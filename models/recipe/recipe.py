@@ -7,9 +7,10 @@ from sqlalchemy import Column, Integer
 class RecipeUtils:
     """Utility functions and attributes for recipe"""
 
-    _prep_time_minutes = Column(Integer, nullable=False)
-    _cook_time_minutes = Column(Integer, nullable=False)
+    prep_time_minutes = Column(Integer, nullable=False)
+    cook_time_minutes = Column(Integer, nullable=False)
 
+    '''
     @property
     def prep_time_minutes(self) -> int:
         """Prep time getter"""
@@ -29,3 +30,5 @@ class RecipeUtils:
     def cook_time_minutes(self, value: int) -> None:
         """Cook time setter"""
         self._cook_time_minutes = value
+
+    '''
