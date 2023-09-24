@@ -65,8 +65,12 @@ class DBStorage:
     def allModels(self) -> Dict:
         """Returns a dictionary of all models"""
         from models.user import User
+        from models.recipe import Recipe
 
-        return {"User": User}
+        return {
+                "User": User,
+                "Recipe": Recipe
+        }
 
     def new(self, obj) -> None:
         """Adds the given object to the current session"""
