@@ -44,7 +44,6 @@ class DBStorage:
             database if obj is None
         """
         objects = {}
-        from models.user import User
 
         if obj:
             query = self.__session.query(obj).all()
