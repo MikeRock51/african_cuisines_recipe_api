@@ -4,6 +4,7 @@
 from models.base_model import Base, BaseModel
 from sqlalchemy import Column, String
 from models.user.auth import UserAuth
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base, UserAuth):
@@ -15,3 +16,4 @@ class User(BaseModel, Base, UserAuth):
     email = Column(String(128), nullable=False, unique=True)
     firstname = Column(String(128), nullable=True)
     lastname = Column(String(128), nullable=True)
+    recipes = relationship('Recipe', backref='author', cascade='all, delete')
