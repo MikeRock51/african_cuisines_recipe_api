@@ -15,7 +15,7 @@ TOKEN_TTL = getenv('TOKEN_TTL')
 class SessionAuth():
     """Handles Session Authentication"""
 
-    _tokenKey = 'auth_{}'
+    _key = 'auth_{}'
 
     def __init__(self) -> None:
         """Initializes a new redis client"""
@@ -27,24 +27,35 @@ class SessionAuth():
             raise ValueError('Missing User ID')
 
         token = str(uuid4())
-        self._client.setex(self._tokenKey.format(token), int(TOKEN_TTL), userID)
+        self._client.setex(self._key.format(token), int(TOKEN_TTL), userID)
         return token
 
-    def getSession(self, token: str):
+    def getSession(self, token: str) -> str:
         """Retrieves a session based on token"""
         if not token:
             raise ValueError('Missing token')
         
-        userID = self._client.get(self._tokenKey.format(token))
+        userID = self._client.get(self._key.format(token))
         if not userID:
             raise ValueError('Unauthorized')
 
         return userID
 
+    def destroySession(self, token: str) -> None:
+        """Destroys a session based on token"""
+        if not token:
+            raise ValueError('Missing token')
+
+        response = self._client.delete(self._key.format(token))
+        if not response:
+            raise ValueError('Token is not valid')
+
+        return None
 
 
 if __name__ == '__main__':
     session = SessionAuth()
  #   mikeID = session.createSession('Mike-Rock')
  #   print(mikeID)
-    print(session.getSession('b088df9e-8147-488d-b7c2-c46a313c0fa5'))
+    # print(session.getSession('b088df9e-8147-488d-b7c2-c46a313c0fa5'))
+    print(session.destroySession('b088df9e-8147-488d-b7c2-c46a313c0fa5'))
