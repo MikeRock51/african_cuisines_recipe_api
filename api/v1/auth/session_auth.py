@@ -4,6 +4,7 @@
 from os import getenv
 import redis
 from dotenv import load_dotenv
+from uuid import uuid4
 
 load_dotenv()
 
@@ -17,8 +18,10 @@ class SessionAuth():
     def __init__(self):
         """Initializes a new redis client"""
         self._client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-        print(self._client.get('Mike'))
 
+    def createSession(self, request=None):
+        """Creates and stores a new session token"""
 
 if __name__ == '__main__':
-    SessionAuth()
+    session = SessionAuth()
+    session.createSession()
