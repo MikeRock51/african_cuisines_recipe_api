@@ -4,7 +4,7 @@
 from flask import request, jsonify
 from api.v1.views import app_views
 from api.v1.auth import auth
-from api.v1.utils.utilities import Utilities
+from api.v1.utils import Utils
 from models import storage
 from models.user import User
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ def userLogin():
     """Creates a user session"""
     requiredFields = ['email', 'password']
     try:
-        credential = Utilities.getReqJSON(request, requiredFields)
+        credential = Utils.getReqJSON(request, requiredFields)
         user = auth.getUserEmail(credential.get('email'))
         if not user.validatePassword(credential.get('password')):
             raise ValueError('Incorrect Password!')
