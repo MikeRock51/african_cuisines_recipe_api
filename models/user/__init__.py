@@ -19,3 +19,19 @@ class User(BaseModel, Base, UserAuth):
     lastname = Column(String(128), nullable=True)
     role = Column(Enum(UserRole), default=UserRole.contributor, nullable=False)
     recipes = relationship('Recipe', backref='author', cascade='all, delete')
+
+    def toDict(self, detailed=False):
+        """Returns a dictionary representation of a user instance"""
+        instance = super().toDict()
+        instance['role'] = instance['role'].value
+
+        if detailed:
+            return instance
+
+        heldBackAttrs = ['createdAt', 'updatedAt', 'email']
+
+        for attr in heldBackAttrs:
+            if attr in instance:
+                instance.pop(attr)
+
+        return instance

@@ -104,7 +104,6 @@ class DBStorage:
     def getByEmail(self, email: str):
         """Retrieves the user with the given email from database"""
         User = self.allModels()['User']
-
         user = self.__session.query(User).filter_by(email=email).one()
         return user
 
