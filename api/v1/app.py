@@ -31,7 +31,7 @@ def badRequest(error):
     return jsonify({
         "status": "error",
         "message": "Bad request"
-    })
+    }), 400
 
 @app.errorhandler(401)
 def unauthorized(error):
@@ -39,7 +39,7 @@ def unauthorized(error):
     return jsonify({
         "status": "error",
         "message": "Unauthorized"
-    })
+    }), 401
 
 @app.errorhandler(403)
 def forbidden(error):
@@ -47,7 +47,7 @@ def forbidden(error):
     return jsonify({
         "status": "error",
         "message": "Forbidden"
-    })
+    }), 403
 
 @app.errorhandler(404)
 def notFound(error):
@@ -55,7 +55,7 @@ def notFound(error):
     return jsonify({
         "status": "error",
         "message": "Not found!!!"
-    })
+    }), 404
 
 
 if __name__ == "__main__":

@@ -48,4 +48,4 @@ from os import getenv
 sessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
 >>> session = scoped_session(sessionFactory)
 
-
+curl -X POST 0:6000/api/v1/users -H 'Content-Type: application/json' -d '{"username": "Ola of da milky way", "password": "pass", "email": "ajebo@email.com", "junk": "filter this", "firstname": "Mike", "lastname": "Rock"}'

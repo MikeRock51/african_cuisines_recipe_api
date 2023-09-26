@@ -10,6 +10,7 @@ from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
 from api.v1.utils import Utils
 from sqlalchemy.exc import IntegrityError
+from api.v1.auth import auth
 
 
 @app_views.route('/users')
@@ -24,6 +25,7 @@ def createUser():
     """Creates a news user"""
     requiredFields = ['username', 'email', 'password']
     userFields = ['username', 'email', 'password', 'firstname', 'lastname']
+    detailed = request.args.get('detailed', False)
     try:
         data = Utils.getReqJSON(request, requiredFields)
         userData = {key: value for key, value in data.items() if key in userFields}
@@ -43,7 +45,7 @@ def createUser():
     return jsonify({
         "status": "success",
         "message": "Account created successfully",
-        "data": user.toDict()
+        "data": user.toDict(detailed=detailed)
     }), 201
 
 @app_views.route('/users/me')
@@ -55,4 +57,23 @@ def getCurrentUser():
         "status": "success",
         "message": "Current user retrieved successfully",
         "data": g.currentUser.toDict(detailed=detailed)
-    }) 
+    })
+
+@app_views.route('/users/<id>')
+@login_required()
+def getUserByID(id):
+    """Returns a user based on user ID"""
+    detailed = request.args.get('detailed', False)
+    try:
+        user = auth.getUserID(id)
+    except ValueError as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 404
+
+    return jsonify({
+        "status": "success",
+        "message": "User retrieved successfully",
+        "data": user.toDict(detailed=detailed)
+    })
