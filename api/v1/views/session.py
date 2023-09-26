@@ -15,7 +15,7 @@ load_dotenv()
 
 @app_views.route('/login', methods=['POST'])
 def userLogin():
-    """Handles user log in"""
+    """Creates a user session"""
     requiredFields = ['email', 'password']
     try:
         credential = Utilities.getReqJSON(request, requiredFields)
@@ -34,3 +34,21 @@ def userLogin():
         })
     
     return jsonify(response), 200
+
+
+@app_views.route('/logout')
+def logoutUser():
+    """Destroys a user session"""
+    try:
+        token = auth.extractAuthToken(request)
+        auth.destroySession(token)
+    except ValueError as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        })
+
+    return jsonify({
+        "status": "success",
+        "message": "Logout successful"
+    })
