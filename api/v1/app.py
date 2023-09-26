@@ -21,7 +21,7 @@ def preRequest():
     try:
         token = auth.extractAuthToken(request)
         userID = auth.getSession(token)
-        g.currentUser = auth.getUser(userID)
+        g.currentUser = auth.getUserID(userID)
     except ValueError:
         g.currentUser = None
 

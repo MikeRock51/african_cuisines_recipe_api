@@ -12,8 +12,9 @@ class Utilities:
             if not data:
                 abort(400)
 
-            for field in requiredFields:
-                if field not in data:
-                    raise ValueError(f'Missing required {field}')
+            if requiredFields:
+                for field in requiredFields:
+                    if field not in data:
+                        raise ValueError(f'Missing required {field}')
 
             return data

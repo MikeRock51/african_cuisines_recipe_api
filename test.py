@@ -5,6 +5,12 @@ from models.roles import UserRole
 from sqlalchemy.exc import IntegrityError
 from api.v1.utils import extractErrorMessage
 
+ola = {'firstname': 'Michael', 'lastname': 'Olasunkanmi', 'username': 'Ollywayne', 'email': 'ola@email.com',
+        'phone': '0885465549', 'address': 'Abuja', 'password': 'pass'}
+
+user = User(**ola)
+user.save()
+
 mike = {'firstname': 'Michael', 'lastname': 'Adebayo', 'username': 'Mike Rock', 'email': 'mikerock@email.com',
         'phone': '0885465549', 'address': 'Abuja', 'password': 'pass', "role": UserRole.admin}
 user = User(**mike)

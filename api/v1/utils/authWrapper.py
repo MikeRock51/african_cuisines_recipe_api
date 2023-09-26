@@ -16,7 +16,7 @@ def login_required(authorizedRoles: Union[List[UserRole], None] = None) -> Calla
 
             if not g.currentUser:
                 return unauthorized()
-            if authoriazedRoles is not None and g.currentUser.role not in authorizedRoles:
+            if authorizedRoles is not None and g.currentUser.role not in authorizedRoles:
                 return unauthorized()
 
             return f(*args, **kwargs)

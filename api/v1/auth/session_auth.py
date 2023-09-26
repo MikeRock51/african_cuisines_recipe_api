@@ -45,8 +45,16 @@ class SessionAuth():
 
         return userID
 
-    def getUser(self, email: str) -> User:
-        """Retrieves a user based on userID"""
+    def getUserID(self, userID: str) -> User:
+        """Retrieves a user based on user ID"""
+        user = storage.get(User, userID)
+        if not user:
+            raise ValueError('No user with this ID')
+
+        return user
+
+    def getUserEmail(self, email: str) -> User:
+        """Retrieves a user based on user email"""
         try:
             user = storage.getByEmail(email)
         except NoResultFound:

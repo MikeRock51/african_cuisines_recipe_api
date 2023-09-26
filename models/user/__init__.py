@@ -28,7 +28,7 @@ class User(BaseModel, Base, UserAuth):
         if detailed:
             return instance
 
-        heldBackAttrs = ['createdAt', 'updatedAt', 'email']
+        heldBackAttrs = ['createdAt', 'updatedAt', 'email', 'role']
 
         for attr in heldBackAttrs:
             if attr in instance:

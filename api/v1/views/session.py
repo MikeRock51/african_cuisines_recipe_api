@@ -19,13 +19,14 @@ def userLogin():
     requiredFields = ['email', 'password']
     try:
         credential = Utilities.getReqJSON(request, requiredFields)
-        user = auth.getUser(credential.get('email'))
+        user = auth.getUserEmail(credential.get('email'))
         if not user.validatePassword(credential.get('password')):
             raise ValueError('Incorrect Password!')
         response = {
                 "status": "success",
                 "message": "Log in successful",
-                getenv("AUTH_HEADER"): auth.createSession(user.id)
+                getenv("AUTH_HEADER"): auth.createSession(user.id),
+                "data": user.toDict()
         }
     except ValueError as e:
         return jsonify({
