@@ -23,7 +23,7 @@ def preRequest():
         userID = auth.getSession(token)
         g.currentUser = auth.getUser(userID)
     except ValueError:
-        g.user = None
+        g.currentUser = None
 
 @app.errorhandler(400)
 def badRequest(error):
