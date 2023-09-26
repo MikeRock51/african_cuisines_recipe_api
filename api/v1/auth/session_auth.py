@@ -11,6 +11,7 @@ load_dotenv()
 REDIS_HOST = getenv('REDIS_HOST')
 REDIS_PORT = getenv('REDIS_PORT')
 TOKEN_TTL = getenv('TOKEN_TTL')
+AUTH_HEADER = getenv('AUTH_HEADER')
 
 class SessionAuth():
     """Handles Session Authentication"""
@@ -20,6 +21,7 @@ class SessionAuth():
     def __init__(self) -> None:
         """Initializes a new redis client"""
         self._client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        print(AUTH_HEADER)
 
     def createSession(self, userID: str = None) -> str:
         """Creates and stores a new session token"""
@@ -52,6 +54,13 @@ class SessionAuth():
 
         return None
 
+    def getAuthToken(self, request) -> str:
+        """Extracts auth token from header"""
+        token = request.header.get(AUTH_TOKEN)
+        if not token:
+            raise ValueError(f'{AUTH_TOKEN} is required');
+
+        return token
 
 if __name__ == '__main__':
     session = SessionAuth()
