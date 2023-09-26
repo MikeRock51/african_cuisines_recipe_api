@@ -3,6 +3,7 @@ from models.user import User
 from models.recipe import Recipe
 from models.roles import UserRole
 from sqlalchemy.exc import IntegrityError
+from api.v1.utils import extractErrorMessage
 
 mike = {'firstname': 'Michael', 'lastname': 'Adebayo', 'username': 'Mike Rock', 'email': 'mikerock@email.com',
         'phone': '0885465549', 'address': 'Abuja', 'password': 'pass', "role": UserRole.admin}
@@ -24,11 +25,4 @@ user2 = User(**mike)
 try:
     user2.save()
 except IntegrityError as e:
-    error_message = str(e.args[0])
-    start_index = error_message.find('"')
-    end_index = error_message.rfind('"')
-    if start_index != -1 and end_index != -1:
-        extracted_message = error_message[start_index + 1:end_index]
-        print(extracted_message)
-    else:
-        print(error_message)
+    print(extractErrorMessage(e.args[0])

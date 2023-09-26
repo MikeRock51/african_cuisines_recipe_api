@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """The flask app"""
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort, g
 from flask_cors import CORS
 from api.v1.views import app_views
 from os import getenv
+from api.v1.auth import auth
 
 
 app = Flask(__name__)
@@ -13,6 +14,16 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
 
+
+@app.before_request
+def preRequest():
+    """Handles prequest setups and validations"""
+    try:
+        token = auth.extractAuthToken(request)
+        userID = auth.getSession(token)
+        g.currentUser = auth.getUser(userID)
+    except ValueError:
+        g.user = None
 
 @app.errorhandler(400)
 def badRequest(error):

@@ -5,6 +5,8 @@ from os import getenv
 import redis
 from dotenv import load_dotenv
 from uuid import uuid4
+from models import storage
+from models.user import User
 
 load_dotenv()
 
@@ -21,7 +23,6 @@ class SessionAuth():
     def __init__(self) -> None:
         """Initializes a new redis client"""
         self._client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-        print(AUTH_HEADER)
 
     def createSession(self, userID: str = None) -> str:
         """Creates and stores a new session token"""
@@ -43,6 +44,15 @@ class SessionAuth():
 
         return userID
 
+    def getUser(self, userID):
+        """Retrieves a user based on userID"""
+        user = storage.get(User, userID)
+
+        if not user:
+            raise ValueError('No user with this ID')
+
+        return user
+
     def destroySession(self, token: str) -> None:
         """Destroys a session based on token"""
         if not token:
@@ -54,7 +64,7 @@ class SessionAuth():
 
         return None
 
-    def getAuthToken(self, request) -> str:
+    def extractAuthToken(self, request) -> str:
         """Extracts auth token from header"""
         token = request.header.get(AUTH_TOKEN)
         if not token:

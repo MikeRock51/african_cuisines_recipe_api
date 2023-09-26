@@ -11,4 +11,4 @@ class UserRole(Enum):
     moderator = "moderator"
     editor = "editor"
     contributor = "contributor"
-    viewer = "viewer"
+    user = "user"
