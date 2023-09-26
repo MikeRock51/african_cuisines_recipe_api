@@ -27,5 +27,5 @@ class UserAuth:
     def validatePassword(self, password: str) -> bool:
         """Validates that user password matches the set password"""
         if type(password).__name__ == 'str':
-            return bcrypt.checkpw(password.encode('utf-8'), self._password)
+            return bcrypt.checkpw(password.encode('utf-8'), self._password.encode('utf-8'))
 

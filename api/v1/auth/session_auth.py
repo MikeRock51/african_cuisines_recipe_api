@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from uuid import uuid4
 from models import storage
 from models.user import User
+from sqlalchemy.exc import NoResultFound
 
 load_dotenv()
 
@@ -44,12 +45,12 @@ class SessionAuth():
 
         return userID
 
-    def getUser(self, userID):
+    def getUser(self, email: str) -> User:
         """Retrieves a user based on userID"""
-        user = storage.get(User, userID)
-
-        if not user:
-            raise ValueError('No user with this ID')
+        try:
+            user = storage.getByEmail(email)
+        except NoResultFound:
+            raise ValueError('User does not exist')
 
         return user
 
