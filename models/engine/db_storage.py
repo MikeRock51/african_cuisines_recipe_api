@@ -104,11 +104,9 @@ class DBStorage:
     def getByEmail(self, email: str):
         """Retrieves the user with the given email from database"""
         User = self.allModels()['User']
-        users = self.all(User)
 
-        for user in users.values():
-            if user.email == email:
-                return user
+        user = self.__session.query(User).filter_by(email=email).one()
+        return user
 
     def close(self) -> None:
         """Removes the current session"""

@@ -25,4 +25,21 @@ user2 = User(**mike)
 try:
     user2.save()
 except IntegrityError as e:
-    print(extractErrorMessage(e.args[0])
+    print(extractErrorMessage(e.args[0]))
+
+
+from os import getenv
+>>> USER = getenv("DB_USER")
+>>> HOST = getenv("DB_HOST")
+>>> PWD = getenv("DB_PWD")
+>>> DB = getenv("DB_NAME")
+>>> from sqlalchemy.orm import scoped_session, sessionmaker
+>>> from sqlalchemy import create_engine
+>>> engine = create_engine(
+...             f"mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}",
+...             pool_pre_ping=True)
+
+sessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
+>>> session = scoped_session(sessionFactory)
+
+

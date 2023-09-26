@@ -12,3 +12,6 @@ class UserRole(Enum):
     editor = "editor"
     contributor = "contributor"
     user = "user"
+
+if __name__ == "__main__":
+    print(UserRole.admin.value)

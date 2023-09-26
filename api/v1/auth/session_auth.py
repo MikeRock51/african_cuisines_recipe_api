@@ -66,15 +66,8 @@ class SessionAuth():
 
     def extractAuthToken(self, request) -> str:
         """Extracts auth token from header"""
-        token = request.header.get(AUTH_TOKEN)
+        token = request.headers.get(AUTH_HEADER)
         if not token:
-            raise ValueError(f'{AUTH_TOKEN} is required');
+            raise ValueError(f'{AUTH_HEADER} is required');
 
         return token
-
-if __name__ == '__main__':
-    session = SessionAuth()
- #   mikeID = session.createSession('Mike-Rock')
- #   print(mikeID)
-    # print(session.getSession('b088df9e-8147-488d-b7c2-c46a313c0fa5'))
-    print(session.destroySession('b088df9e-8147-488d-b7c2-c46a313c0fa5'))
