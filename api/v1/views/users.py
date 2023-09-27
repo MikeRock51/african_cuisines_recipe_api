@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """User view routes"""
 
-from flask import jsonify, g, request
+from flask import jsonify, g, request, abort
 from models.user import User
 from models import storage
 from api.v1.views import app_views
@@ -77,3 +77,20 @@ def getUserByID(id):
         "message": "User retrieved successfully",
         "data": user.toDict(detailed=detailed)
     })
+
+@app_views.route('/users/<id>', methods=['PUT'])
+@login_required()
+def updateUser(id):
+    """Updates a user based on user id"""
+    data = Utils.getReqJSON(request)
+    if not data:
+        abort(400)
+
+    user = storage.get(User, id)
+
+    if not user:
+        abort(404)
+    if user is not g.currentUser:
+        abort(401)
+
+    return jsonify({'res': user is g.currentUser})
