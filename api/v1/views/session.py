@@ -23,17 +23,17 @@ def userLogin():
         if not user.validatePassword(credential.get('password')):
             raise ValueError('Incorrect Password!')
         response = {
-                "status": "success",
-                "message": "Log in successful",
-                getenv("AUTH_HEADER"): auth.createSession(user.id),
-                "data": user.toDict()
+            "status": "success",
+            "message": "Log in successful",
+            getenv("AUTH_HEADER"): auth.createSession(user.id),
+            "data": user.toDict()
         }
     except ValueError as e:
         return jsonify({
             "status": "error",
             "message": str(e)
         })
-    
+
     return jsonify(response), 200
 
 

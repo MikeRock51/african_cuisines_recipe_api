@@ -20,6 +20,7 @@ def allUsers():
     users: List[User] = storage.all(User).values()
     return jsonify([user.toDict(detailed=True) for user in users]), 200
 
+
 @app_views.route('/users', methods=['POST'])
 def createUser():
     """Creates a news user"""
@@ -28,7 +29,8 @@ def createUser():
     detailed = request.args.get('detailed', False)
     try:
         data = Utils.getReqJSON(request, requiredFields)
-        userData = {key: value for key, value in data.items() if key in userFields}
+        userData = {key: value for key,
+                    value in data.items() if key in userFields}
         user = User(**userData)
         user.save()
     except ValueError as ve:
@@ -48,6 +50,7 @@ def createUser():
         "data": user.toDict(detailed=detailed)
     }), 201
 
+
 @app_views.route('/users/me')
 @login_required()
 def getCurrentUser():
@@ -58,6 +61,7 @@ def getCurrentUser():
         "message": "Current user retrieved successfully",
         "data": g.currentUser.toDict(detailed=detailed)
     })
+
 
 @app_views.route('/users/<id>')
 @login_required()
@@ -77,6 +81,7 @@ def getUserByID(id):
         "message": "User retrieved successfully",
         "data": user.toDict(detailed=detailed)
     })
+
 
 @app_views.route('/users/<id>', methods=['PUT'])
 @login_required()
@@ -111,6 +116,7 @@ def updateUser(id):
         "message": "User updated successfully",
         "data": user.toDict(detailed=True)
     }), 200
+
 
 @app_views.route('/users/<id>', methods=['DELETE'])
 @login_required()

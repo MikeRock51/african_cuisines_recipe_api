@@ -17,12 +17,12 @@ data.forEach((recipe, index) => {
   }
 });
 
-// fs.writeFileSync('filteredDataset.json', JSON.stringify(filtered));
-// console.log(filtered.length);
+fs.writeFileSync('filteredDataset.json', JSON.stringify(filtered));
+console.log(filtered.length);
 
-console.log(Object.keys(unique).length);
+// console.log(Object.keys(unique).length);
 // console.log(unique);
-// Object.keys(unique).forEach((food, index) => {
-//     fs.appendFileSync('foodNames.txt', `${index + 1}. ${food}\n`);
-// });
+Object.keys(unique).forEach((food, index) => {
+    fs.appendFileSync('foodNames.txt', `${index + 1}. ${food}\n`);
+});
 console.log(data.length);

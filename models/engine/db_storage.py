@@ -61,6 +61,25 @@ class DBStorage:
 
         return objects
     
+    def getPaginatedData(self, obj=None, page: int = 1, size: int = 20) -> Dict:
+        """Retrieves paginated data"""
+        if obj:
+            data = []
+            offset = (page - 1) * size
+
+            query = self.__session.query(obj).offset(offset).limit(size).all()
+
+            for result in query:
+                data.append(result.toDict())
+
+            return {
+                    "data": data,
+                    "page": page,
+                    "page_size": size,
+                    "total_items": len(data),
+                    "total_pages": self.__session.query(obj).count()
+            }
+ 
     def allModels(self) -> Dict:
         """Returns a dictionary of all models"""
         from models.user import User
