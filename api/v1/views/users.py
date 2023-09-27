@@ -93,4 +93,21 @@ def updateUser(id):
     if user is not g.currentUser:
         abort(401)
 
-    return jsonify({'res': user is g.currentUser})
+    updatables = ['username', 'firstname', 'lastname', 'password']
+
+    try:
+        for key, value in data.items():
+            if key in updatables:
+                setattr(user, key, value)
+        user.save()
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": Utils.extractErrorMessage(str(e))
+        })
+
+    return jsonify({
+        "status": "success",
+        "message": "User updated successfully",
+        "data": user.toDict(detailed=True)
+    }), 200
