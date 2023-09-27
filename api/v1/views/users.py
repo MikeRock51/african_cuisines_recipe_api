@@ -111,3 +111,25 @@ def updateUser(id):
         "message": "User updated successfully",
         "data": user.toDict(detailed=True)
     }), 200
+
+@app_views.route('/users/<id>', methods=['DELETE'])
+@login_required()
+def deleteUser(id):
+    """Deletes the user with the user id"""
+    user = storage.get(User, id)
+    if not user:
+        abort(404)
+    if user is not g.currentUser:
+        abort(401)
+    try:
+        user.delete()
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": Utils.extractErrorMessage(str(e))
+        })
+
+    return jsonify({
+        "status": "success",
+        "message": "User deleted sucessfully"
+    })
