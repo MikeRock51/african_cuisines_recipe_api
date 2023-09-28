@@ -5,8 +5,19 @@ const unique = {};
 const filtered = [];
 
 data.forEach((recipe, index) => {
-  recipe.name = recipe.recipe_name
-  delete recipe.recipe_name
+  if (recipe.total_time_hours) {
+    recipe.total_time_minutes = recipe.total_time_hours * 60
+    delete recipe.total_time_hours
+  }
+  if (recipe.prep_time_hours) {
+    recipe.prep_time_minutes = recipe.prep_time_hours * 60
+    delete recipe.prep_time_hours
+  }
+  if (recipe.cook_time_hours) {
+    recipe.cook_time_minutes = recipe.cook_time_hours * 60
+    delete recipe.cook_time_hours
+  }
+
   // if (unique.hasOwnProperty(recipe.recipe_name)) {
   //   unique[recipe.recipe_name] += 1;
   // } else {
