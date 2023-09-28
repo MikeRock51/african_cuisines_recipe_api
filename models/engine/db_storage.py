@@ -65,7 +65,6 @@ class DBStorage:
     def getPaginatedData(self, obj=None, page: int = 1, size: int = 20, keyword="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
-            data = []
             offset = (page - 1) * size
 
             query = self.__session.query(obj).filter(obj.name.like(f"%{keyword}%"))
@@ -74,16 +73,14 @@ class DBStorage:
                 query = query.filter(and_(*filterConditions))
 
             total_pages = ceil(len(query.all()) / size)
-            query = query.offset(offset).limit(size).all()
+            result = query.offset(offset).limit(size).all()
 
-            for result in query:
-                data.append(result.toDict())
 
             return {
-                    "data": data,
+                    "data": result,
                     "page": page,
                     "page_size": size,
-                    "total_items": len(data),
+                    "total_items": len(result),
                     "total_pages": total_pages
             }
  
