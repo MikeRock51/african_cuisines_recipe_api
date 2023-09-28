@@ -35,17 +35,17 @@ except IntegrityError as e:
 
 
 from os import getenv
->>> USER = getenv("DB_USER")
->>> HOST = getenv("DB_HOST")
->>> PWD = getenv("DB_PWD")
->>> DB = getenv("DB_NAME")
->>> from sqlalchemy.orm import scoped_session, sessionmaker
->>> from sqlalchemy import create_engine
->>> engine = create_engine(
-...             f"mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}",
-...             pool_pre_ping=True)
+USER = getenv("DB_USER")
+HOST = getenv("DB_HOST")
+PWD = getenv("DB_PWD")
+DB = getenv("DB_NAME")
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import create_engine
+engine = create_engine(
+             f"mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}",
+             pool_pre_ping=True)
 
 sessionFactory = sessionmaker(bind=engine, expire_on_commit=False)
->>> session = scoped_session(sessionFactory)
+session = scoped_session(sessionFactory)
 
-curl -X POST 0:6000/api/v1/users -H 'Content-Type: application/json' -d '{"username": "Ola of da milky way", "password": "pass", "email": "ajebo@email.com", "junk": "filter this", "firstname": "Mike", "lastname": "Rock"}'
+# curl -X POST 0:6000/api/v1/users -H 'Content-Type: application/json' -d '{"username": "Ola of da milky way", "password": "pass", "email": "ajebo@email.com", "junk": "filter this", "firstname": "Mike", "lastname": "Rock"}'
