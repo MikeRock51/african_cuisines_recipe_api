@@ -23,3 +23,18 @@ class Recipe(BaseModel, Base, RecipeUtils):
         """Initialize instance"""
         super().__init__(*args, **kwargs)
         self.total_time_minutes = self.cook_time_minutes + self.prep_time_minutes
+
+    def toDict(self, detailed=False):
+        """Extexsion of basemodel.toDict for recipe data"""
+        instance = super().toDict()
+
+        if detailed:
+            return instance
+
+        heldBackAttrs = ["__class__", "createdAt", "updatedAt", "userID"]
+
+        for attr in heldBackAttrs:
+            if attr in instance:
+                instance.pop(attr)
+
+        return instance

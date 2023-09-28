@@ -51,3 +51,6 @@ session = scoped_session(sessionFactory)
 
 # curl -X POST 0:6000/api/v1/users -H 'Content-Type: application/json' -d '{"username": "Ola of da milky way", "password": "pass", "email": "ajebo@email.com", "junk": "filter this", "firstname": "Mike", "lastname": "Rock"}'
 # curl 0:6000/api/v1/login -H 'Content-Type: application/json' -d '{"email": "mikerock@email.com", "password": "pass"}'
+
+
+# curl "0:6000/api/v1/recipes?filter_by=cuisine+Nigerian,Ghanaian:serving+6:mike+wonderful&page=5&keyword=Jollof&detailed=true"
