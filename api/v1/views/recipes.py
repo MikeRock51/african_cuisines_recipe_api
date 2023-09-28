@@ -49,3 +49,9 @@ def recipeByID(id):
         abort(404)
 
     return recipe.toDict(detailed=detailed)
+
+@app_views.route('/recipes/<id>', methods=['PUT'])
+@login_required()
+def updateRecipe(id):
+    """Updates a recipe based on id"""
+    pass
