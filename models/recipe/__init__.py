@@ -11,7 +11,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
 
     __tablename__ = "recipes"
 
-    recipe_name = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False)
     cuisine = Column(String(128), default="Not specified", nullable=False)
     ingredients = Column(JSON, nullable=False)
     instructions = Column(JSON, nullable=False)
