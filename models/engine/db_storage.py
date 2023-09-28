@@ -3,9 +3,10 @@
 
 from os import getenv
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from typing import Dict
 from dotenv import load_dotenv
+from math import ceil
 
 load_dotenv()
 
@@ -61,17 +62,19 @@ class DBStorage:
 
         return objects
     
-    def getPaginatedData(self, obj=None, page: int = 1, size: int = 20, keyword="", filter_columns={}) -> Dict:
+    def getPaginatedData(self, obj=None, page: int = 1, size: int = 20, keyword="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
             data = []
             offset = (page - 1) * size
 
             query = self.__session.query(obj).filter(obj.name.like(f"%{keyword}%"))
-            if filter_columns != {}:
-                filter_conditions = None
+            if filterColumns != {}:
+                filterConditions = [(key.in_(value) if hasattr(value, '__iter__') else (key == value) for key, value in filterColumns.items())]
+                query = query.filter(and_(*filterConditions))
 
-            offset(offset).limit(size).all()
+            total_pages = ceil(len(query.all()) / size)
+            query = query.offset(offset).limit(size).all()
 
             for result in query:
                 data.append(result.toDict())
@@ -81,7 +84,7 @@ class DBStorage:
                     "page": page,
                     "page_size": size,
                     "total_items": len(data),
-                    "total_pages": self.__session.query(obj).count()
+                    "total_pages": total_pages
             }
  
     def allModels(self) -> Dict:
