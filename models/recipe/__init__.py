@@ -17,6 +17,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     instructions = Column(JSON, nullable=False)
     serving_size = Column(Integer, nullable=True)
     total_time_minutes = Column(Integer, nullable=False)
+    calories_per_serving = Column(Integer, nullable=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
 
     def __init__(self, *args, **kwargs) -> None:

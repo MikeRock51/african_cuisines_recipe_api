@@ -16,7 +16,7 @@ mike = {'firstname': 'Michael', 'lastname': 'Adebayo', 'username': 'Mike Rock', 
 user = User(**mike)
 user.save()
 
-eba = {"recipe_name": "Eba", "cuisine": "Nigeria",
+eba = {"name": "Eba", "cuisine": "Nigeria",
        "ingredients": ["2 Cups of Garri", "Boiled water"],
        "instructions": ["Dance around the room for 2 mins", "Do the Hokey Pokey"], "userID": user.id,
        "prep_time_minutes": 20,
@@ -54,3 +54,5 @@ session = scoped_session(sessionFactory)
 
 
 # curl "0:6000/api/v1/recipes?filter_by=cuisine+Nigerian,Ghanaian:serving+6:mike+wonderful&page=5&keyword=Jollof&detailed=true"
+
+# curl -XPOST 0:6000/api/v1/recipes -H 'Content-Type: application/json' -H 'auth-token: 0768d7a0-1c77-4560-a501-b7da15345692' -d '{"name": "Eba", "cuisine": "Nigeria", "ingredients": ["2 Cups of Garri", "Boiled water"], "instructions": ["Dance around the room for 2 mins", "Do the Hokey Pokey"], "userID": "8bdfa62f-b226-4d6c-bd73-16c02c370a4d", "prep_time_minutes": 20, "cook_time_minutes": 40, "serving_size": 4, "calories_per_serving": 400}'

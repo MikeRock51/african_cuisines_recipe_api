@@ -3,8 +3,10 @@
 
 from models.recipe import Recipe
 from models import storage
+from models.roles import UserRole
 from flask import jsonify, abort, request
 from api.v1.views import app_views
+from api.v1.utils import Utils
 from api.v1.utils.authWrapper import login_required
 import re
 
@@ -50,8 +52,27 @@ def recipeByID(id):
 
     return recipe.toDict(detailed=detailed)
 
-@app_views.route('/recipes/<id>', methods=['PUT'])
-@login_required()
-def updateRecipe(id):
-    """Updates a recipe based on id"""
-    pass
+@app_views.route('/recipes', methods=['POST'])
+@login_required([UserRole.admin, UserRole.moderator, UserRole.editor, UserRole.contributor])
+def createRecipe():
+    """Creates a new recipe and stores it in database"""
+    requiredFields = ['name', 'userID', 'cuisine', 'ingredients', 'instructions', 'prep_time_minutes', 'cook_time_minutes']
+    optionalFields = ['total_time_minutes', 'serving_size', 'calories_per_serving']
+    try:
+        recipeData = Utils.getReqJSON(request, requiredFields)
+        for field in recipeData:
+            if field not in requiredFields and field not in optionalFields:
+                recipeData.pop(field)
+        recipe = Recipe(**recipeData)
+        recipe.save()
+    except (ValueError) as e:
+        return jsonify({
+            "status": "error",
+            "message": Utils.extractErrorMessage(str(e))
+        }), 400
+
+    return jsonify({
+        "status": "error",
+        "message": "Recipe created successfully",
+        "data": recipe.toDict(detailed=True)
+    })
