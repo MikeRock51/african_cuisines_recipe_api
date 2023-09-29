@@ -7,6 +7,7 @@ from sqlalchemy import create_engine, and_
 from typing import Dict
 from dotenv import load_dotenv
 from math import ceil
+from sqlalchemy.exc import ArgumentError
 
 load_dotenv()
 
@@ -61,37 +62,43 @@ class DBStorage:
                     objects[key] = result
 
         return objects
-    
-    def getPaginatedData(self, obj=None, page: int = 1, size: int = 20, keyword="", filterColumns={}) -> Dict:
+
+    def getPaginatedData(self, obj=None, page: int = 1,
+                         size: int = 20, keyword="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
             offset = (page - 1) * size
 
-            query = self.__session.query(obj).filter(obj.name.like(f"%{keyword}%"))
-            if filterColumns != {}:
-                filterConditions = [(key.in_(value) if hasattr(value, '__iter__') else (key == value) for key, value in filterColumns.items())]
-                query = query.filter(and_(*filterConditions))
+            try:
+                query = self.__session.query(obj).filter(
+                    obj.name.like(f"%{keyword}%"))
+                if filterColumns != {}:
+                    filterConditions = [(key.in_(value) if
+                                         hasattr(value, '__iter__') else (
+                        key == value) for key, value in filterColumns.items())]
+                    query = query.filter(and_(*filterConditions))
 
-            total_pages = ceil(len(query.all()) / size)
-            result = query.offset(offset).limit(size).all()
+                total_pages = ceil(len(query.all()) / size)
+                result = query.offset(offset).limit(size).all()
 
-
-            return {
+                return {
                     "data": result,
                     "page": page,
                     "page_size": size,
                     "total_items": len(result),
                     "total_pages": total_pages
-            }
- 
+                }
+            except ArgumentError:
+                raise ValueError('Invalid filters!')
+
     def allModels(self) -> Dict:
         """Returns a dictionary of all models"""
         from models.user import User
         from models.recipe import Recipe
 
         return {
-                "User": User,
-                "Recipe": Recipe
+            "User": User,
+            "Recipe": Recipe
         }
 
     def new(self, obj) -> None:

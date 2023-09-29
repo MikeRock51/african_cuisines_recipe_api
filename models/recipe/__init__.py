@@ -32,8 +32,8 @@ class Recipe(BaseModel, Base, RecipeUtils):
         instance = super().toDict()
         order = ['name', 'cuisine', 'id', 'prep_time_minutes',
                  'cook_time_minutes', 'total_time_minutes',
-                 'calories_per_serving', 'serving_size', 'userID', 'ingredients',
-                 'instructions']
+                 'calories_per_serving', 'serving_size', 'userID',
+                 'ingredients', 'instructions']
 
         if detailed:
             return Utils.sortDictKeys(instance, order)

@@ -4,6 +4,10 @@
 from typing import Dict, List
 from models.recipe import Recipe
 import re
+from flask import abort
+import json
+from json.decoder import JSONDecodeError
+from sqlalchemy.exc import ArgumentError
 
 class Utils:
     """Utility class"""
@@ -33,7 +37,7 @@ class Utils:
             return error_message
 
     @staticmethod
-    def getFilterColumns(filterBy: str) -> Dict:
+    def getFilterColumnsFromStr(filterBy: str) -> Dict:
         """Creates a dict of filter columns"""
         filterColumns = {}
 
@@ -54,14 +58,33 @@ class Utils:
 
         return filterColumns
 
+    @staticmethod
+    def getFilterColumns(filterBy: str) -> Dict:
+        """Creates a dict of filter columns"""
+        filterColumns = {}
+
+        if not filterBy or type(filterBy) != str:
+            raise ValueError('Invalid filters')
+
+        try:
+            filterBy = json.loads(filterBy)
+            for key, value in filterBy.items():
+                filterColumns[getattr(Recipe, key)] = value
+        except AttributeError as e:
+            raise ValueError(str(e))
+        except (ValueError, JSONDecodeError, ArgumentError):
+            raise ValueError('Invalid filters')
+
+        return filterColumns
+
     def successResponse(data: List, detailed: bool = False) -> Dict:
         """Constructs a JSON response based on data"""
         return {
            "status": "success",
-            "message": "Sucessfully fetched recipes" if data['data'] != [] else "No match found",
-            "data": [recipe.toDict(detailed=detailed) for recipe in data['data']],
+            "message": "Successfully fetched recipes" if data['data'] != [] else "No match found",
             "page": data['page'],
             "page_size": data['page_size'],
             "total_page_items": data['total_items'],
-            "total_pages": data['total_pages']
+            "total_pages": data['total_pages'],
+            "data": [recipe.toDict(detailed=detailed) for recipe in data['data']]
         }

@@ -7,8 +7,10 @@ from models.roles import UserRole
 from sqlalchemy.exc import IntegrityError
 import json
 
-mike = {'firstname': 'Michael', 'lastname': 'Adebayo', 'username': 'Mike Rock', 'email': 'mikerock@email.com',
-        'phone': '08107094647', 'address': 'Abuja', 'password': 'pass', "role": UserRole.admin}
+mike = {'firstname': 'Michael', 'lastname': 'Adebayo',
+        'username': 'Mike Rock', 'email': 'mikerock@email.com',
+        'phone': '08107094647', 'address': 'Abuja',
+        'password': 'pass', "role": UserRole.admin}
 
 # Create user if it doesn't exist
 try:
@@ -35,7 +37,7 @@ for recipe in data:
         print(recipe)
         error = True
         break
-    
+
 if not error:
     print('Mission Accomplished!!!')
 else:
