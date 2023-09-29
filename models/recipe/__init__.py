@@ -4,6 +4,7 @@
 from sqlalchemy import Column, String, JSON, Integer, ForeignKey
 from models.base_model import BaseModel, Base
 from models.recipe.recipe import RecipeUtils
+from models.utils import Utils
 
 
 class Recipe(BaseModel, Base, RecipeUtils):
@@ -23,14 +24,19 @@ class Recipe(BaseModel, Base, RecipeUtils):
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""
         super().__init__(*args, **kwargs)
-        self.total_time_minutes = self.cook_time_minutes + self.prep_time_minutes
+        self.total_time_minutes = self.cook_time_minutes \
+            + self.prep_time_minutes
 
     def toDict(self, detailed=False):
         """Extexsion of basemodel.toDict for recipe data"""
         instance = super().toDict()
+        order = ['name', 'cuisine', 'id', 'prep_time_minutes',
+                 'cook_time_minutes', 'total_time_minutes',
+                 'calories_per_serving', 'serving_size', 'ingredients',
+                 'instructions']
 
         if detailed:
-            return instance
+            return Utils.sortDictKeys(instance, order)
 
         heldBackAttrs = ["__class__", "createdAt", "updatedAt", "userID"]
 
@@ -38,4 +44,4 @@ class Recipe(BaseModel, Base, RecipeUtils):
             if attr in instance:
                 instance.pop(attr)
 
-        return instance
+        return Utils.sortDictKeys(instance, order)

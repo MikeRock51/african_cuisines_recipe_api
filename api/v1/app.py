@@ -6,11 +6,13 @@ from flask_cors import CORS
 from api.v1.views import app_views
 from os import getenv
 from api.v1.auth import auth
+from models import storage
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.json.sort_keys = False
 app.register_blueprint(app_views)
 CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
 
@@ -24,6 +26,11 @@ def preRequest():
         g.currentUser = auth.getUserID(userID)
     except ValueError:
         g.currentUser = None
+
+@app.teardown_appcontext
+def tearDown(self):
+    """Removes the current database session after each request"""
+    storage.close()
 
 @app.errorhandler(400)
 def badRequest(error):

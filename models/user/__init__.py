@@ -6,6 +6,7 @@ from sqlalchemy import Column, String, Enum
 from models.user.auth import UserAuth
 from sqlalchemy.orm import relationship
 from models.roles import UserRole
+from models.utils import Utils
 
 
 class User(BaseModel, Base, UserAuth):
@@ -24,9 +25,10 @@ class User(BaseModel, Base, UserAuth):
         """Returns a dictionary representation of a user instance"""
         instance = super().toDict()
         instance['role'] = instance['role'].value
+        order = ['firstname', 'lastname', 'username', 'role', 'id']
 
         if detailed:
-            return instance
+            return Utils.sortDictKeys(instance, order)
 
         heldBackAttrs = ['createdAt', 'updatedAt', 'email', 'role']
 
@@ -34,4 +36,4 @@ class User(BaseModel, Base, UserAuth):
             if attr in instance:
                 instance.pop(attr)
 
-        return instance
+        return Utils.sortDictKeys(instance, order)

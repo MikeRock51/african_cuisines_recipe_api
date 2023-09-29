@@ -10,7 +10,6 @@ class Utils:
         if request:
             data = request.get_json()
             if not data:
-                print('NAA')
                 abort(400)
 
             if requiredFields:
