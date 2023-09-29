@@ -67,6 +67,32 @@ def getUserRecipes(userID):
 
     return jsonify(Utils.successResponse(data, detailed)), 200
 
+@app_views.route('/recipes/me')
+@login_required()
+def getCurrUserRecipes():
+    """Retrives all recipes created by the current user"""
+    page = request.args.get('page', 1)
+    detailed = request.args.get('detailed', False)
+    keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
+    filterBy = request.args.get('filter_by')
+    filterColumns = {}
+
+    if filterBy:
+        try:
+            filterColumns = Utils.getFilterColumns(filterBy)
+        except ValueError as e:
+            return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
+
+    filterColumns[getattr(Recipe, 'userID')] = [g.currentUser.id]
+
+    data = storage.getPaginatedData(obj=Recipe, page=int(
+        page), keyword=keyword, filterColumns=filterColumns)
+
+    return jsonify(Utils.successResponse(data, detailed)), 200
+
 @app_views.route('/recipes/<id>')
 def recipeByID(id):
     """Returns a single recipe based on ID"""
