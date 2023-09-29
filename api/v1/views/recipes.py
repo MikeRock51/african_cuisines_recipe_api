@@ -22,14 +22,7 @@ def allRecipes():
     filterColumns = {}
 
     if filterBy:
-        columns = filterBy.split(':')
-        for column in columns:
-            key, value = column.split()
-            try:
-                filterColumns[getattr(Recipe, key)] = int(value)
-            except ValueError:
-                filterColumns[getattr(Recipe, key)] = [" ".join(
-                    re.split(r'[_-]', col)) for col in value.split(',')]
+        filterColumns = Utils.getFilterColumns(filterBy)
 
     data = storage.getPaginatedData(obj=Recipe, page=int(
         page), keyword=keyword, filterColumns=filterColumns)
@@ -43,6 +36,19 @@ def allRecipes():
         "total_page_items": data['total_items'],
         "total_pages": data['total_pages']
     })
+
+
+@app_views.route('/recipes/<userID>')
+def getUserRecipes(userID):
+    """Retrives all recipes created by a particular user based on userID"""
+    user = storage.get(User, userID)
+    if not user:
+        return jsonify({
+            "status": "error",
+            "message": "This user does not exist"
+        }), 404
+
+    return jsonify({})
 
 
 @app_views.route('/recipes/<id>')
