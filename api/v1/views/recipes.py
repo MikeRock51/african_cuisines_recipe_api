@@ -9,6 +9,7 @@ from api.v1.views import app_views
 from api.v1.utils import Utils
 from api.v1.utils.authWrapper import login_required
 import re
+import json
 
 
 @app_views.route('/recipes')
@@ -71,8 +72,9 @@ def createRecipe():
             "message": Utils.extractErrorMessage(str(e))
         }), 400
 
+    data = recipe.toDict(detailed=True)
     return jsonify({
-        "status": "error",
+        "status": "success",
         "message": "Recipe created successfully",
-        "data": recipe.toDict(detailed=True)
+        "data": data
     })
