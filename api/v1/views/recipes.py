@@ -8,8 +8,8 @@ from flask import jsonify, abort, request, g
 from api.v1.views import app_views
 from api.v1.utils import Utils
 from api.v1.utils.authWrapper import login_required
+from models.user import User
 import re
-import json
 
 
 @app_views.route('/recipes')
@@ -22,21 +22,18 @@ def allRecipes():
     filterColumns = {}
 
     if filterBy:
-        filterColumns = Utils.getFilterColumns(filterBy)
+        try:
+            filterColumns = Utils.getFilterColumns(filterBy)
+        except ValueError as e:
+            return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
 
     data = storage.getPaginatedData(obj=Recipe, page=int(
         page), keyword=keyword, filterColumns=filterColumns)
 
-    return jsonify({
-        "status": "success",
-        "message": "Sucessfully fetched recipes" if data['data'] != [] else "No match found",
-        "data": [recipe.toDict(detailed=detailed) for recipe in data['data']],
-        "page": data['page'],
-        "page_size": data['page_size'],
-        "total_page_items": data['total_items'],
-        "total_pages": data['total_pages']
-    })
-
+    return jsonify(Utils.successResponse(data, detailed)), 200
 
 @app_views.route('/recipes/<userID>')
 def getUserRecipes(userID):
@@ -48,8 +45,27 @@ def getUserRecipes(userID):
             "message": "This user does not exist"
         }), 404
 
-    return jsonify({})
+    page = request.args.get('page', 1)
+    detailed = request.args.get('detailed', False)
+    keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
+    filterBy = request.args.get('filter_by')
+    filterColumns = {}
 
+    if filterBy:
+        try:
+            filterColumns = Utils.getFilterColumns(filterBy)
+        except ValueError as e:
+            return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
+
+    filterColumns[getattr(Recipe, 'userID')] = [userID]
+
+    data = storage.getPaginatedData(obj=Recipe, page=int(
+        page), keyword=keyword, filterColumns=filterColumns)
+
+    return jsonify(Utils.successResponse(data, detailed)), 200
 
 @app_views.route('/recipes/<id>')
 def recipeByID(id):
