@@ -133,3 +133,35 @@ def createRecipe():
         "message": "Recipe created successfully",
         "data": data
     })
+
+@app_views.route('/recipes/<id>', methods=['PUT'])
+@login_required()
+def updateRecipe(id):
+    """Updates the recipe with the id"""
+    recipe = storage.get(Recipe, id)
+    if not recipe:
+        abort(404)
+
+    nonUpdatables = ['id', 'userID', 'createdAt', 'updatedAt']
+    privilegedRoles = [UserRole.admin, UserRole.moderator, UserRole.editor]
+
+    if g.currentUser.id != recipe.userID and g.currentUser.role not in privilegedRoles:
+        abort(401)
+
+    try:
+        data = Utils.getReqJSON(request)
+        for key, value in data.items():
+            if key not in nonUpdatables and hasattr(Recipe, key):
+                setattr(recipe, key, value)
+        recipe.save()
+    except (ValueError, Exception) as e:
+        return jsonify({
+            "status": "error",
+            "message": Utils.extractErrorMessage(str(e))
+        }), 400
+
+    return jsonify({
+        "status": "success",
+        "message": "Recipe updated successfully!",
+        "data": recipe.toDict(detailed=True)
+    })
