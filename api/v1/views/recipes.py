@@ -165,3 +165,22 @@ def updateRecipe(id):
         "message": "Recipe updated successfully!",
         "data": recipe.toDict(detailed=True)
     })
+
+@app_views.route('/recipes/<id>', methods=['DELETE'])
+@login_required()
+def deleteRecipe(id):
+    """Deletes the recipe with the id"""
+    recipe = storage.get(Recipe, id)
+    if not recipe:
+        abort(404)
+
+    privilegedRoles = [UserRole.admin, UserRole.moderator]
+    if g.currentUser.id != recipe.userID and g.currentUser.role not in privilegedRoles:
+        abort(401)
+
+    storage.delete(recipe)
+
+    return jsonify({
+        "status": "success",
+        "message": "Recipe deleted successfully!"
+    }), 200
