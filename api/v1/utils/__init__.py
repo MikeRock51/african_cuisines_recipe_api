@@ -7,7 +7,6 @@ import re
 from flask import abort
 import json
 from json.decoder import JSONDecodeError
-from sqlalchemy.exc import ArgumentError
 
 class Utils:
     """Utility class"""
@@ -72,16 +71,16 @@ class Utils:
                 filterColumns[getattr(Recipe, key)] = value
         except AttributeError as e:
             raise ValueError(str(e))
-        except (ValueError, JSONDecodeError, ArgumentError):
+        except (ValueError, JSONDecodeError):
             raise ValueError('Invalid filters')
 
         return filterColumns
 
-    def successResponse(data: List, detailed: bool = False) -> Dict:
+    def successResponse(data: List, detailed: bool = False, objName='') -> Dict:
         """Constructs a JSON response based on data"""
         return {
            "status": "success",
-            "message": "Successfully fetched recipes" if data['data'] != [] else "No match found",
+            "message": f"Successfully fetched {objName}" if data['data'] != [] else "No match found",
             "page": data['page'],
             "page_size": data['page_size'],
             "total_page_items": data['total_items'],

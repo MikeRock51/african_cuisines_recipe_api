@@ -5,7 +5,7 @@ from flask import jsonify, g, request, abort
 from models.user import User
 from models import storage
 from api.v1.views import app_views
-from typing import List
+from typing import Dict
 from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
 from api.v1.utils import Utils
@@ -17,9 +17,18 @@ from api.v1.auth import auth
 @login_required([UserRole.admin])
 def allUsers():
     """Retrives a list of all users from database"""
-    users: List[User] = storage.all(User).values()
-    return jsonify([user.toDict(detailed=True) for user in users]), 200
+    page = request.args.get('page', 1)
+    detailed = request.args.get('detailed', False)
 
+    try:
+        usersData: Dict[User] = storage.getPaginatedData(obj=User,
+                                                         page=int(page))
+        return jsonify(Utils.successResponse(usersData, detailed, 'users')), 200
+    except ValueError as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 400
 
 @app_views.route('/users', methods=['POST'])
 def createUser():

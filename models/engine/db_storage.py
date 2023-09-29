@@ -68,10 +68,12 @@ class DBStorage:
         """Retrieves paginated data"""
         if obj:
             offset = (page - 1) * size
+            objType = type(obj).__name__
 
             try:
-                query = self.__session.query(obj).filter(
-                    obj.name.like(f"%{keyword}%"))
+                query = self.__session.query(obj)
+                if objType == 'Recipe':
+                    query = query.filter(obj.name.like(f"%{keyword}%"))
                 if filterColumns != {}:
                     filterConditions = [(key.in_(value) if
                                          hasattr(value, '__iter__') else (

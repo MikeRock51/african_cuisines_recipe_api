@@ -7,8 +7,13 @@ from flask import jsonify
 
 @app_views.route('/status')
 def getStatus():
-    """Returns the status of the server"""
+    """
+    Returns the status of the server
+    responses:
+      200:
+        description: All systems green!
+    """
     return jsonify({
         "status": "success",
-        "message": "All systems green!!!"
+        "message": "All systems green!"
     })

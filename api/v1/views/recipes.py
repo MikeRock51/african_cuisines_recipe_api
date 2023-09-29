@@ -27,11 +27,12 @@ def allRecipes():
                 page), keyword=keyword, filterColumns=filterColumns)
         except ValueError as e:
             return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 400
+                "status": "error",
+                "message": str(e)
+            }), 400
 
-    return jsonify(Utils.successResponse(data, detailed)), 200
+    return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
+
 
 @app_views.route('/recipes/<userID>')
 def getUserRecipes(userID):
@@ -40,6 +41,7 @@ def getUserRecipes(userID):
     detailed = request.args.get('detailed', False)
     keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
     filterBy = request.args.get('filter_by')
+    filterColumns = {}
     user = storage.get(User, userID)
 
     if not user:
@@ -52,16 +54,17 @@ def getUserRecipes(userID):
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
             filterColumns[getattr(Recipe, 'userID')] = [userID]
-
-            data = storage.getPaginatedData(obj=Recipe, page=int(
-                page), keyword=keyword, filterColumns=filterColumns)
         except ValueError as e:
             return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 400
+                "status": "error",
+                "message": str(e)
+            }), 400
 
-    return jsonify(Utils.successResponse(data, detailed)), 200
+    data = storage.getPaginatedData(obj=Recipe, page=int(
+        page), keyword=keyword, filterColumns=filterColumns)
+
+    return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
+
 
 @app_views.route('/recipes/me')
 @login_required()
@@ -81,11 +84,12 @@ def getCurrUserRecipes():
                 page), keyword=keyword, filterColumns=filterColumns)
         except ValueError as e:
             return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 400
+                "status": "error",
+                "message": str(e)
+            }), 400
 
-    return jsonify(Utils.successResponse(data, detailed)), 200
+    return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
+
 
 @app_views.route('/recipes/<id>')
 def recipeByID(id):
@@ -128,6 +132,7 @@ def createRecipe():
         "data": data
     })
 
+
 @app_views.route('/recipes/<id>', methods=['PUT'])
 @login_required()
 def updateRecipe(id):
@@ -159,6 +164,7 @@ def updateRecipe(id):
         "message": "Recipe updated successfully!",
         "data": recipe.toDict(detailed=True)
     })
+
 
 @app_views.route('/recipes/<id>', methods=['DELETE'])
 @login_required()
