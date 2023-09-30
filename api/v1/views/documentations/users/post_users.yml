@@ -1,0 +1,31 @@
+Creates a new user
+---
+tags:
+  - Users
+parameters:
+  - name: User Info
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          example: rocky@email.com
+        username:
+          type: string
+          example: Rocky
+        password:
+          type: string
+          example: pass
+        firstname:
+          type: string
+          example: Amor
+        lastname:
+          type: string
+          example: Feliz
+responses:
+  201:
+    description: User created successfully
+  400:
+    description: Not a JSON | one or more required fields (username, password, email)* missing | user email already exist

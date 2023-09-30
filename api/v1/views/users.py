@@ -12,10 +12,12 @@ from api.v1.utils import Utils
 from sqlalchemy.exc import IntegrityError
 from api.v1.auth import auth
 from flasgger.utils import swag_from
+import os
 
+DOCS_DIR = os.path.abspath('api/v1/views/documentations/users')
 
 @app_views.route('/users')
-@swag_from('../views/documentation/users/all_users.yml')
+@swag_from(f'{DOCS_DIR}/all_users.yml')
 @login_required([UserRole.admin])
 def allUsers():
     """Retrieves a list of all users from database"""
@@ -33,7 +35,7 @@ def allUsers():
         }), 400
 
 @app_views.route('/users', methods=['POST'])
-@swag_from('../views/documentation/users/post_users.yml')
+@swag_from(f'{DOCS_DIR}/post_users.yml')
 def createUser():
     """Creates a news user"""
     requiredFields = ['username', 'email', 'password']
@@ -64,7 +66,7 @@ def createUser():
 
 
 @app_views.route('/users/me')
-@swag_from('../views/documentation/users/get_me.yml')
+@swag_from(f'{DOCS_DIR}/get_me.yml')
 @login_required()
 def getCurrentUser():
     """Returns the current user data"""
@@ -77,6 +79,7 @@ def getCurrentUser():
 
 
 @app_views.route('/users/<id>')
+@swag_from(f'{DOCS_DIR}/get_user.yml')
 @login_required()
 def getUserByID(id):
     """Returns a user based on user ID"""
