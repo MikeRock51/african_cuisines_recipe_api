@@ -43,6 +43,12 @@ parameters:
         calories_per_serving:
           type: integer
           example: 75
+  - name: detailed
+    in: query
+    description: Set to true to see full recipe information
+    required: false
+    schema:
+      type: bool
 responses:
   200:
     description: Recipe updated successfully

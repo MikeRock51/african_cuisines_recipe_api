@@ -1,0 +1,20 @@
+Deletes a recipe based on ID.
+---
+tags:
+  - Recipes
+security:
+  - Auth: []
+parameters:
+  - name: id
+    in: path
+    required: true
+    description: ID of the recipe you want to delete
+    schema:
+      type: string
+responses:
+  200:
+    description: Recipe deleted successfully
+  401:
+    description: Only recipe author or users with moderator access or higher can delete recipe
+  404:
+    description: No recipe with the given ID

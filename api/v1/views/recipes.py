@@ -183,6 +183,7 @@ def updateRecipe(id):
 
 
 @app_views.route('/recipes/<id>', methods=['DELETE'])
+@swag_from(f'{DOCS_DIR}/delete_recipes.yml')
 @login_required()
 def deleteRecipe(id):
     """Deletes the recipe with the id"""
