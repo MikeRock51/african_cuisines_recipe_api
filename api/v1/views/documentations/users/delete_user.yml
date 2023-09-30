@@ -1,4 +1,4 @@
-Updates a user based on ID
+Deletes a user based on ID
 ---
 tags:
   - Users
