@@ -98,8 +98,8 @@ def getUserByID(id):
         "data": user.toDict(detailed=detailed)
     })
 
-
 @app_views.route('/users/<id>', methods=['PUT'])
+@swag_from(f'{DOCS_DIR}/put_users.yml')
 @login_required()
 def updateUser(id):
     """Updates a user based on user id"""
