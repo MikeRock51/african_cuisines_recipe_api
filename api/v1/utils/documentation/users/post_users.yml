@@ -1,0 +1,16 @@
+Creates a new user
+---
+tags:
+  - Users
+parameters:
+  - name: detailed
+    in: query
+    description: Set to true to see full user information
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched users
+  401:
+    description: Only admins can view this route

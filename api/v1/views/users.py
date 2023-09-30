@@ -15,7 +15,7 @@ from flasgger.utils import swag_from
 
 
 @app_views.route('/users')
-@swag_from('documentation/user/all_users.yml')
+@swag_from('documentation/users/all_users.yml')
 @login_required([UserRole.admin])
 def allUsers():
     """Retrieves a list of all users from database"""

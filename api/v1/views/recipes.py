@@ -10,6 +10,7 @@ from api.v1.utils import Utils
 from api.v1.utils.authWrapper import login_required
 from models.user import User
 import re
+from flasgger.utils import swag_from
 
 
 @app_views.route('/recipes')

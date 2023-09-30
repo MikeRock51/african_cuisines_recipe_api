@@ -1,15 +1,10 @@
-Retrieves a list of all users.
+Retrieves a list of all recipes.
 ---
 tags:
-  - Users
-security:
-  ApiKeyAuth:
-    type: apiKey
-    in: header
-    name: auth-token
+  - Recipes
 responses:
   200:
-    description: Successfully fetched users
+    description: Successfully fetched recipes
     schema:
       type: array
       items:
@@ -25,18 +20,33 @@ responses:
           id:
             type: string
             description: The uuid of the instance
-          email:
+          name:
              type: string
              description: User's email
-          firstname:
+          cuisine:
              type: string
              description: User's first name
-          lastname:
-             type: string
+          ingredients:
+             type: json
              description: User's last name
-          username:
-             type: string
+          instructions:
+             type: json
              description: User's username
-          role:
+          serving_size:
+            type: integer
+            description: User's role
+          prep_time_minutes:
+            type: integer
+            description: User's role
+          cook_time_minutes:
+            type: integer
+            description: User's role
+          total_time_minutes:
+            type: integer
+            description: User's role
+          calories_per_serving:
+            type: integer
+            description: User's role
+          userID:
             type: string
             description: User's role

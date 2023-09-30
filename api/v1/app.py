@@ -28,10 +28,12 @@ def preRequest():
     except ValueError:
         g.currentUser = None
 
+
 @app.teardown_appcontext
 def tearDown(self):
     """Removes the current database session after each request"""
     storage.close()
+
 
 @app.errorhandler(400)
 def badRequest(error):
@@ -41,6 +43,7 @@ def badRequest(error):
         "message": "Bad request"
     }), 400
 
+
 @app.errorhandler(401)
 def unauthorized(error):
     """Handles 401 errors"""
@@ -48,6 +51,7 @@ def unauthorized(error):
         "status": "error",
         "message": "Unauthorized"
     }), 401
+
 
 @app.errorhandler(403)
 def forbidden(error):
@@ -57,6 +61,7 @@ def forbidden(error):
         "message": "Forbidden"
     }), 403
 
+
 @app.errorhandler(404)
 def notFound(error):
     """Handles 404 errors"""
@@ -65,12 +70,44 @@ def notFound(error):
         "message": "Not found!!!"
     }), 404
 
+
 app.config['SWAGGER'] = {
-        'title': 'African Cuisines Recipe Restful API',
-        'uiversion': 3
+    'title': 'African Cuisines Recipe Restful API',
+    'uiversion': 3,
+    'securityDefinitions': {
+        "Auth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "auth-token"
+        }
+    },
+    'doc_dir': './views/',
+    'security': [{'ApiKeyAuth': []}],
+    'schemes': ["http", "https"],
 }
+# swagger_config = {
+#     "swagger": "3.0",
+#     "info": {
+#         'title': 'African Cuisines Recipe Restful API',
+#         'uiversion': 3
+#     },
+#     "basePath": "/views/documentation",
+#     "schemes": ["http", "https"],
+#     "paths": {},
+#     "securityDefinitions": {
+#         "ApiKeyAuth": {
+#             "type": "apiKey",
+#             "in": "header",
+#             "name": "auth-token"
+#         }
+#     },
+#     "security": [{"ApiKeyAuth": []}],  # Default security requirement
+#     "displayOperationId": True,  # Display operation IDs in Swagger UI
+#     "displayRequestDuration": True,  # Display request duration in Swagger UI
+# }
 
 swagger = Swagger(app)
 
 if __name__ == "__main__":
-   app.run(debug=getenv("DEBUG", False), host='0.0.0.0', port=9000, threaded=True)
+    app.run(debug=getenv("DEBUG", False),
+            host='0.0.0.0', port=9000, threaded=True)
