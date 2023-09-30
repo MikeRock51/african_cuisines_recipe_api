@@ -15,7 +15,7 @@ from flasgger.utils import swag_from
 
 
 @app_views.route('/users')
-@swag_from('documentation/users/all_users.yml')
+@swag_from('../views/documentation/users/all_users.yml')
 @login_required([UserRole.admin])
 def allUsers():
     """Retrieves a list of all users from database"""
@@ -33,11 +33,12 @@ def allUsers():
         }), 400
 
 @app_views.route('/users', methods=['POST'])
+@swag_from('../views/documentation/users/post_users.yml')
 def createUser():
     """Creates a news user"""
     requiredFields = ['username', 'email', 'password']
     userFields = ['username', 'email', 'password', 'firstname', 'lastname']
-    detailed = request.args.get('detailed', False)
+    detailed = request.args.get('detailed', True)
     try:
         data = Utils.getReqJSON(request, requiredFields)
         userData = {key: value for key,
@@ -63,6 +64,7 @@ def createUser():
 
 
 @app_views.route('/users/me')
+@swag_from('../views/documentation/users/get_me.yml')
 @login_required()
 def getCurrentUser():
     """Returns the current user data"""

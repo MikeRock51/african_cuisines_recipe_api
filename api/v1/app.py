@@ -81,30 +81,13 @@ app.config['SWAGGER'] = {
             "name": "auth-token"
         }
     },
-    'doc_dir': './views/',
     'security': [{'ApiKeyAuth': []}],
     'schemes': ["http", "https"],
+    'doc_dir': '/api/v1/views/documentation',
+    "security": [{"ApiKeyAuth": []}],
+    "displayOperationId": True,
+    "displayRequestDuration": True
 }
-# swagger_config = {
-#     "swagger": "3.0",
-#     "info": {
-#         'title': 'African Cuisines Recipe Restful API',
-#         'uiversion': 3
-#     },
-#     "basePath": "/views/documentation",
-#     "schemes": ["http", "https"],
-#     "paths": {},
-#     "securityDefinitions": {
-#         "ApiKeyAuth": {
-#             "type": "apiKey",
-#             "in": "header",
-#             "name": "auth-token"
-#         }
-#     },
-#     "security": [{"ApiKeyAuth": []}],  # Default security requirement
-#     "displayOperationId": True,  # Display operation IDs in Swagger UI
-#     "displayRequestDuration": True,  # Display request duration in Swagger UI
-# }
 
 swagger = Swagger(app)
 

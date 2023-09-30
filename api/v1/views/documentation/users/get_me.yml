@@ -1,7 +1,9 @@
-Creates a new user
+Retrieves a the current user information.
 ---
 tags:
   - Users
+security:
+  - Auth: []
 parameters:
   - name: detailed
     in: query
@@ -11,6 +13,6 @@ parameters:
       type: bool
 responses:
   200:
-    description: Successfully fetched users
+    description: Successfully fetched current user
   401:
-    description: Only admins can view this route
+    description: Authorization required

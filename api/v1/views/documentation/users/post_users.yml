@@ -1,0 +1,40 @@
+Creates a new user
+---
+tags:
+  - Users
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          email:
+            type: string
+          username:
+            type: string
+          password:
+            type: string
+          firstname:
+            type: string
+          lastname:
+            type: string
+        required:
+          - email
+          - username
+          - password
+          - firstname
+          - lastname
+# parameters:
+#   - name: detailed
+#     in: query
+#     description: Set to true to see full user information
+#     required: false
+#     schema:
+#       type: boolean
+
+responses:
+  201:
+    description: User created successfully
+  400:
+    description: Not a JSON | one or more required fields missing | user email already exist
