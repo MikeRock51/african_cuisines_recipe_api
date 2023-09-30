@@ -41,7 +41,8 @@ def userLogin():
     return jsonify(response), 200
 
 
-@app_views.route('/logout')
+@app_views.route('/logout', methods=['DELETE'])
+@swag_from(f'{DOCS_DIR}/logout.yml')
 def logoutUser():
     """Destroys a user session"""
     try:
@@ -51,7 +52,7 @@ def logoutUser():
         return jsonify({
             "status": "error",
             "message": str(e)
-        })
+        }), 401
 
     return jsonify({
         "status": "success",

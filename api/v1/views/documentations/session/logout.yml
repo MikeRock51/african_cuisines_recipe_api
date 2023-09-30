@@ -1,0 +1,12 @@
+Destroys user session
+---
+tags:
+  - Sessions
+security:
+  - Auth: []
+responses:
+  200:
+    description: Logout successful
+  401:
+    description: Authorization required
+
