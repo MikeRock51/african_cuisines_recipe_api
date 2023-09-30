@@ -118,6 +118,7 @@ def recipeByID(id):
 
 
 @app_views.route('/recipes', methods=['POST'])
+@swag_from(f'{DOCS_DIR}/post_recipes.yml')
 @login_required([UserRole.admin, UserRole.moderator, UserRole.editor, UserRole.contributor])
 def createRecipe():
     """Creates a new recipe and stores it in database"""
