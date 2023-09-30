@@ -21,3 +21,5 @@ responses:
     description: Successfully fetched current user
   401:
     description: Authorization required
+  404:
+    description: User not found

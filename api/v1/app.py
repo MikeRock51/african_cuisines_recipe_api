@@ -86,7 +86,8 @@ app.config['SWAGGER'] = {
     'doc_dir': '/api/v1/views/documentation',
     "security": [{"ApiKeyAuth": []}],
     "displayOperationId": True,
-    "displayRequestDuration": True
+    "displayRequestDuration": True,
+    "hide_top_bar": True
 }
 
 swagger = Swagger(app)

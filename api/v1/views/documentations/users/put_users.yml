@@ -29,6 +29,8 @@ parameters:
           example: Feliz
 responses:
   201:
-    description: User created successfully
+    description: User updated successfully
   400:
-    description: Not a JSON | one or more required fields (username, password, email)* missing | user email already exist
+    description: Not a JSON | user email already exist
+  401:
+    description: Authorization required

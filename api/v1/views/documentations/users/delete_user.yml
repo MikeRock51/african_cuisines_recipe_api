@@ -1,0 +1,17 @@
+Updates a user based on ID
+---
+tags:
+  - Users
+security:
+  - Auth: []
+parameters:
+  - name: id
+    in: path
+    required: true
+responses:
+  201:
+    description: User deleted successfully
+  401:
+    description: Authentication required to delete user
+  404:
+    description: User not found

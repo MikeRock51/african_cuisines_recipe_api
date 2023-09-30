@@ -77,7 +77,6 @@ def getCurrentUser():
         "data": g.currentUser.toDict(detailed=detailed)
     })
 
-
 @app_views.route('/users/<id>')
 @swag_from(f'{DOCS_DIR}/get_user.yml')
 @login_required()
@@ -135,6 +134,7 @@ def updateUser(id):
 
 
 @app_views.route('/users/<id>', methods=['DELETE'])
+@swag_from(f'{DOCS_DIR}/delete_user.yml')
 @login_required()
 def deleteUser(id):
     """Deletes the user with the user id"""
@@ -153,5 +153,5 @@ def deleteUser(id):
 
     return jsonify({
         "status": "success",
-        "message": "User deleted sucessfully"
+        "message": "User deleted successfully"
     })
