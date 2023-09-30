@@ -11,12 +11,14 @@ from models.roles import UserRole
 from api.v1.utils import Utils
 from sqlalchemy.exc import IntegrityError
 from api.v1.auth import auth
+from flasgger.utils import swag_from
 
 
 @app_views.route('/users')
+@swag_from('documentation/user/all_users.yml')
 @login_required([UserRole.admin])
 def allUsers():
-    """Retrives a list of all users from database"""
+    """Retrieves a list of all users from database"""
     page = request.args.get('page', 1)
     detailed = request.args.get('detailed', False)
 

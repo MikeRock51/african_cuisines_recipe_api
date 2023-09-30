@@ -17,10 +17,6 @@ app.json.sort_keys = False
 app.register_blueprint(app_views)
 CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
 
-app.config['SWAGGER'] = {
-        'title': 'African Cuisines Recipe Restful API',
-        'uiversion': 3
-}
 
 @app.before_request
 def preRequest():
@@ -69,7 +65,12 @@ def notFound(error):
         "message": "Not found!!!"
     }), 404
 
+app.config['SWAGGER'] = {
+        'title': 'African Cuisines Recipe Restful API',
+        'uiversion': 3
+}
+
 swagger = Swagger(app)
 
 if __name__ == "__main__":
-   app.run(debug=getenv("DEBUG", False), host='0.0.0.0', port=6000, threaded=True)
+   app.run(debug=getenv("DEBUG", False), host='0.0.0.0', port=9000, threaded=True)

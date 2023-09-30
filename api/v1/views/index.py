@@ -3,6 +3,7 @@
 
 from api.v1.views import app_views
 from flask import jsonify
+from flasgger import swag_from
 
 
 @app_views.route('/status')

@@ -19,18 +19,20 @@ def allRecipes():
     detailed = request.args.get('detailed', False)
     keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
     filterBy = request.args.get('filter_by')
+    filterColumns = {}
 
     if filterBy:
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
-            data = storage.getPaginatedData(obj=Recipe, page=int(
-                page), keyword=keyword, filterColumns=filterColumns)
         except ValueError as e:
             return jsonify({
                 "status": "error",
                 "message": str(e)
             }), 400
 
+    data = storage.getPaginatedData(obj=Recipe, page=int(
+                page), keyword=keyword, filterColumns=filterColumns)
+    
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
 

@@ -2,7 +2,11 @@ Retrieves a list of all users.
 ---
 tags:
   - Users
-
+security:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: auth-token
 responses:
   200:
     description: Successfully fetched users
