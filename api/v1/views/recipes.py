@@ -41,9 +41,10 @@ def allRecipes():
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
 
-@app_views.route('/recipes/<userID>')
+@app_views.route('/recipes/users/<userID>')
+@swag_from(f'{DOCS_DIR}/get_user_recipe.yml')
 def getUserRecipes(userID):
-    """Retrives all recipes created by a particular user based on userID"""
+    """Retrieves all recipes created by a particular user based on userID"""
     page = request.args.get('page', 1)
     detailed = request.args.get('detailed', False)
     keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
@@ -60,13 +61,13 @@ def getUserRecipes(userID):
     if filterBy:
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
-            filterColumns[getattr(Recipe, 'userID')] = [userID]
         except ValueError as e:
             return jsonify({
                 "status": "error",
                 "message": str(e)
             }), 400
 
+    filterColumns[getattr(Recipe, 'userID')] = [userID]
     data = storage.getPaginatedData(obj=Recipe, page=int(
         page), keyword=keyword, filterColumns=filterColumns)
 
@@ -99,10 +100,13 @@ def getCurrUserRecipes():
 
 
 @app_views.route('/recipes/<id>')
+@swag_from(f'{DOCS_DIR}/get_recipe.yml')
 def recipeByID(id):
     """Returns a single recipe based on ID"""
     recipe = storage.get(Recipe, id)
     detailed = request.args.get('detailed', False)
+
+    print("gerrio")
 
     if not recipe:
         abort(404)

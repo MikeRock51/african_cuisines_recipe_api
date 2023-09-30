@@ -1,11 +1,18 @@
-Retrieves a paginated list of all recipes (20 per page).
+Retrieves all recipes created by a user based on the given UserID.
 ---
 tags:
   - Recipes
 parameters:
+  - name: userID
+    in: path
+    description: User ID
+    required: true
+    schema:
+      type: string
+
   - name: page
     in: query
-    description: Page to fetch (1 page <= 20 items). Fetches the first page if no value is provided.
+    description: Pageto fetch (1 page <= 20 items). Fetches the first page if no value is provided.
     required: false
     schema:
       type: integer
@@ -34,4 +41,6 @@ parameters:
       type: bool
 responses:
   200:
-    description: Successfully fetched recipes
+    description: Successfully fetched recipe
+  404:
+    description: User not found
