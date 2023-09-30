@@ -68,16 +68,17 @@ class DBStorage:
         """Retrieves paginated data"""
         if obj:
             offset = (page - 1) * size
-            objType = type(obj).__name__
+            tableName = obj.__tablename__
 
             try:
                 query = self.__session.query(obj)
-                if objType == 'Recipe':
+                if tableName == 'recipes':
                     query = query.filter(obj.name.like(f"%{keyword}%"))
                 if filterColumns != {}:
-                    filterConditions = [(key.in_(value) if
-                                         hasattr(value, '__iter__') else (
-                        key == value) for key, value in filterColumns.items())]
+                    filterConditions = [(key.in_(value) for key, value in filterColumns.items())]
+                    # filterConditions = [(key.in_(value) if
+                    #                      hasattr(value, '__iter__') else (
+                    #     key == value) for key, value in filterColumns.items())]
                     query = query.filter(and_(*filterConditions))
 
                 total_pages = ceil(len(query.all()) / size)

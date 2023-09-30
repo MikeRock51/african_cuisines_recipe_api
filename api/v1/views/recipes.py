@@ -11,9 +11,13 @@ from api.v1.utils.authWrapper import login_required
 from models.user import User
 import re
 from flasgger.utils import swag_from
+from os import path
+
+DOCS_DIR = path.abspath('api/v1/views/documentations/recipes')
 
 
 @app_views.route('/recipes')
+@swag_from(f'{DOCS_DIR}/all_recipes.yml')
 def allRecipes():
     """Returns all recipes from database"""
     page = request.args.get('page', 1)
