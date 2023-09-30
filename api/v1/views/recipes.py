@@ -149,6 +149,7 @@ def createRecipe():
 
 
 @app_views.route('/recipes/<id>', methods=['PUT'])
+@swag_from(f'{DOCS_DIR}/put_recipes.yml')
 @login_required()
 def updateRecipe(id):
     """Updates the recipe with the id"""
