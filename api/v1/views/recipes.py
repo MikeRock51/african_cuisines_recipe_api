@@ -36,8 +36,8 @@ def allRecipes():
             }), 400
 
     data = storage.getPaginatedData(obj=Recipe, page=int(
-                page), keyword=keyword, filterColumns=filterColumns)
-    
+        page), keyword=keyword, filterColumns=filterColumns)
+
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
 
@@ -75,6 +75,7 @@ def getUserRecipes(userID):
 
 
 @app_views.route('/recipes/me')
+@swag_from(f'{DOCS_DIR}/get_my_recipes.yml')
 @login_required()
 def getCurrUserRecipes():
     """Retrives all recipes created by the current user"""
@@ -82,19 +83,21 @@ def getCurrUserRecipes():
     detailed = request.args.get('detailed', False)
     keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
     filterBy = request.args.get('filter_by')
+    filterColumns = {}
 
     if filterBy:
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
-            filterColumns[getattr(Recipe, 'userID')] = [g.currentUser.id]
-
-            data = storage.getPaginatedData(obj=Recipe, page=int(
-                page), keyword=keyword, filterColumns=filterColumns)
         except ValueError as e:
             return jsonify({
                 "status": "error",
                 "message": str(e)
             }), 400
+
+    filterColumns[getattr(Recipe, 'userID')] = [g.currentUser.id]
+
+    data = storage.getPaginatedData(obj=Recipe, page=int(
+        page), keyword=keyword, filterColumns=filterColumns)
 
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
