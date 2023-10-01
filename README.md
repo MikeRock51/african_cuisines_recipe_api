@@ -15,6 +15,7 @@ A RESTFUL API that provides detailed information about African cuisines. As well
 1. Install python and project dependencies
 ```bash
 $ sudo apt install python3
+$ sudo apt install python3-pip
 $ pip3 install -r requirements.txt
 ```
 2. Install mysql
