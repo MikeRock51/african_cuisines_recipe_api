@@ -45,6 +45,8 @@ def createUser():
         data = Utils.getReqJSON(request, requiredFields)
         userData = {key: value for key,
                     value in data.items() if key in userFields}
+        username = userData['username']
+        userData['username'] = "_".join(username.split())
         user = User(**userData)
         user.save()
     except ValueError as ve:
@@ -118,6 +120,8 @@ def updateUser(id):
     try:
         for key, value in data.items():
             if key in updatables:
+                if key == 'username':
+                    value = "_".join(value.split())
                 setattr(user, key, value)
         user.save()
     except Exception as e:
