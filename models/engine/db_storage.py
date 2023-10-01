@@ -64,7 +64,7 @@ class DBStorage:
         return objects
 
     def getPaginatedData(self, obj=None, page: int = 1,
-                         size: int = 10, keyword="", filterColumns={}) -> Dict:
+                         size: int = 5, keyword="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
             offset = (page - 1) * size
