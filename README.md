@@ -16,12 +16,15 @@ A RESTFUL API that provides detailed information about African cuisines. As well
 ```bash
 $ sudo apt install python3
 $ sudo apt install python3-pip
+$ sudo apt-get install pkg-config
+$ sudo apt-get install libmysqlclient-dev
 $ pip3 install -r requirements.txt
 ```
-2. Install mysql
+2. Install mysql and setup database table
 ```bash
 $ sudo apt install mysql-server
 $ sudo systemctl start mysql.service
+$ cat setupDatabase.sql | mysql
 ```
 3. Install redis
 ```bash
