@@ -73,7 +73,9 @@ def notFound(error):
 
 app.config['SWAGGER'] = {
     'title': 'African Cuisines Recipe Restful API',
+    'description': 'A RESTFUL API that provides detailed information about African cuisines. As well as step by step instructions on how to make them.',
     'uiversion': 3,
+    'version': '1.0.0',
     'securityDefinitions': {
         "Auth": {
             "type": "apiKey",
@@ -83,7 +85,7 @@ app.config['SWAGGER'] = {
     },
     'security': [{'ApiKeyAuth': []}],
     'schemes': ["http", "https"],
-    'doc_dir': '/api/v1/views/documentation',
+    'specs_route': '/api/v1/docs',
     "security": [{"ApiKeyAuth": []}],
     "displayOperationId": True,
     "displayRequestDuration": True,
