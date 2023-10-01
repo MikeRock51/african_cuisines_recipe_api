@@ -12,7 +12,7 @@ parameters:
 
   - name: detailed
     in: query
-    description: Set to true to see full recipe information
+    description: Set to true to see full recipe information (Optional)
     required: false
     schema:
       type: bool

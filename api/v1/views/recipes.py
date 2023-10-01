@@ -22,7 +22,7 @@ def allRecipes():
     """Returns all recipes from database"""
     page = request.args.get('page', 1)
     detailed = request.args.get('detailed', False)
-    keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
+    search = " ".join(re.split(r'[-_]', request.args.get('search', '')))
     filterBy = request.args.get('filter_by')
     filterColumns = {}
 
@@ -36,7 +36,7 @@ def allRecipes():
             }), 400
 
     data = storage.getPaginatedData(obj=Recipe, page=int(
-        page), keyword=keyword, filterColumns=filterColumns)
+        page), search=search, filterColumns=filterColumns)
 
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
@@ -47,7 +47,7 @@ def getUserRecipes(userID):
     """Retrieves all recipes created by a particular user based on userID"""
     page = request.args.get('page', 1)
     detailed = request.args.get('detailed', False)
-    keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
+    search = " ".join(re.split(r'[-_]', request.args.get('search', '')))
     filterBy = request.args.get('filter_by')
     filterColumns = {}
     user = storage.get(User, userID)
@@ -69,7 +69,7 @@ def getUserRecipes(userID):
 
     filterColumns[getattr(Recipe, 'userID')] = [userID]
     data = storage.getPaginatedData(obj=Recipe, page=int(
-        page), keyword=keyword, filterColumns=filterColumns)
+        page), search=search, filterColumns=filterColumns)
 
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 
@@ -81,7 +81,7 @@ def getCurrUserRecipes():
     """Retrives all recipes created by the current user"""
     page = request.args.get('page', 1)
     detailed = request.args.get('detailed', False)
-    keyword = " ".join(re.split(r'[-_]', request.args.get('keyword', '')))
+    search = " ".join(re.split(r'[-_]', request.args.get('search', '')))
     filterBy = request.args.get('filter_by')
     filterColumns = {}
 
@@ -97,7 +97,7 @@ def getCurrUserRecipes():
     filterColumns[getattr(Recipe, 'userID')] = [g.currentUser.id]
 
     data = storage.getPaginatedData(obj=Recipe, page=int(
-        page), keyword=keyword, filterColumns=filterColumns)
+        page), search=search, filterColumns=filterColumns)
 
     return jsonify(Utils.successResponse(data, detailed, 'recipes')), 200
 

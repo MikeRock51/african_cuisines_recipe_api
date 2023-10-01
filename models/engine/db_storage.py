@@ -64,7 +64,7 @@ class DBStorage:
         return objects
 
     def getPaginatedData(self, obj=None, page: int = 1,
-                         size: int = 5, keyword="", filterColumns={}) -> Dict:
+                         size: int = 5, search="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
             offset = (page - 1) * size
@@ -73,7 +73,7 @@ class DBStorage:
             try:
                 query = self.__session.query(obj)
                 if tableName == 'recipes':
-                    query = query.filter(obj.name.like(f"%{keyword}%"))
+                    query = query.filter(obj.name.like(f"%{search}%"))
                 if filterColumns != {}:
                     filterConditions = [(key.in_(value) for key, value in filterColumns.items())]
                     # filterConditions = [(key.in_(value) if
