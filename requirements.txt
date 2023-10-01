@@ -1,0 +1,13 @@
+# Project Dependencies
+# Run 'pip install -r requirements.txt' to install
+
+sqlalchemy
+mysqlclient
+flask
+flask_cors
+gunicorn
+requests
+flasgger
+redis
+bcrypt
+python-dotenv

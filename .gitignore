@@ -1,7 +1,6 @@
 *.json
 *.swp
 *.swo
-*.txt
 .env
 *.rdb
 alembi.ini
