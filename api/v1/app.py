@@ -3,24 +3,25 @@
 
 from flask import Flask, jsonify, request, abort, g
 from flask_cors import CORS
-from api.v1.views import app_views
+from api.v1.views import app_views, graphql_blueprint
 from os import getenv
 from api.v1.auth import auth
 from models import storage
 from flasgger import Swagger
+# from flask_graphql import GraphQLView
+# from schema import Recipe, schema
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.json.sort_keys = False
-app.register_blueprint(app_views)
 CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
 
-
+app.register_blueprint(app_views)
 @app.before_request
 def preRequest():
-    """Handles prequest setups and validations"""
+    """Handles pre request setups and validations"""
     try:
         token = auth.extractAuthToken(request)
         userID = auth.getSession(token)
@@ -67,7 +68,7 @@ def notFound(error):
     """Handles 404 errors"""
     return jsonify({
         "status": "error",
-        "message": "Not found!!!"
+        "message": "Not Found"
     }), 404
 
 
@@ -91,7 +92,7 @@ app.config['SWAGGER'] = {
     "displayRequestDuration": True,
     "hide_top_bar": True
 }
-
+app.register_blueprint(graphql_blueprint)
 swagger = Swagger(app)
 
 if __name__ == "__main__":

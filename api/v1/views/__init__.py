@@ -3,7 +3,19 @@
 
 from flask import Blueprint
 from models import storage
+from flask_graphql import GraphQLView
+from schema import schema
+from flasgger import Swagger
 
+graphql_blueprint = Blueprint("graphql", __name__)
+graphql_blueprint.add_url_rule(
+    "/graphql",
+    view_func=GraphQLView.as_view(
+        "graphql",
+        schema=schema,
+        graphiql=True
+    )
+)
 
 app_views = Blueprint('app_views', __name__, url_prefix='/api/v1/')
 

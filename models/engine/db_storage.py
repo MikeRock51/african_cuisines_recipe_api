@@ -39,6 +39,7 @@ class DBStorage:
         sessionFactory = sessionmaker(bind=self.__engine,
                                       expire_on_commit=False)
         self.__session = scoped_session(sessionFactory)
+        Base.query = self.__session.query_property()
 
     def all(self, obj=None) -> Dict:
         """
