@@ -118,21 +118,13 @@ class DBStorage:
             self.__session.delete(obj)
             self.save()
 
-    def get(self, cls, id: str):
-        """
-            Retrieves the cls instance with the given id
-            or None if no instance was found
-        """
+    def get(self, obj, id: str):
+        """Retrieves the obj instance with the given id"""
         models = self.allModels()
 
-        if cls not in models.values():
-            return None
-
-        instances = self.all(cls)
-
-        for instance in instances.values():
-            if instance.id == id:
-                return instance
+        if obj in models.values():
+            instance = self.__session.query(obj).filter(obj.id == id).one()
+            return instance
 
     def getByEmail(self, email: str):
         """Retrieves the user with the given email from database"""

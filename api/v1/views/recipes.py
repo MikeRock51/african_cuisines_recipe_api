@@ -110,12 +110,14 @@ def recipeByID(id):
     recipe = storage.get(Recipe, id)
     detailed = request.args.get('detailed', False)
 
-    print("gerrio")
-
     if not recipe:
         abort(404)
 
-    return recipe.toDict(detailed=detailed)
+    return {
+        "status": "success",
+        "message": "Recipe retrieved successfully!",
+        "data": recipe.toDict(detailed=detailed)
+    }
 
 
 @app_views.route('/recipes', methods=['POST'])
