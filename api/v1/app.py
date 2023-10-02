@@ -92,7 +92,7 @@ app.config['SWAGGER'] = {
     "displayRequestDuration": True,
     "hide_top_bar": True
 }
-app.register_blueprint(graphql_blueprint)
+# app.register_blueprint(graphql_blueprint)
 swagger = Swagger(app)
 
 if __name__ == "__main__":

@@ -5,7 +5,6 @@ from flask import Blueprint
 from models import storage
 from flask_graphql import GraphQLView
 from schema import schema
-from flasgger import Swagger
 
 graphql_blueprint = Blueprint("graphql", __name__)
 graphql_blueprint.add_url_rule(
