@@ -13,7 +13,7 @@ import re
 from flasgger.utils import swag_from
 from os import path
 
-DOCS_DIR = path.abspath('api/v1/views/documentations/recipes')
+DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
 
 
 @app_views.route('/recipes')

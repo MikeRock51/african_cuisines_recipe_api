@@ -12,7 +12,7 @@ from os import getenv, path
 from flasgger.utils import swag_from
 
 load_dotenv()
-DOCS_DIR = path.abspath('api/v1/views/documentations/session')
+DOCS_DIR = path.dirname(__file__) + '/documentations/session'
 
 
 @app_views.route('/login', methods=['POST'])

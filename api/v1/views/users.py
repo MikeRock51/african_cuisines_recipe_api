@@ -12,9 +12,9 @@ from api.v1.utils import Utils
 from sqlalchemy.exc import IntegrityError
 from api.v1.auth import auth
 from flasgger.utils import swag_from
-import os
+from os import path
 
-DOCS_DIR = os.path.abspath('api/v1/views/documentations/users')
+DOCS_DIR = path.dirname(__file__) + '/documentations/users'
 
 @app_views.route('/users')
 @swag_from(f'{DOCS_DIR}/all_users.yml')

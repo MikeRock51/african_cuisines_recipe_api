@@ -11,3 +11,6 @@ flasgger
 redis
 bcrypt
 python-dotenv
+graphene-sqlalchemy
+graphene
+
