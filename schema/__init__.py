@@ -10,7 +10,7 @@ from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models.recipe import Recipe as RecipeModel
 from models.user import User as UserModel
 from models import storage
-from flask import g
+from flask import g, abort
 from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
 
@@ -37,14 +37,17 @@ class Query(graphene.ObjectType):
     user = graphene.Field(User, id=graphene.String())
     
 
+    @login_required()
     def resolve_user(self, info, id):
-        """Fetches a user based on their ID"""
-        # print(help(UserModel.query.filter))
-        print(id)
-        print(UserModel.query.filter(UserModel.id == id))
-        user = UserModel.query.filter(UserModel.id == id).first()
-        print(f"USER: !!!!! {user}")
-        return user
+        """Fetches a user based on their ID"""    
+        user = UserModel.query.filter(UserModel.id == id).one()
+        del user._password
+
+        if user.id == g.currentUser.id or g.currentUser.role == UserRole.admin:
+            return user
+        else:
+            abort(401)
+        
 
     @login_required([UserRole.admin])
     def resolve_users(self, info, sort=None):
