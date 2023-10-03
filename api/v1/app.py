@@ -3,7 +3,7 @@
 
 from flask import Flask, jsonify, request, abort, g
 from flask_cors import CORS
-from api.v1.views import app_views, graphql_blueprint
+from api.v1.views import app_views
 from os import getenv
 from api.v1.auth import auth
 from models import storage
@@ -19,8 +19,9 @@ app.json.sort_keys = False
 CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
 
 app.register_blueprint(app_views)
+
 @app.before_request
-def preRequest():
+def authenticate():
     """Handles pre request setups and validations"""
     try:
         token = auth.extractAuthToken(request)

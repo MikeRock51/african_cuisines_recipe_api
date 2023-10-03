@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """The flask app to serve the graphql"""
 
-from flask import Flask
+# import collections.abc
+# collections = collections.abc
+
+from flask import Flask, request, g
 from flask_cors import CORS
 from os import getenv
 from models import storage
 from flask_graphql import GraphQLView
 from schema import schema
+from api.v1.auth import auth
 
 
 app = Flask(__name__)
@@ -21,6 +25,17 @@ app.add_url_rule(
         graphiql=True
     )
 )
+
+@app.before_request
+def authenticate():
+    """Handles pre request setups and validations"""
+    try:
+        token = auth.extractAuthToken(request)
+        userID = auth.getSession(token)
+        g.currentUser = auth.getUserID(userID)
+    except ValueError:
+        g.currentUser = None
+
 
 @app.teardown_appcontext
 def tearDown(self):
