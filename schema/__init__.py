@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """Defines the GraphQL schema for the api"""
 
-import collections.abc
-collections.Mapping = collections.abc.Mapping
-collections.Iterable = collections.abc.Iterable
-
+from graphql_relay.connection.arrayconnection import offset_to_cursor
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from models.recipe import Recipe as RecipeModel
@@ -13,6 +10,9 @@ from models import storage
 from flask import g, abort
 from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
+import collections.abc
+collections.Mapping = collections.abc.Mapping
+collections.Iterable = collections.abc.Iterable
 
 
 class Recipe(SQLAlchemyObjectType):
@@ -22,6 +22,7 @@ class Recipe(SQLAlchemyObjectType):
         model = RecipeModel
         interfaces = (graphene.relay.Node,)
 
+
 class User(SQLAlchemyObjectType):
     """Defines a GraphQL type for a User"""
     class Meta:
@@ -29,25 +30,33 @@ class User(SQLAlchemyObjectType):
         model = UserModel
         interfaces = (graphene.relay.Node,)
 
+
 class Query(graphene.ObjectType):
     """Defines the entry point for querying data from the API"""
     node = graphene.relay.Node.Field()
-    
-    recipes = SQLAlchemyConnectionField(Recipe.connection)
+
+    recipes = SQLAlchemyConnectionField(
+        Recipe.connection, page=graphene.Int(), search=graphene.String())
     recipe = graphene.Field(Recipe, id=graphene.String())
 
     users = SQLAlchemyConnectionField(User.connection)
     user = graphene.Field(User, id=graphene.String())
-    
+
+    def resolve_recipes(self, info, sort=None, page=1, search=""):
+        """Handles recipe fetching. Paginates 5 items per page"""
+        offset = (page - 1) * 5
+        query = RecipeModel.query.filter(RecipeModel.name.like(f"%{search}%"))
+        query = query.offset(offset).limit(5)
+        return query.all()
 
     def resolve_recipe(self, info, id):
-        """Fetches a recipe based on ID"""    
+        """Fetches a recipe based on ID"""
         recipe = RecipeModel.query.filter(RecipeModel.id == id).one()
         return recipe
 
     @login_required()
     def resolve_user(self, info, id):
-        """Fetches a user based on ID"""    
+        """Fetches a user based on ID"""
         user = UserModel.query.filter(UserModel.id == id).one()
         del user._password
 
@@ -60,6 +69,7 @@ class Query(graphene.ObjectType):
     def resolve_users(self, info, sort=None):
         """Handles queries for users"""
         return self
+
 
 class CreateUser(graphene.Mutation):
     """Handles user creation"""
@@ -87,9 +97,11 @@ class CreateUser(graphene.Mutation):
         storage.save()
 
         return CreateUser(user=user)
-    
+
+
 class Mutations(graphene.ObjectType):
     """Handles all POST/PUT actions"""
     createUser = CreateUser.Field()
+
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
