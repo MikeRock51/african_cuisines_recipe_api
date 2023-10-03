@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """The flask app to serve the graphql"""
 
-# import collections.abc
-# collections = collections.abc
-
 from flask import Flask, request, g
 from flask_cors import CORS
 from os import getenv

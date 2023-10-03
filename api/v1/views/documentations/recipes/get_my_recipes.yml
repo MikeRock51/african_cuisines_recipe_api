@@ -7,7 +7,7 @@ security:
 parameters:
   - name: page
     in: query
-    description: (Optional) Page to fetch (1 page <= 5 items). Fetches the first page if no value is provided.
+    description: (Optional) Page to fetch (1 page <= 10 items). Fetches the first page if no value is provided.
     required: false
     schema:
       type: integer

@@ -43,11 +43,14 @@ class Query(graphene.ObjectType):
     user = graphene.Field(User, id=graphene.String())
 
     def resolve_recipes(self, info, sort=None, page=1, search=""):
-        """Handles recipe fetching. Paginates 5 items per page"""
-        offset = (page - 1) * 5
+        """Handles recipe fetching and paginating recipes"""
+        limit = 10
+        offset = (page - 1) * limit
         query = RecipeModel.query.filter(RecipeModel.name.like(f"%{search}%"))
-        query = query.offset(offset).limit(5)
-        return query.all()
+        query = query.offset(offset).limit(limit)
+        recipes = query.all()
+
+        return recipes
 
     def resolve_recipe(self, info, id):
         """Fetches a recipe based on ID"""
