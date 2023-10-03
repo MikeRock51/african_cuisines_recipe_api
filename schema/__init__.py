@@ -34,9 +34,19 @@ class Query(graphene.ObjectType):
     node = graphene.relay.Node.Field()
     recipes = SQLAlchemyConnectionField(Recipe.connection)
     users = SQLAlchemyConnectionField(User.connection)
-    user = graphene.Field(User)
+    user = graphene.Field(User, id=graphene.String())
+    
 
-    @login_required()
+    def resolve_user(self, info, id):
+        """Fetches a user based on their ID"""
+        # print(help(UserModel.query.filter))
+        print(id)
+        print(UserModel.query.filter(UserModel.id == id))
+        user = UserModel.query.filter(UserModel.id == id).first()
+        print(f"USER: !!!!! {user}")
+        return user
+
+    @login_required([UserRole.admin])
     def resolve_users(self, info, sort=None):
         """Handles queries for users"""
         return self
