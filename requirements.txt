@@ -1,16 +1,24 @@
-# Project Dependencies
-# Run 'pip install -r requirements.txt' to install
+# -----------------------------------------------
+# Required application dependencies             |
+# Run pip install -r requirements.txt           |
+# -----------------------------------------------
 
-sqlalchemy
-mysqlclient
-flask
-flask_cors
-gunicorn
-requests
-flasgger
-redis
-bcrypt
-python-dotenv
-graphene-sqlalchemy
-graphene
-
+aniso8601==9.0.1
+blinker==1.6.2
+click==8.1.7
+Flask==3.0.0
+graphene==3.3
+graphene-sqlalchemy==2.1.0
+graphql-core==3.2.3
+graphql-relay==3.2.0
+greenlet==2.0.2
+itsdangerous==2.1.2
+Jinja2==3.1.2
+MarkupSafe==2.1.3
+singledispatch==4.1.0
+six==1.16.0
+SQLAlchemy==2.0.21
+typing_extensions==4.8.0
+Werkzeug==3.0.0
+flask_graphql==2.0.1
+graphql-server-core==1.2.0
