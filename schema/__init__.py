@@ -5,6 +5,7 @@ import graphene
 from graphene_sqlalchemy import SQLAlchemyConnectionField
 from models.recipe import Recipe as RecipeModel
 from models.user import User as UserModel
+from models import storage
 from schema.models import User, Recipe
 from flask import g, abort
 from api.v1.utils.authWrapper import login_required
@@ -13,6 +14,7 @@ from schema.mutations.users.createUser import CreateUser
 from schema.mutations.users.updateUser import UpdateUser
 from schema.mutations.users.deleteUser import DeleteUser
 from schema.mutations.recipes.createRecipe import CreateRecipe
+from schema.mutations.recipes.updateRecipe import UpdateRecipe
 
 
 class Query(graphene.ObjectType):
@@ -28,17 +30,22 @@ class Query(graphene.ObjectType):
 
     def resolve_recipes(self, info, sort=None, page=1, search=""):
         """Handles recipe fetching and paginating recipes"""
-        limit = 10
-        offset = (page - 1) * limit
-        query = RecipeModel.query.filter(RecipeModel.name.like(f"%{search}%"))
-        query = query.offset(offset).limit(limit)
-        recipes = query.all()
+        recipes = storage.getPaginatedData(obj=RecipeModel, search=search, page=page)
+        recipes = recipes['data']
+        for recipe in recipes:
+            if recipe.author._password:
+                del recipe.author._password
 
         return recipes
 
     def resolve_recipe(self, info, id):
         """Fetches a recipe based on ID"""
-        recipe = RecipeModel.query.filter(RecipeModel.id == id).one()
+        # recipe = RecipeModel.query.filter(RecipeModel.id == id).one()
+        recipe = storage.get(RecipeModel, id)
+        if not recipe:
+            abort(404, description="Recipe not found!")
+
+        del recipe.author._password
         return recipe
 
     @login_required()
@@ -63,6 +70,7 @@ class Mutations(graphene.ObjectType):
     updateUser = UpdateUser.Field()
     deleteUser = DeleteUser.Field()
     createRecipe = CreateRecipe.Field()
+    updateRecipe = UpdateRecipe.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutations)

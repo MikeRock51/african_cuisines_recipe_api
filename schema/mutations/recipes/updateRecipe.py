@@ -2,43 +2,43 @@
 """Handles updating recipes"""
 
 import graphene
-from models.user import User as UserModel
+from models.recipe import Recipe as RecipeModel
 from models import storage
 from flask import g, abort
-from schema.models import User
+from schema.models import Recipe
 from models.roles import UserRole
 from api.v1.utils.authWrapper import login_required
-from schema.utils import UserData
+from schema.utils import RecipeData
 from sqlalchemy.exc import NoResultFound
 
 
-class UpdateUser(graphene.Mutation):
+class UpdateRecipe(graphene.Mutation):
     """Handles user update"""
     class Arguments:
         """Defines arguments for updating a user"""
         id = graphene.String(required=True)
-        updateData = UserData(required=True)
+        updateData = RecipeData(required=True)
 
-    user = graphene.Field(lambda: User)
+    recipe = graphene.Field(lambda: Recipe)
 
     @login_required()
     def mutate(root, info, id, updateData):
-        """Creates a new user in the database"""
-        if g.currentUser.id != id and g.currentUser.role != UserRole.admin:
-            abort(401, description="Unauthorized access!")
-        
+        """Updates a recipe based on ID"""
         nonUpdatables = ['id', 'userID', 'createdAt', 'updatedAt']
-        
+
+        if g.currentUser.id != id and g.currentUser.role not in [
+                UserRole.admin, UserRole.moderator, UserRole.editor]:
+            abort(401, description="Unauthorized access!")
+
         try:
-            user = storage.get(UserModel, id)
+            recipe = storage.get(RecipeModel, id)
         except NoResultFound:
-            abort(404, description="No user found!")
+            abort(404, description="No recipe found!")
 
         for key, value in updateData.items():
-            if key == 'username':
-                value = "_".join(updateData["username"].split())
-            setattr(user, key, value)        
+            if key not in nonUpdatables:
+                setattr(recipe, key, value)
 
-        user.save()
+        recipe.save()
 
-        return UpdateUser(user=user)
+        return UpdateRecipe(recipe=recipe)
