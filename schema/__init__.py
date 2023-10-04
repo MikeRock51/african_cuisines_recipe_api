@@ -9,7 +9,8 @@ from schema.models import User, Recipe
 from flask import g, abort
 from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
-from schema.mutations.createUser import CreateUser
+from schema.mutations.users.createUser import CreateUser
+from schema.mutations.users.updateUser import UpdateUser
 from schema.mutations.createRecipe import CreateRecipe
 
 
@@ -58,6 +59,7 @@ class Query(graphene.ObjectType):
 class Mutations(graphene.ObjectType):
     """Handles all POST/PUT actions"""
     createUser = CreateUser.Field()
+    updateUser = UpdateUser.Field()
     createRecipe = CreateRecipe.Field()
 
 

@@ -1,0 +1,14 @@
+#!/bin/env bash
+# Starts the full API
+
+sudo service mysql start
+sudo service mysql status
+sudo redis-server /etc/redis/redis.conf
+redis-cli PING
+
+source .venv/bin/activate
+
+python3 -m api.v1.app &
+python3 -m api.v1.graphql.app &
+
+tail -f dev/null

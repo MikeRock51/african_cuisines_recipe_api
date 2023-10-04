@@ -5,7 +5,6 @@ import graphene
 from models.user import User as UserModel
 from models import storage
 from flask import g
-from models.roles import UserRole
 from schema.models import User
 
 
