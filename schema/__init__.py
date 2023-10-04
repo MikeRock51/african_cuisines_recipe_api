@@ -11,7 +11,7 @@ from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
 from schema.mutations.users.createUser import CreateUser
 from schema.mutations.users.updateUser import UpdateUser
-from schema.mutations.createRecipe import CreateRecipe
+from schema.mutations.recipes.createRecipe import CreateRecipe
 
 
 class Query(graphene.ObjectType):

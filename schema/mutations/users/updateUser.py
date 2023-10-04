@@ -31,6 +31,8 @@ class UpdateUser(graphene.Mutation):
             abort(404)
 
         for key, value in updateData.items():
+            if key == 'username':
+                value = "_".join(updateData["username"].split())
             setattr(user, key, value)        
 
         user.save()
