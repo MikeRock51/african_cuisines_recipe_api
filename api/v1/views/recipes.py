@@ -158,13 +158,13 @@ def updateRecipe(id):
     """Updates the recipe with the id"""
     recipe = storage.get(Recipe, id)
     if not recipe:
-        abort(404)
+        abort(404, description="Recipe not found!")
 
     nonUpdatables = ['id', 'userID', 'createdAt', 'updatedAt']
     privilegedRoles = [UserRole.admin, UserRole.moderator, UserRole.editor]
 
     if g.currentUser.id != recipe.userID and g.currentUser.role not in privilegedRoles:
-        abort(401)
+        abort(401, "Unauthorized access!")
 
     try:
         data = Utils.getReqJSON(request)
