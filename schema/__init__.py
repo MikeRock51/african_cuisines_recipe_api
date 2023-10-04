@@ -101,10 +101,49 @@ class CreateUser(graphene.Mutation):
 
         return CreateUser(user=user)
 
+class CreateRecipe(graphene.Mutation):
+    """Handles recipe creation"""
+    class Arguments:
+        """Defines arguments for creating a recipe"""
+        name = graphene.String(required=True)
+        cuisine = graphene.String(required=False)
+        prep_time_minutes = graphene.Int(required=True)
+        cook_time_minutes = graphene.Int(required=True)
+        userID = graphene.String(required=True)
+        serving_size = graphene.Int(required=False)
+        calories_per_serving = graphene.Int(required=False)
+        ingredients = graphene.List(graphene.String)
+        instructions = graphene.List(graphene.String)
+
+    recipe = graphene.Field(lambda: Recipe)
+
+    def mutate(root, info, name, cuisine, prep_time_minutes,
+        cook_time_minutes, ingredients, instructions, userID, serving_size=None,
+        calories_per_serving=None):
+        """Creates a new recipe in the database"""
+
+        recipe = RecipeModel(
+            name = name,
+            cuisine = cuisine,
+            prep_time_minutes = prep_time_minutes,
+            cook_time_minutes = cook_time_minutes,
+            userID = userID,
+            serving_size = serving_size,
+            calories_per_serving = calories_per_serving,
+            ingredients = ingredients,
+            instructions = instructions
+        )
+
+        storage.new(recipe)
+        storage.save()
+
+        return CreateRecipe(recipe=recipe)
+
 
 class Mutations(graphene.ObjectType):
     """Handles all POST/PUT actions"""
     createUser = CreateUser.Field()
+    createRecipe = CreateRecipe.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
