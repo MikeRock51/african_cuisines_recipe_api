@@ -15,6 +15,7 @@ from schema.mutations.users.updateUser import UpdateUser
 from schema.mutations.users.deleteUser import DeleteUser
 from schema.mutations.recipes.createRecipe import CreateRecipe
 from schema.mutations.recipes.updateRecipe import UpdateRecipe
+from schema.mutations.recipes.deleteRecipe import DeleteRecipe
 
 
 class Query(graphene.ObjectType):
@@ -71,6 +72,7 @@ class Mutations(graphene.ObjectType):
     deleteUser = DeleteUser.Field()
     createRecipe = CreateRecipe.Field()
     updateRecipe = UpdateRecipe.Field()
+    deleteRecipe = DeleteRecipe.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutations)
