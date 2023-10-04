@@ -6,17 +6,14 @@ from models.user import User as UserModel
 from models import storage
 from flask import g
 from schema.models import User
+from schema.utils import UserData
 
 
 class CreateUser(graphene.Mutation):
     """Handles user creation"""
     class Arguments:
         """Defines arguments for creating a user"""
-        username = graphene.String(required=True)
-        email = graphene.String(required=True)
-        password = graphene.String(required=True)
-        firstname = graphene.String(required=False)
-        lastname = graphene.String(required=False)
+        userData = UserData(required=True)
 
     user = graphene.Field(lambda: User)
 

@@ -145,7 +145,7 @@ def deleteUser(id):
     user = storage.get(User, id)
     if not user:
         abort(404)
-    if user is not g.currentUser:
+    if user is not g.currentUser and g.currentUser.role != UserRole.admin:
         abort(401)
     try:
         user.delete()
