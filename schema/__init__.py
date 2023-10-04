@@ -11,6 +11,7 @@ from api.v1.utils.authWrapper import login_required
 from models.roles import UserRole
 from schema.mutations.users.createUser import CreateUser
 from schema.mutations.users.updateUser import UpdateUser
+from schema.mutations.users.deleteUser import DeleteUser
 from schema.mutations.recipes.createRecipe import CreateRecipe
 
 
@@ -49,7 +50,7 @@ class Query(graphene.ObjectType):
         if user.id == g.currentUser.id or g.currentUser.role == UserRole.admin:
             return user
         else:
-            abort(401)
+            abort(401, description="Unauthorized access!")
 
     @login_required([UserRole.admin])
     def resolve_users(self, info, sort=None):
@@ -60,6 +61,7 @@ class Mutations(graphene.ObjectType):
     """Handles all POST/PUT actions"""
     createUser = CreateUser.Field()
     updateUser = UpdateUser.Field()
+    deleteUser = DeleteUser.Field()
     createRecipe = CreateRecipe.Field()
 
 

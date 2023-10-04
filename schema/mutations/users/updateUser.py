@@ -9,6 +9,7 @@ from schema.models import User
 from models.roles import UserRole
 from api.v1.utils.authWrapper import login_required
 from schema.utils import UserData
+from sqlalchemy.exc import NoResultFound
 
 
 class UpdateUser(graphene.Mutation):
@@ -24,11 +25,12 @@ class UpdateUser(graphene.Mutation):
     def mutate(root, info, id, updateData):
         """Creates a new user in the database"""
         if g.currentUser.id != id and g.currentUser.role != UserRole.admin:
-            abort(401)
+            abort(401, description="Unauthorized access!")
         
-        user = storage.get(UserModel, id)
-        if not user:
-            abort(404)
+        try:
+            user = storage.get(UserModel, id)
+        except NoResultFound:
+            abort(404, description="No user found!")
 
         for key, value in updateData.items():
             if key == 'username':
