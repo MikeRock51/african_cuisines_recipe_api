@@ -4,7 +4,7 @@
 import graphene
 from models.user import User as UserModel
 from models import storage
-from flask import g
+from flask import g, abort
 from schema.models import User
 from schema.utils import UserData
 
@@ -17,17 +17,18 @@ class CreateUser(graphene.Mutation):
 
     user = graphene.Field(lambda: User)
 
-    def mutate(root, info, username, email, password, firstname="", lastname=""):
+    def mutate(root, info, userData):
         """Creates a new user in the database"""
-        user = UserModel(
-            username=username,
-            email=email,
-            _password=password,
-            firstname=firstname,
-            lastname=lastname
-        )
+        requiredFields = ["username", "email", "password"]
 
-        storage.new(user)
-        storage.save()
+        for attr in requiredFields:
+            if attr not in userData:
+                error = f"Please include {attr} in your request"
+                abort(400, description=error)
+
+        username = userData['username']
+        userData['username'] = "_".join(username.split())
+        user = UserModel(**userData)
+        user.save()
 
         return CreateUser(user=user)
