@@ -13,18 +13,19 @@ load_dotenv()
 
 SQL_ROOT_PWD = getenv("SQL_ROOT_PWD")
 PSN = getenv("PSN") 
-APP_FILES = json.dumps(getenv('APP_FILES'))
+APP_FILES = json.loads(getenv('APP_FILES'))
 
 def set_sql_pwd():
     """Sets the root password of MySQL"""
     run(f'echo "mysql-server mysql-server/root_password password {SQL_ROOT_PWD}" | debconf-set-selections')
     run(f'echo "mysql-server mysql-server/root_password_again password {SQL_ROOT_PWD}" | debconf-set-selections')
 
-def do_pack():
+def packFiles():
     """Packs the application file in a .tgz archive"""
-    local("mkdir -p versions")
-
     dateString = datetime.utcnow().strftime("%Y:%m:%d:%H:%M:%S")
-    path = f"versions/{PSN}.tgz"
+    archivePath = f"versions/{PSN}_{dateString}.tgz"
 
-    status = local(f"tar -cvzf {path} {' '.join(APP_FILES)}")
+    local("mkdir -p versions")
+    status = local(f"tar -cvzf {archivePath} {' '.join(APP_FILES)}")
+
+    return archivePath
