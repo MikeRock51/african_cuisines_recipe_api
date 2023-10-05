@@ -28,7 +28,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
             + self.prep_time_minutes
 
     def toDict(self, detailed=False):
-        """Extexsion of basemodel.toDict for recipe data"""
+        """Extension of basemodel.toDict for recipe data"""
         instance = super().toDict()
         order = ['name', 'cuisine', 'id', 'prep_time_minutes',
                  'cook_time_minutes', 'total_time_minutes',
