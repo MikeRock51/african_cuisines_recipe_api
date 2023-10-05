@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/home/ubuntu/acr-api/.venv/bin/activate
-ExecStartPre=/home/ubuntu/acr-api/.venv/bin/gunicorn --bind 0.0.0.0:9000 --workers 3 api.v1.app:app
+WorkingDirectory=/home/ubuntu/acr-api
+ExecStartPre=/home/ubuntu/acr-api/.venv/bin/activate
 ExecStart=//home/ubuntu/acr-api/.venv/bin/gunicorn --bind 0.0.0.0:9000 --workers 3 api.v1.app:app
 ExecStartPost=/home/ubuntu/acr-api/.venv/bin/gunicorn --bind 0.0.0.0:9001 --workers 3 api.v1.graphql.app:app
 StandardOutput=file:/tmp/acr-access.log

@@ -6,11 +6,15 @@ from models.recipe import Recipe
 from models.roles import UserRole
 from sqlalchemy.exc import IntegrityError
 import json
+from dotenv import load_dotenv
+from os import getenv
+
+load_dotenv()
 
 mike = {'firstname': 'Michael', 'lastname': 'Adebayo',
-        'username': 'Mike Rock', 'email': 'mikerock@email.com',
+        'username': 'Mike Rock', 'email': getenv("ADMIN_EMAIL"),
         'phone': '08107094647', 'address': 'Abuja',
-        'password': 'pass', "role": UserRole.admin}
+        'password': getenv("ADMIN_PWD"), "role": UserRole.admin}
 
 # Create user if it doesn't exist
 try:
