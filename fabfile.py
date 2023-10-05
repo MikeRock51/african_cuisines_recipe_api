@@ -55,19 +55,23 @@ def deployServiceFile():
 def startUnitService():
     """Starts the apps unit service"""
     sudo(f"systemctl start {PSN}.service")
-    sudo(f"systemctl startus {PSN}.service")
+    # sudo(f"systemctl status {PSN}.service")
 
 
 def stopUnitService():
-    """Stopsthe apps unit service"""
+    """Stops the apps unit service"""
     sudo(f"systemctl stop {PSN}.service")
+    # sudo(f"systemctl status {PSN}.service")
+
+def getStatus():
+    """Gets the status of the apps unit service"""
     sudo(f"systemctl status {PSN}.service")
 
 
 def restartUnitService():
     """Restarts the apps unit service"""
     sudo(f"systemctl restart {PSN}.service")
-    sudo(f"systemctl status {PSN}.service")
+    # sudo(f"systemctl status {PSN}.service")
 
 
 def deployNginxConfig():
@@ -121,11 +125,11 @@ def deployFiles():
 
 def fullDeploy():
     """Performs a full deploy to a new server"""
-    # deployFiles()
-    # installPackages()
-    # configureSQL()
+    deployFiles()
+    installPackages()
+    configureSQL()
     installRequirements()
     setupDB()
-    # deployNginxConfig()
+    deployNginxConfig()
     deployServiceFile()
     startUnitService()

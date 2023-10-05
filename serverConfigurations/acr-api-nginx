@@ -1,6 +1,6 @@
 server {
 
-    server_name afr-api.mikerock.tech;
+    server_name acr-api.mikerock.tech;
 
     location / {
         proxy_pass http://localhost:9000;
