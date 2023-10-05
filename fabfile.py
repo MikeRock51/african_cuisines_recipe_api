@@ -38,6 +38,27 @@ def installPackages():
     sudo("apt install -y nginx")
     sudo("apt install redis-server")
     sudo("sed -i /'s/supervised no'/'supervised systemd/' /etc/redis/redis.conf")
+    sudo("systemctl restart redis.service")
+
+    print("Packages installed successfully!")
+
+def deployServiceFile():
+    """Deploys the systemd service unit for the app"""
+    put(f"server_configurations/{PSN}.service", use_sudo=True)
+    sudo("systemctl daemon-reload")
+    sudo(f"systemctl enable {PSN}.service")
+
+def startUnitService():
+    """Starts the apps unit service"""
+    sudo(f"systemctl enable {PSN}.service")
+
+def stopUnitService():
+    """Stopsthe apps unit service"""
+    sudo(f"systemctl stop {PSN}.service")
+
+def restartUnitService():
+    """Restarts the apps unit service"""
+    sudo(f"systemctl restart {PSN}.service")
 
 def packFiles():
     """Packs the application file in a .tgz archive"""

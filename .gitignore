@@ -3,6 +3,4 @@
 *.swo
 .env
 *.rdb
-alembi.ini
 .venv
-*-nginx
