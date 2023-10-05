@@ -33,7 +33,6 @@ def installPackages():
     sudo("apt install -y python3")
     sudo("apt install -y python3-pip")
     sudo("apt-get install -y pkg-config")
-    run("pip3 install gunicorn")
     sudo("apt-get install -y libmysqlclient-dev")
     sudo("apt install -y nginx")
     sudo("apt install redis-server")
@@ -79,6 +78,9 @@ def shipFiles(archivePath):
     run(f"mkdir -p {PSN}")
     archiveName = archivePath.split('/')[1]
     run(f"tar -xvzf {remoteVersionsPath}/{archiveName} -C {PSN}")
+
+def installRequirements():
+    """Install"""
 
 def deployFiles():
     archivePath = packFiles()
