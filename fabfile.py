@@ -78,6 +78,7 @@ def deployNginxConfig():
     """Deploys Nginx configuration and restarts Nginx"""
     put(f'serverConfigurations/{PSN}-nginx',
         '/etc/nginx/sites-available/', use_sudo=True)
+    sudo(f"ln -s /etc/nginx/sites-available/{PSN}-nginx /etc/nginx/sites-enabled/")
     sudo('systemctl restart nginx')
     sudo('systemctl status nginx')
 
