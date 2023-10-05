@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+.venv/bin/gunicorn --bind 0.0.0.0:9000 --workers 3 api.v1.app:app &
+.venv/bin/gunicorn --bind 0.0.0.0:9001 --workers 3 api.v1.graphql.app:app &
+
+wait

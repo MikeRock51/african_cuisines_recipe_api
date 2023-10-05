@@ -35,25 +35,27 @@ def installPackages():
     sudo("apt update")
     sudo("apt install -y python3")
     sudo("apt install -y python3-pip")
+    sudo("apt install -y python3-venv")
     sudo("apt-get install -y pkg-config")
     sudo("apt-get install -y libmysqlclient-dev")
     sudo("apt install -y nginx")
-    sudo("apt install redis-server")
-    sudo("sed -i /'s/supervised no'/'supervised systemd/' /etc/redis/redis.conf")
+    sudo("apt install -y redis-server")
+    sudo("sed -i 's/supervised no/supervised systemd/' /etc/redis/redis.conf")
     sudo("systemctl restart redis.service")
 
 
 def deployServiceFile():
     """Deploys the systemd service unit for the app"""
-    put(f"serverConfigurations/{PSN}.service", use_sudo=True)
+    put(f"serverConfigurations/{PSN}.service",
+        "/etc/systemd/system/", use_sudo=True)
     sudo("systemctl daemon-reload")
     sudo(f"systemctl enable {PSN}.service")
 
 
 def startUnitService():
     """Starts the apps unit service"""
-    sudo(f"systemctl enable {PSN}.service")
-    sudo(f"systemctl status {PSN}.service")
+    sudo(f"systemctl start {PSN}.service")
+    sudo(f"systemctl startus {PSN}.service")
 
 
 def stopUnitService():
@@ -70,7 +72,7 @@ def restartUnitService():
 
 def deployNginxConfig():
     """Deploys Nginx configuration and restarts Nginx"""
-    put('serverConfigurations/{PSN}-nginx',
+    put(f'serverConfigurations/{PSN}-nginx',
         '/etc/nginx/sites-available/', use_sudo=True)
     sudo('systemctl restart nginx')
     sudo('systemctl status nginx')
@@ -102,14 +104,13 @@ def installRequirements():
     """Install project dependencies"""
     with cd(PSN):
         run("python3 -m venv .venv")
-        run("source .venv/bin/activate")
-        run("pip3 install -r requirements.txt")
+        run("source .venv/bin/activate && pip3 install -r requirements.txt")
 
 
 def setupDB():
-    """(Re)Creates and prepopulates datatbase with data"""
-    with cd({PSN}):
-        run(f"cat setupDatabase.sql | mysql -uroot -p {SQL_ROOT_PWD}")
+    """(Re)Creates and prepopulates database with data"""
+    with cd(PSN):
+        run(f"cat setupDatabase.sql | mysql -uroot -p{SQL_ROOT_PWD}")
         run("python3 createRecipeDataDB.py")
 
 
@@ -120,11 +121,11 @@ def deployFiles():
 
 def fullDeploy():
     """Performs a full deploy to a new server"""
-    deployFiles()
-    installPackages()
-    configureSQL()
+    # deployFiles()
+    # installPackages()
+    # configureSQL()
     installRequirements()
     setupDB()
-    deployNginxConfig()
+    # deployNginxConfig()
     deployServiceFile()
     startUnitService()
