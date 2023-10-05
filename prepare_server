@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Prepares a server for deployment
+
+sudo apt update
+sudo apt install -y python3
+sudo apt install -y python3-pip
+sudo apt-get install -y pkg-config
+sudo apt-get install -y libmysqlclient-dev
+sudo apt install -y nginx
+pip3 install gunicorn
+sudo apt install redis-server
+sudo apt install mysql-server
+echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
+echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections

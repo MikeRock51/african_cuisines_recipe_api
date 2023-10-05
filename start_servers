@@ -1,7 +1,7 @@
 #!/bin/env bash
 # Starts the RESTFUL API Server and the graphQL server
 
-python3 -m api.v1.app &
-python3 -m api.v1.graphql.app &
+DEBUG=true python3 -m api.v1.app &
+DEBUG=true python3 -m api.v1.graphql.app &
 
 tail -f dev/null
