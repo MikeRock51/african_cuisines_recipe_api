@@ -5,7 +5,7 @@
 
 from fabric.api import *
 from dotenv import load_dotenv
-from os import getenv
+from os import getenv, path
 from datetime import datetime
 import json
 
@@ -15,17 +15,50 @@ SQL_ROOT_PWD = getenv("SQL_ROOT_PWD")
 PSN = getenv("PSN") 
 APP_FILES = json.loads(getenv('APP_FILES'))
 
-def set_sql_pwd():
-    """Sets the root password of MySQL"""
-    run(f'echo "mysql-server mysql-server/root_password password {SQL_ROOT_PWD}" | debconf-set-selections')
-    run(f'echo "mysql-server mysql-server/root_password_again password {SQL_ROOT_PWD}" | debconf-set-selections')
+def configureSQL():
+    """Installs and sets the root password of MySQL"""
+    run("sudo apt install -y mysql-server")
+    run("sudo apt update")
+    sudo("service mysql stop")
+    sudo("mysqld_safe --skip-grant-tables &")
+    run("sleep 5")
+    sudo("service mysql start")
+    sudo(f"mysql -u root -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '{SQL_ROOT_PWD}';\"")
+    sudo("service mysql start")
+    print("MySQL root password changed successfully.")
+
+def installPackages():
+    """Installs project required packages on the server"""
+    sudo("apt update")
+    sudo("apt install -y python3")
+    sudo("apt install -y python3-pip")
+    sudo("apt-get install -y pkg-config")
+    run("pip3 install gunicorn")
+    sudo("apt-get install -y libmysqlclient-dev")
+    sudo("apt install -y nginx")
+    sudo("apt install redis-server")
+    sudo("sed -i /'s/supervised no'/'supervised systemd/' /etc/redis/redis.conf")
 
 def packFiles():
     """Packs the application file in a .tgz archive"""
-    dateString = datetime.utcnow().strftime("%Y:%m:%d:%H:%M:%S")
+    dateString = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S")
     archivePath = f"versions/{PSN}_{dateString}.tgz"
 
     local("mkdir -p versions")
     status = local(f"tar -cvzf {archivePath} {' '.join(APP_FILES)}")
-
     return archivePath
+
+def shipFiles(archivePath):
+    """Unpacks the contents of an archive to the server(s)"""
+    if not path.exists(archivePath):
+        return False
+    remoteVersionsPath = f"/tmp/{PSN}/versions"
+    run(f"mkdir -p {remoteVersionsPath}")
+    put(archivePath, remoteVersionsPath)
+    run(f"mkdir -p {PSN}")
+    archiveName = archivePath.split('/')[1]
+    run(f"tar -xvzf {remoteVersionsPath}/{archiveName} -C {PSN}")
+
+def deployFiles():
+    archivePath = packFiles()
+    shipFiles(archivePath)

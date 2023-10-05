@@ -10,5 +10,6 @@ sudo apt install -y nginx
 pip3 install gunicorn
 sudo apt install redis-server
 sudo apt install mysql-server
-echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
-echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections
+sudo systemctl start mysql.service
+# echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
+# echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections
