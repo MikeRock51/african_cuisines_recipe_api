@@ -77,7 +77,7 @@ app.config['SWAGGER'] = {
         }
     },
     'security': [{'ApiKeyAuth': []}],
-    'schemes': ["http", "https"],
+    'schemes': ["https"],
     'specs_route': '/api/v1/docs',
     "security": [{"ApiKeyAuth": []}],
     "displayOperationId": True,
