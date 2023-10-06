@@ -124,7 +124,7 @@ class DBStorage:
         models = self.allModels()
 
         if obj in models.values():
-            instance = self.__session.query(obj).filter(obj.id == id).one()
+            instance = self.__session.query(obj).filter(obj.id == id).first()
             return instance
 
     def getByEmail(self, email: str):

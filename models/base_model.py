@@ -50,7 +50,7 @@ class BaseModel:
         instance['createdAt'] = instance['createdAt'].isoformat()
         instance['updatedAt'] = instance['updatedAt'].isoformat()
 
-        heldbackAttrs = ['_sa_instance_state', '_password']
+        heldbackAttrs = ['_sa_instance_state', '__class__', '_password']
 
         for attr in heldbackAttrs:
             if attr in instance:
