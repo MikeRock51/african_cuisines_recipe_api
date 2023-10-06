@@ -63,7 +63,7 @@ def stopUnitService():
     sudo(f"systemctl stop {PSN}.service")
     # sudo(f"systemctl status {PSN}.service")
 
-def getStatus():
+def unitStatus():
     """Gets the status of the apps unit service"""
     sudo(f"systemctl status {PSN}.service")
 
@@ -80,6 +80,9 @@ def deployNginxConfig():
         '/etc/nginx/sites-available/', use_sudo=True)
     sudo(f"ln -s /etc/nginx/sites-available/{PSN}-nginx /etc/nginx/sites-enabled/")
     sudo('systemctl restart nginx')
+
+def nginxStatus():
+    """Checks the status of server's Nginx service"""
     sudo('systemctl status nginx')
 
 
@@ -108,6 +111,7 @@ def shipFiles(archivePath):
 def installRequirements():
     """Install project dependencies"""
     with cd(PSN):
+        run("pip3 install -r requirements.txt")
         run("python3 -m venv .venv")
         run("source .venv/bin/activate && pip3 install -r requirements.txt")
 
@@ -115,8 +119,12 @@ def installRequirements():
 def setupDB():
     """(Re)Creates and prepopulates database with data"""
     with cd(PSN):
-        run(f"cat setupDatabase.sql | mysql -uroot -p{SQL_ROOT_PWD}")
+        #run(f"cat setupDatabase.sql | mysql -uroot -p{SQL_ROOT_PWD}")
         run("python3 createRecipeDataDB.py")
+
+def removeOldFiles():
+    """Deletes the old deployed project files"""
+    pass
 
 
 def deployFiles():
@@ -126,9 +134,9 @@ def deployFiles():
 
 def fullDeploy():
     """Performs a full deploy to a new server"""
-    deployFiles()
-    installPackages()
-    configureSQL()
+    #deployFiles()
+    #installPackages()
+    #configureSQL()
     installRequirements()
     setupDB()
     deployNginxConfig()
