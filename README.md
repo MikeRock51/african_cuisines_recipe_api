@@ -70,10 +70,10 @@ $ curl localhost:9000/api/v1/recipes
 <a href="https://twitter.com/Mike_Rock1">Twitter</a>,
 <a href="https://www.linkedin.com/in/michael-adebayo-637507251/">LinkedIn</a>
 <a href="mailto:mikerockmusic51@gmail.com">Email</a>
-- [RESTFUL AP ENDPOINT](https://acr-api.mikerock.tech/api/v1/)
+- [API Endpoints](https://acr-api.mikerock.tech/api/v1/)
 - [Swagger Documentation](https://acr-api.mikerock.tech/api/v1/docs)
 - [GraphQL Endpoint](https://acr-api.mikerock.tech/api/v1/graphql)
-- [Postman Documentation](https://recipes.mikerock.tech/api/v1/status)
+- [Postman Documentation](https://documenter.getpostman.com/view/30168355/2s9YJf126k)
 
 
 <span><i>Made at <a href='https://qwasar.io'>Qwasar SV -- Software Engineering School</a></i></span>
