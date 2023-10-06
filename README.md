@@ -50,7 +50,7 @@ $ pip install -r requirements.txt
 ```bash
 $ bash start_servers
 ```
-5. The RESTFUL API will be running on http://localhost:9000/api/v1/status while the graphql api on http://localhost:9000/api/v1/graphql and the swagger documentation on http://localhost:9000/api/v1/docs
+5. The RESTFUL API will be running on http://localhost:9000/api/v1/status while the graphql api on http://localhost:9000/api/v1/graphql and the swagger documentation on http://localhost:9001/api/v1/docs
 
 
 ## Usage
