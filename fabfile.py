@@ -42,6 +42,7 @@ def installPackages():
     sudo("apt install -y redis-server")
     sudo("sed -i 's/supervised no/supervised systemd/' /etc/redis/redis.conf")
     sudo("systemctl restart redis.service")
+    print("Packages installed successfully!")
 
 
 def deployServiceFile():
@@ -50,18 +51,19 @@ def deployServiceFile():
         "/etc/systemd/system/", use_sudo=True)
     sudo("systemctl daemon-reload")
     sudo(f"systemctl enable {PSN}.service")
+    print("Service file deployed successfully!")
 
 
 def startUnitService():
     """Starts the apps unit service"""
     sudo(f"systemctl start {PSN}.service")
-    # sudo(f"systemctl status {PSN}.service")
+    print(f"{PSN} service started successfully!")
 
 
 def stopUnitService():
     """Stops the apps unit service"""
     sudo(f"systemctl stop {PSN}.service")
-    # sudo(f"systemctl status {PSN}.service")
+    print(f"{PSN} service stopped successfully!")
 
 def unitStatus():
     """Gets the status of the apps unit service"""
@@ -71,7 +73,7 @@ def unitStatus():
 def restartUnitService():
     """Restarts the apps unit service"""
     sudo(f"systemctl restart {PSN}.service")
-    # sudo(f"systemctl status {PSN}.service")
+    print(f"{PSN} service restarted successfully!")
 
 
 def deployNginxConfig():
@@ -80,6 +82,13 @@ def deployNginxConfig():
         '/etc/nginx/sites-available/', use_sudo=True)
     sudo(f"ln -s /etc/nginx/sites-available/{PSN}-nginx /etc/nginx/sites-enabled/")
     sudo('systemctl restart nginx')
+    print("Nginx config deployed successfully!")
+
+
+def restartNginx():
+    """Restarts Nginx service"""
+    sudo('systemctl restart nginx')
+    print("Nginx service restarted successfully!")
 
 def nginxStatus():
     """Checks the status of server's Nginx service"""
@@ -106,6 +115,7 @@ def shipFiles(archivePath):
     run(f"mkdir -p {PSN}")
     archiveName = archivePath.split('/')[1]
     run(f"tar -xvzf {remoteVersionsPath}/{archiveName} -C {PSN}")
+    print("Files shipped successfully!")
 
 
 def installRequirements():
@@ -114,31 +124,42 @@ def installRequirements():
         run("pip3 install -r requirements.txt")
         run("python3 -m venv .venv")
         run("source .venv/bin/activate && pip3 install -r requirements.txt")
+    print("Requirements installed successfully!")
 
 
 def setupDB():
     """(Re)Creates and prepopulates database with data"""
     with cd(PSN):
-        #run(f"cat setupDatabase.sql | mysql -uroot -p{SQL_ROOT_PWD}")
+        run(f"cat setupDatabase.sql | mysql -uroot -p{SQL_ROOT_PWD}")
         run("python3 createRecipeDataDB.py")
+    print("Database is ready!")
 
 def removeOldFiles():
     """Deletes the old deployed project files"""
-    pass
+    run("rm -rf {PSN}")
+    print("Files removed successfully!")
 
 
 def deployFiles():
     archivePath = packFiles()
     shipFiles(archivePath)
+    print("Files deployed successfully!")
+
+def updateFiles():
+    """Replaces old project files with current ones"""
+    removeOldFiles()
+    deployFiles()
+    print("Files updated successfully!")
 
 
 def fullDeploy():
     """Performs a full deploy to a new server"""
-    #deployFiles()
-    #installPackages()
-    #configureSQL()
+    deployFiles()
+    installPackages()
+    configureSQL()
     installRequirements()
     setupDB()
     deployNginxConfig()
     deployServiceFile()
     startUnitService()
+    print("Hurray!! Full deployment successful!")
