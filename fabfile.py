@@ -111,7 +111,7 @@ def shipFiles(archivePath):
         return False
     remoteVersionsPath = f"/tmp/{PSN}/versions"
     run(f"mkdir -p {remoteVersionsPath}")
-    put(archivePath, remoteVersionsPath)
+    put(archivePath, remoteVersionsPath, use_sudo=True)
     run(f"mkdir -p {PSN}")
     archiveName = archivePath.split('/')[1]
     run(f"tar -xvzf {remoteVersionsPath}/{archiveName} -C {PSN}")
