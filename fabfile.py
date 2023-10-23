@@ -117,11 +117,14 @@ def shipFiles(archivePath):
     run(f"tar -xvzf {remoteVersionsPath}/{archiveName} -C {PSN}")
     print("Files shipped successfully!")
 
+def installGlobalRequirements():
+    """Installs the projects global requirements"""
+    run("pip3 install -r globals.txt")
+
 
 def installRequirements():
     """Install project dependencies"""
     with cd(PSN):
-        run("pip3 install -r requirements.txt")
         run("python3 -m venv .venv")
         run("source .venv/bin/activate && pip3 install -r requirements.txt")
     print("Requirements installed successfully!")
@@ -157,6 +160,7 @@ def fullDeploy():
     deployFiles()
     installPackages()
     configureSQL()
+    installGlobalRequirements()
     installRequirements()
     setupDB()
     deployNginxConfig()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Defines Utiliy methods for models"""
+"""Defines Utility methods for models"""
 
 from typing import Dict, List
 
@@ -8,7 +8,7 @@ class Utils:
     """Utils class"""
     @staticmethod
     def sortDictKeys(obj: Dict, order: List) -> Dict:
-        """Returns obj with keys sorted in the provided order"""
+        """Returns obj with keys sorted in the specified order"""
         def customSort(key):
             """Sorts the position of a dict key"""
             if key in order:

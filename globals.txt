@@ -1,0 +1,8 @@
+# -----------------------------------------------
+# Required global dependencies                   |
+# Run pip install -r globals.txt                 |
+# -----------------------------------------------
+
+SQLAlchemy==1.4.49
+mysqlclient==2.1.1
+gunicorn
