@@ -12,7 +12,6 @@ class UserAuth:
     @property
     def password(self) -> str:
         """User password getter"""
-
         return self._password
 
     @password.setter

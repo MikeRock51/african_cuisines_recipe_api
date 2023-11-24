@@ -23,7 +23,9 @@ class Recipe(BaseModel, Base, RecipeUtils):
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""
+        # Initialize instace 
         super().__init__(*args, **kwargs)
+        # Calculate total cook time
         self.total_time_minutes = self.cook_time_minutes \
             + self.prep_time_minutes
 
@@ -40,6 +42,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
 
         heldBackAttrs = ["__class__", "createdAt", "updatedAt", "userID"]
 
+        # Filter heldback attributes
         for attr in heldBackAttrs:
             if attr in instance:
                 instance.pop(attr)

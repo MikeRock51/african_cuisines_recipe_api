@@ -23,6 +23,7 @@ class DBStorage:
     __session = None
 
     def __init__(self) -> None:
+        # Create database engine
         self.__engine = create_engine(
             f"mysql+mysqldb://{USER}:{PWD}@{HOST}/{DB}",
             pool_pre_ping=True)
@@ -68,21 +69,28 @@ class DBStorage:
                          size: int = 10, search="", filterColumns={}) -> Dict:
         """Retrieves paginated data"""
         if obj:
+            # Set the starting point of data to retrieve
             offset = (page - 1) * size
             tableName = obj.__tablename__
 
             try:
                 query = self.__session.query(obj)
                 if tableName == 'recipes':
+                    # Filter data by search keyword
                     query = query.filter(obj.name.like(f"%{search}%"))
                 if filterColumns != {}:
-                    filterConditions = [(key.in_(value) for key, value in filterColumns.items())]
-                    # filterConditions = [(key.in_(value) if
-                    #                      hasattr(value, '__iter__') else (
-                    #     key == value) for key, value in filterColumns.items())]
+                    # Create a list of filter conditions based on specified columns
+                    filterConditions = [(key.in_(value)
+                                         for key, value in filterColumns.items())]
+                    # Filter data by specified columns
                     query = query.filter(and_(*filterConditions))
 
+                    """filterConditions = [(key.in_(value) if
+                                         hasattr(value, '__iter__') else (
+                        key == value) for key, value in filterColumns.items())]"""
+
                 total_pages = ceil(len(query.all()) / size)
+                # Paginate query
                 result = query.offset(offset).limit(size).all()
 
                 return {
