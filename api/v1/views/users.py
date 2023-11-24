@@ -57,7 +57,7 @@ def createUser():
     except IntegrityError as ie:
         return jsonify({
             "status": "error",
-            "message": Utils.extractErrorMessage(str(ie))
+        "message": Utils.extractErrorMessage(str(ie))
         }), 400
 
     return jsonify({

@@ -77,6 +77,6 @@ class SessionAuth():
         """Extracts auth token from header"""
         token = request.headers.get(AUTH_HEADER)
         if not token:
-            raise ValueError(f'{AUTH_HEADER} is required');
+            raise ValueError(f'{AUTH_HEADER} is required')
 
         return token

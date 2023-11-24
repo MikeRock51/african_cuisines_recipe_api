@@ -19,7 +19,7 @@ app.register_blueprint(app_views)
 
 @app.before_request
 def authenticate():
-    """Handles pre request setups and validations"""
+    """Handles pre-request setups and validations"""
     try:
         token = auth.extractAuthToken(request)
         userID = auth.getSession(token)
