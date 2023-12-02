@@ -1,4 +1,4 @@
-# Welcome to My Api
+# Welcome to African Cuisines Recipes Api
 ***
 
 ## Task
