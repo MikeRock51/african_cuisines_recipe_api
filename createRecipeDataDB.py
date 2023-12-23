@@ -3,6 +3,7 @@
 from models import storage
 from models.user import User
 from models.recipe import Recipe
+from models.recipeDP import RecipeDP
 from models.roles import UserRole
 from sqlalchemy.exc import IntegrityError
 import json
@@ -14,7 +15,7 @@ load_dotenv()
 mike = {'firstname': 'Michael', 'lastname': 'Adebayo',
         'username': 'Mike Rock', 'email': getenv("ADMIN_EMAIL"),
         'phone': '08107094647', 'address': 'Abuja',
-        'password': getenv("ADMIN_PWD"), "role": UserRole.admin}
+        'password': getenv("ADMIN_PWD"), "role": UserRole.admin, "dp": 'defaultDP.png'}
 
 # Create user if it doesn't exist
 try:
@@ -36,9 +37,17 @@ for recipe in data:
         newRecipe = Recipe(**recipe)
         newRecipe.userID = user.id
         newRecipe.save()
+        if recipe.get("images"):
+            for image in recipe["images"]:
+                dp = RecipeDP(recipeID=newRecipe.id, userID=user.id, fileType="link", filePath=image)
+                dp.save()
+        else:
+            dp = RecipeDP(recipeID=newRecipe.id, userID=user.id)
+            dp.save()
+            print("No image")
     except Exception as e:
         print(e)
-        print(recipe)
+        # print(recipe)
         error = True
         break
 

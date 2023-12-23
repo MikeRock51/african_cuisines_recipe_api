@@ -1,0 +1,28 @@
+Processes user chat and returns response from the chatbot
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+parameters:
+  - name: Chat Data
+    in: body
+    required: true
+    description: Data for the chat you want to process
+    schema:
+      type: object
+      properties:
+        content:
+          type: string
+          example: How much butter is safe to put in my bread?
+        sessionID:
+          type: string
+responses:
+  200:
+    description: Chat response generated successfully
+  400:
+    description: Bad request || Invalid chat session
+  401:
+    description: Unauthorized request
+  503:
+    description: Chat bot unavailable

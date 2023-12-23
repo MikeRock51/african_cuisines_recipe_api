@@ -1,0 +1,18 @@
+Deletes a chat session based on sessionID
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+parameters:
+  - name: id
+    in: path
+    required: true
+    description: The unique id of the chat session you want to delete
+responses:
+  200:
+    description: Chat session deleted successfully
+  401:
+    description: You are not authorized to delete this chat session
+  404:
+    description: Chat session not found

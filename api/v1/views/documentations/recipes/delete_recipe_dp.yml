@@ -1,0 +1,19 @@
+Deletes a recipe dp based on ID
+---
+tags:
+  - Recipes
+security:
+  - Auth: []
+parameters:
+  - name: dpID
+    in: path
+    description: The unique id of the dp to delete.
+    required: true
+responses:
+  204:
+    description: Deleted Successfully
+  404:
+    description: DP not found
+  401:
+    description: You are not authorized to delete this dp.
+

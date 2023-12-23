@@ -1,0 +1,39 @@
+Uploads a recipe's display picture
+---
+tags:
+  - Recipes
+security:
+  - Auth: []
+consumes:
+  - multipart/form-data
+parameters:
+  - name: file
+    in: formData
+    description: The image file to be uploaded (PNG, JPG, JPEG, or GIF).
+    required: false
+    type: file
+
+  - name: recipeID
+    in: formData
+    description: The unique id of the recipe to add dp to.
+    required: true
+    type: string
+
+  - name: fileType
+    in: formData
+    description: Type of file being added. Can be either link or file. Use file if uploading a raw file otherwise link.
+    required: true
+    type: string
+
+  - name: filePath
+    in: formData
+    description: If adding a file link, provide the link here.
+    required: false
+    type: string
+responses:
+  201:
+    description: Successful upload
+  400:
+    description: Bad request
+  401:
+    description: Unauthorized request

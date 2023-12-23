@@ -1,0 +1,13 @@
+Retrieves a recipe dp file based on ID
+---
+tags:
+  - Recipes
+parameters:
+  - name: dpID
+    in: path
+    description: The unique id of the dp.
+    required: true
+responses:
+  200:
+    description: Successful operation
+

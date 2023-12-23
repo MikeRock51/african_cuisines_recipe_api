@@ -12,7 +12,7 @@ def login_required(authorizedRoles: Union[List[UserRole], None] = None) -> Calla
         @wraps(f)
         def route_function(*args, **kwargs):
             def unauthorized():
-                abort(401)
+                abort(401, description="Access Denied! Authorization failed")
 
             if not g.currentUser:
                 return unauthorized()

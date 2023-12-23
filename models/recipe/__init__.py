@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""The recipe module"""
+"""The recipe model"""
 
 from sqlalchemy import Column, String, JSON, Integer, ForeignKey
 from models.base_model import BaseModel, Base
 from models.recipe.recipe import RecipeUtils
 from models.utils import Utils
+from sqlalchemy.orm import relationship
 
 
 class Recipe(BaseModel, Base, RecipeUtils):
@@ -20,6 +21,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     total_time_minutes = Column(Integer, nullable=False)
     calories_per_serving = Column(Integer, nullable=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
+    dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""
@@ -36,6 +38,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
                  'cook_time_minutes', 'total_time_minutes',
                  'calories_per_serving', 'serving_size', 'userID',
                  'ingredients', 'instructions']
+        instance['dps'] = [dp.toDict() for dp in self.dps]
 
         if detailed:
             return Utils.sortDictKeys(instance, order)

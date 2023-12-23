@@ -1,0 +1,13 @@
+Retrieves the current users display picture file
+---
+tags:
+  - Users
+parameters:
+  - name: userID
+    in: path
+    required: true
+responses:
+  200:
+    description: Successful fetched user dp
+  401:
+    description: Unauthorized request

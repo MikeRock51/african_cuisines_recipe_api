@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """User view routes"""
 
-from flask import jsonify, g, request, abort
+from flask import jsonify, g, request, abort, current_app
 from models.user import User
 from models import storage
 from api.v1.views import app_views
@@ -13,8 +13,11 @@ from sqlalchemy.exc import IntegrityError
 from api.v1.auth import auth
 from flasgger.utils import swag_from
 from os import path
+from models.userDP import UserDP
+
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/users'
+
 
 @app_views.route('/users')
 @swag_from(f'{DOCS_DIR}/all_users.yml')
@@ -34,6 +37,7 @@ def allUsers():
             "message": str(e)
         }), 400
 
+
 @app_views.route('/users', methods=['POST'])
 @swag_from(f'{DOCS_DIR}/post_users.yml')
 def createUser():
@@ -41,12 +45,15 @@ def createUser():
     requiredFields = ['username', 'email', 'password']
     userFields = ['username', 'email', 'password', 'firstname', 'lastname']
     detailed = request.args.get('detailed', True)
+
     try:
         data = Utils.getReqJSON(request, requiredFields)
         userData = {key: value for key,
                     value in data.items() if key in userFields}
         username = userData['username']
         userData['username'] = "_".join(username.split())
+        userData['dp'] = 'defaultDP.png'
+
         user = User(**userData)
         user.save()
     except ValueError as ve:
@@ -57,7 +64,7 @@ def createUser():
     except IntegrityError as ie:
         return jsonify({
             "status": "error",
-        "message": Utils.extractErrorMessage(str(ie))
+            "message": Utils.extractErrorMessage(str(ie))
         }), 400
 
     return jsonify({
@@ -79,6 +86,7 @@ def getCurrentUser():
         "data": g.currentUser.toDict(detailed=detailed)
     })
 
+
 @app_views.route('/users/<id>')
 @swag_from(f'{DOCS_DIR}/get_user.yml')
 @login_required()
@@ -98,6 +106,7 @@ def getUserByID(id):
         "message": "User retrieved successfully",
         "data": user.toDict(detailed=detailed)
     })
+
 
 @app_views.route('/users/<id>', methods=['PUT'])
 @swag_from(f'{DOCS_DIR}/put_users.yml')
@@ -144,18 +153,20 @@ def deleteUser(id):
     """Deletes the user with the user id"""
     user = storage.get(User, id)
     if not user:
-        abort(404)
+        abort(404, description="User not found")
     if user is not g.currentUser and g.currentUser.role != UserRole.admin:
-        abort(401)
+        abort(401, description="You are not authorized to delete this user")
     try:
         user.delete()
     except Exception as e:
         return jsonify({
             "status": "error",
-            "message": Utils.extractErrorMessage(str(e))
+            "message": Utils.extractErrorMessage(str(e)),
+            "data": None
         })
 
     return jsonify({
         "status": "success",
-        "message": "User deleted successfully"
+        "message": "User deleted successfully",
+        "data": None
     })
