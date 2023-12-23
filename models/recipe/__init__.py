@@ -15,7 +15,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
 
     name = Column(String(255), nullable=False)
     cuisine = Column(String(128), default="Not specified", nullable=False)
-    ingredients = Column(JSON, nullable=False)
+    ingredients = relationship('Ingredient', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     instructions = Column(JSON, nullable=False)
     serving_size = Column(Integer, nullable=True)
     total_time_minutes = Column(Integer, nullable=False)
