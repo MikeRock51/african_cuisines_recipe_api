@@ -14,7 +14,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     __tablename__ = "recipes"
 
     name = Column(String(255), nullable=False)
-    cuisine = Column(String(128), default="Not specified", nullable=False)
+    cuisine = Column(String(128), default="Unspecified", nullable=False)
     ingredients = relationship('Ingredient', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     instructions = relationship('Instruction', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     serving_size = Column(Integer, nullable=True)
@@ -22,6 +22,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     calories_per_serving = Column(Integer, nullable=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
     dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    reviews = relationship('Review', backref='recipe', cascade='all, delete-orphan', single_parent=True)
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""
