@@ -2,7 +2,7 @@
 """The ingredients module"""
 
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, String, ForeignKey, UniqueConstraint, Integer
 from sqlalchemy.orm import relationship
 
 
@@ -13,6 +13,7 @@ class Ingredient(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
+    quantity = Column(Integer, nullable=True)
     dps = relationship('IngredientDP', backref='ingredient', cascade='all, delete-orphan', single_parent=True)
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
 

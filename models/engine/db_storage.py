@@ -125,14 +125,17 @@ class DBStorage:
         from models.chat.chatSession import ChatSession
         # from models.userDP import UserDP
         from models.recipeDP import RecipeDP
+        from models.ingredients.ingredient import Ingredient
+        from models.instructions.instruction import Instruction
 
         return {
             "User": User,
             "Recipe": Recipe,
             "Chat": Chat,
             "ChatSession": ChatSession,
-            # "UserDP": UserDP,
-            "RecipeDP": RecipeDP
+            "RecipeDP": RecipeDP,
+            "Ingredient": Ingredient,
+            "Instruction": Instruction
         }
 
     def new(self, obj) -> None:

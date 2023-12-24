@@ -6,7 +6,7 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 
-class Ingredient(BaseModel, Base):
+class Instruction(BaseModel, Base):
     """Defines an instruction object"""
 
     __tablename__ = "instructions"
