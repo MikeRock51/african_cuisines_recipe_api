@@ -1,0 +1,24 @@
+Creates a new chat session for the current user
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+parameters:
+  - name: Session Info
+    in: body
+    required: true
+    description: Info for the chat session you want to create
+    schema:
+      type: object
+      properties:
+        topic:
+          type: string
+          example: Bread or Mayonnaise
+responses:
+  201:
+    description: Chat session created successfully
+  400:
+    description: Data not a JSON || Required field missing |
+  401:
+    description: Authorization required to create recipe

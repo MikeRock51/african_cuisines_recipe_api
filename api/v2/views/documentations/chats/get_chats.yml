@@ -1,0 +1,18 @@
+Retrieves the chat history of a chat session
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+parameters:
+  - name: sessionID
+    in: path
+    required: true
+    description: The sessionID of the session's history you want to retrieve
+responses:
+  200:
+    description: Chat history retrieved successfully
+  401:
+    description: Unauthorized request
+  404:
+    description: Chat session not found

@@ -1,0 +1,30 @@
+Updates a chat session based on sessionID
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+parameters:
+  - name: Session Info
+    in: body
+    required: true
+    description: Info for the chat session you want to update
+    schema:
+      type: object
+      properties:
+        topic:
+          type: string
+          example: Bread or Mayonnaise or Jam
+        sessionID:
+          type: string
+responses:
+  200:
+    description: Chat session updated successfully
+  400:
+    description: Data not a JSON || Required field missing
+  401:
+    description: You are not authorized to update this chat session
+  404:
+    description: Chat session not found
+  409:
+    description: Chat session topic already exist

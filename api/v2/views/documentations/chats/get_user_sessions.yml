@@ -1,0 +1,11 @@
+Retrieves the authenticated user's chat sessions
+---
+tags:
+  - Chats
+security:
+  - Auth: []
+responses:
+  200:
+    description: Chat sessions retrieved successfully
+  401:
+    description: Unauthorized request

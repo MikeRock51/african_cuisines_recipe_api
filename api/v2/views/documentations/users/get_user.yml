@@ -1,0 +1,25 @@
+Retrieves a user based on id.
+---
+tags:
+  - Users
+security:
+  - Auth: []
+parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+  - name: detailed
+    in: query
+    description: Set to true to see full user information
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched current user
+  401:
+    description: Authorization required
+  404:
+    description: User not found

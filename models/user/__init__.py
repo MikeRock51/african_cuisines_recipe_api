@@ -22,7 +22,6 @@ class User(BaseModel, Base, UserAuth):
     recipes = relationship('Recipe', backref='author', cascade='all, delete')
     bookmark_lists = relationship('BookmarkList', backref='user', cascade='all, delete-orphan', single_parent=True)
     dp = Column(String(384), nullable=False)
-    upvotes = Column(Integer, nullabe=False, default=0)
 
     def toDict(self, detailed=False):
         """Returns a dictionary representation of a user instance"""

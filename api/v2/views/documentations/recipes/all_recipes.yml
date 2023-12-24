@@ -1,0 +1,39 @@
+Retrieves a paginated list of all recipes (10 recipes per page).
+---
+tags:
+  - Recipes
+parameters:
+  - name: page
+    in: query
+    description: (Optional) Page to fetch (1 page <= 10 items). Fetches the first page if no value is provided.
+    required: false
+    schema:
+      type: integer
+
+  - name: search
+    in: query
+    description: Search recipe by name. (Optional)
+    example: Ofe Akwu
+    required: false
+    schema:
+      type: string
+
+  - name: filter_by
+    in: query
+    description: (Optional) Enter one or more filter criteria. Format is a dictionary with the filter field as key and an array of values.
+    example: {"cuisine": ["Nigerian", "West African", "Ghanaian"], "cook_time_minutes": [6, 10, 50]}
+    required: false
+    schema:
+      type: object
+
+  - name: detailed
+    in: query
+    description: Set to true to see full recipe information (Optional)
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched recipes
+  400:
+    description: Invalid filters

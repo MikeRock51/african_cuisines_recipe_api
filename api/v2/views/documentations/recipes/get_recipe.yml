@@ -1,0 +1,23 @@
+Retrieves a recipe based on the given ID.
+---
+tags:
+  - Recipes
+parameters:
+  - name: id
+    in: path
+    description: Recipe ID
+    required: true
+    schema:
+      type: string
+
+  - name: detailed
+    in: query
+    description: Set to true to see full recipe information (Optional)
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched recipe
+  404:
+    description: Recipe not found

@@ -1,0 +1,18 @@
+Retrieves a list of all users.
+---
+tags:
+  - Users
+security:
+  - Auth: []
+parameters:
+  - name: detailed
+    in: query
+    description: Set to true to see full user information
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched users
+  401:
+    description: Only admins can view this route

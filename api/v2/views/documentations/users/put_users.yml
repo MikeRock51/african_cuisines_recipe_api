@@ -1,0 +1,36 @@
+Updates a user based on ID
+---
+tags:
+  - Users
+security:
+  - Auth: []
+parameters:
+  - name: id
+    in: path
+    required: true
+
+  - name: User Info
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Rocky
+        password:
+          type: string
+          example: pass
+        firstname:
+          type: string
+          example: Amor
+        lastname:
+          type: string
+          example: Feliz
+responses:
+  201:
+    description: User updated successfully
+  400:
+    description: Not a JSON | user email already exist
+  401:
+    description: Authorization required

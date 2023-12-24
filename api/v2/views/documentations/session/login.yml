@@ -1,0 +1,32 @@
+Validates user and creates a user session
+---
+tags:
+  - Sessions
+parameters:
+  - name: Login Data
+    in: body
+    description: Login credentials
+    required: true
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          example: mikerock@email.com
+        password:
+          type: string
+          example: password
+
+  - name: detailed
+    in: query
+    description: Set to true to see full user information
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Login successful
+  400:
+    description: Not a JSON data || One or more required fields missing || Incorrect email or password
+  404:
+    description: User does not exist

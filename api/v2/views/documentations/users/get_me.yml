@@ -1,0 +1,18 @@
+Retrieves a the current user information.
+---
+tags:
+  - Users
+security:
+  - Auth: []
+parameters:
+  - name: detailed
+    in: query
+    description: Set to true to see full user information
+    required: false
+    schema:
+      type: bool
+responses:
+  200:
+    description: Successfully fetched current user
+  401:
+    description: Authorization required

@@ -23,6 +23,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
     dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     reviews = relationship('Review', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    upvotes = Column(Integer, default=0)
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""

@@ -1,0 +1,45 @@
+Creates a new recipe.
+---
+tags:
+  - Recipes
+security:
+  - Auth: []
+parameters:
+  - name: Recipe Data
+    in: body
+    required: true
+    description: Data for the recipe you want to create
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Amala
+        cuisine:
+          type: string
+          example: Nigerian
+        ingredients:
+          type: array
+          example: ["Yam flour", "boiling water", "A lot of energy"]
+        instructions:
+          type: array
+          example: ["Boil water on fire", "Dance around the room", "Do the hokey pokey", "Enjoy your amala with any soup of your choice"]
+        prep_time_minutes:
+          type: integer
+          example: 5
+        cook_time_minutes:
+          type: integer
+          example: 10
+        serving_size:
+          type: integer
+          example: 4
+        calories_per_serving:
+          type: integer
+          example: 80
+responses:
+  201:
+    description: Recipe created successfully
+  400:
+    description: Data not a JSON || Required field missing |
+  401:
+    description: Authorization required to create recipe
