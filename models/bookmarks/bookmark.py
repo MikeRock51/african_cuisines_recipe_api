@@ -2,7 +2,7 @@
 """The bookmark model"""
 
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, UniqueConstraint
 
 
 class Bookmark(BaseModel, Base):
@@ -12,3 +12,4 @@ class Bookmark(BaseModel, Base):
 
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
     listID = Column(String(60), ForeignKey('bookmark_lists.id'), nullable=False)
+    UniqueConstraint('recipeID', 'listID', name='uq_recipe_per_list')

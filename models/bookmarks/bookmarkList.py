@@ -14,7 +14,4 @@ class BookmarkList(BaseModel, Base):
     name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
-
-    __table_args__ = (
-        UniqueConstraint('name', 'userID', name='uq_list_per_user'),
-    )
+    UniqueConstraint('name', 'userID', name='uq_list_per_user')
