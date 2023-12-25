@@ -20,10 +20,11 @@ class Recipe(BaseModel, Base, RecipeUtils):
     serving_size = Column(Integer, nullable=True)
     total_time_minutes = Column(Integer, nullable=False)
     calories_per_serving = Column(Integer, nullable=True)
-    userID = Column(String(60), ForeignKey('users.id'), nullable=False)
-    dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     reviews = relationship('Review', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     upvotes = relationship('Upvote', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    nutritional_values = relationship('NutritionalValue', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    userID = Column(String(60), ForeignKey('users.id'), nullable=False)
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""

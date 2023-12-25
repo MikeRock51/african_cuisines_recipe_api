@@ -127,6 +127,7 @@ class DBStorage:
         from models.recipeDP import RecipeDP
         from models.ingredients.ingredient import Ingredient
         from models.instructions.instruction import Instruction
+        from models.nutritionalValue import NutritionalValue
 
         return {
             "User": User,
@@ -135,7 +136,8 @@ class DBStorage:
             "ChatSession": ChatSession,
             "RecipeDP": RecipeDP,
             "Ingredient": Ingredient,
-            "Instruction": Instruction
+            "Instruction": Instruction,
+            "NutritionalValue": NutritionalValue,
         }
 
     def new(self, obj) -> None:
