@@ -2,9 +2,9 @@
 """Handles user session"""
 
 from flask import request, jsonify
-from api.v1.views import app_views
-from api.v1.auth import auth
-from api.v1.utils import Utils
+from api.v2.views import app_views
+from api.v2.auth import auth
+from api.v2.utils import Utils
 from models import storage
 from models.user import User
 from dotenv import load_dotenv

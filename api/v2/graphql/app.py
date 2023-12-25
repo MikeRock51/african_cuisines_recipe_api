@@ -7,15 +7,15 @@ from os import getenv
 from models import storage
 from flask_graphql import GraphQLView
 from schema import schema
-from api.v1.auth import auth
+from api.v2.auth import auth
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-CORS(app, resources={r'/api/v1/*': {'origins': '*'}}, support_credentials=True)
+CORS(app, resources={r'/api/v2/*': {'origins': '*'}}, support_credentials=True)
 
 app.add_url_rule(
-    "/api/v1/graphql",
+    "/api/v2/graphql",
     view_func=GraphQLView.as_view(
         "graphql",
         schema=schema,

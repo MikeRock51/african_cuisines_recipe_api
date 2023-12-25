@@ -2,7 +2,7 @@
 """Defines app configs"""
 
 from models.roles import UserRole
-from api.v1.auth.session_auth import SessionAuth
+from api.v2.auth.session_auth import SessionAuth
 from os import getenv
 
 

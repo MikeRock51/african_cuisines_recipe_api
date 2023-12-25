@@ -4,13 +4,13 @@
 from flask import jsonify, g, request, abort, current_app
 from models.user import User
 from models import storage
-from api.v1.views import app_views
+from api.v2.views import app_views
 from typing import Dict
-from api.v1.utils.authWrapper import login_required
+from api.v2.utils.authWrapper import login_required
 from models.roles import UserRole
-from api.v1.utils import Utils
+from api.v2.utils import Utils
 from sqlalchemy.exc import IntegrityError
-from api.v1.auth import auth
+from api.v2.auth import auth
 from flasgger.utils import swag_from
 from os import path
 from models.userDP import UserDP

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Index views"""
 
-from api.v1.views import app_views
+from api.v2.views import app_views
 from flask import jsonify, request
 from flasgger import swag_from
 

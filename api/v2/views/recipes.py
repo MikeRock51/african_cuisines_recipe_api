@@ -6,9 +6,9 @@ from models.recipeDP import RecipeDP
 from models import storage
 from models.roles import UserRole
 from flask import jsonify, abort, request, g, current_app, make_response, send_from_directory
-from api.v1.views import app_views
-from api.v1.utils import Utils
-from api.v1.utils.authWrapper import login_required
+from api.v2.views import app_views
+from api.v2.utils import Utils
+from api.v2.utils.authWrapper import login_required
 from models.user import User
 import re
 from flasgger.utils import swag_from

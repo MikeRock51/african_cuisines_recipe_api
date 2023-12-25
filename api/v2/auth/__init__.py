@@ -3,7 +3,7 @@
 
 from dotenv import load_dotenv
 from os import getenv
-from api.v1.config import Configs 
+from api.v2.config import Configs 
 
 
 auth = Configs.AUTH
