@@ -10,7 +10,7 @@ class InstructionMedia(BaseModel, Base):
 
     __tablename__ = 'instruction_medias'
 
-    filePath = Column(String(384), nullable=False)
+    filePath = Column(String(500), nullable=False)
     fileType = Column(String(30), nullable=False) # link or file
     format = Column(String(30), nullable=False) # image or video
     InstructionID = Column(String(60), ForeignKey('instructions.id'), nullable=False)
