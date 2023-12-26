@@ -27,15 +27,11 @@ def testBody():
       200:
         description: All systems green!
     """
-    body = request.get_json()
-    
-    if "name" not in body:
-        return jsonify({"error": "No Name"}), 400
-
-    name = body['name']
+    data = request.form.to_dict()
+    print(data)
     
     return jsonify({
         "status": "success",
         "message": "All systems green!",
-        "data": name
+        # "data": name
     })

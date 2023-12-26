@@ -127,19 +127,29 @@ def recipeByID(id):
 def createRecipe():
     """Creates a new recipe and stores it in database"""
     requiredFields = ['name', 'cuisine', 'ingredients',
-                      'instructions', 'prep_time_minutes', 'cook_time_minutes']
-    optionalFields = ['total_time_minutes',
-                      'serving_size', 'calories_per_serving']
+                      'instructions', 'nutritional_values', 'prep_time_minutes', 'cook_time_minutes']
+    optionalFields = ['total_time_minutes', 'serving_size', 'calories_per_serving']
+    objectFields = ['ingredients', 'instructions', 'nutritional_values', 'recipe_dps']
+
+    data = request.form.to_dict()
+
+    Utils.validateRecipeData(data, requiredFields)
+
+    recipeData = {}
+
+    for key, value in data:
+        if key in requiredFields or key in optionalFields and key not in objectFields:
+            setattr(recipeData, key, value)
+    
+    recipeData['userID'] = g.currentUser.id
     
     try:
-        reqJSON = Utils.getReqJSON(request, requiredFields)
-
-        recipeData = {key: value for key, value in reqJSON.items(
-        ) if key in requiredFields or key in optionalFields}
-
-        recipeData['userID'] = g.currentUser.id
         recipe = Recipe(**recipeData)
         recipe.save()
+
+        if "recipe_dps" in data:
+            for dp in data['recipe_dps']:
+                pass
         dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id)
         dp.save()
     except (ValueError) as e:

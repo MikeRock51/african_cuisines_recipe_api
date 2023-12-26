@@ -39,6 +39,12 @@ class Utils:
                 for field in requiredFields:
                     if field not in data:
                         abort(400, description=f'Missing required {field}')
+                    if field == "ingredients":
+                        if (len(data['ingredients']) < 1):
+                            abort(400, description="At least one ingredient is required!")
+                    elif field == 'instructions':
+                        if (len(data['instructions']) < 3):
+                            abort(400, description="At least three steps of instruction is required!")
             return data
 
     @staticmethod
@@ -134,6 +140,21 @@ class Utils:
         except FileNotFoundError:
             print("File not found! Moving on...")
             pass
+
+    def validateRecipeData(data, requiredFields):
+        """Validates recipe POST data"""
+        for field in requiredFields:
+            if field not in data:
+                abort(400, description=f"Missing required {field}")
+            if field == "ingredients":
+                if (len(data['ingredients']) < 1):
+                    abort(400, description="At least one ingredient is required!")
+            elif field == "nutritional_values":
+                if (len(data['nutritional_values']) < 1):
+                    abort(400, description="At least one nutritional value is required!")
+            elif field == 'instructions':
+                if (len(data['instructions']) < 3):
+                    abort(400, description="At least three steps of instruction is required!")
 
 
 class VError(ValueError):

@@ -16,7 +16,4 @@ class Ingredient(BaseModel, Base):
     quantity = Column(Integer, nullable=True)
     dps = relationship('IngredientDP', backref='ingredient', cascade='all, delete-orphan', single_parent=True)
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
-
-    __table_args__ = (
-        UniqueConstraint('name', 'recipeID', name='uq_igd_per_recipe'),
-    )
+    UniqueConstraint('name', 'recipeID', name='uq_igd_per_recipe')
