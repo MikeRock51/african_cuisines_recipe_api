@@ -129,6 +129,7 @@ class DBStorage:
         from models.instructions.instruction import Instruction
         from models.nutritionalValue import NutritionalValue
         from models.upvote import Upvote
+        from models.instructions.videoInstruction import VideoInstruction
 
         return {
             "User": User,
@@ -139,7 +140,8 @@ class DBStorage:
             "Ingredient": Ingredient,
             "Instruction": Instruction,
             "NutritionalValue": NutritionalValue,
-            "Upvote": Upvote
+            "Upvote": Upvote,
+            "VideoInstruction": VideoInstruction
         }
 
     def new(self, obj) -> None:
