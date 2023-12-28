@@ -148,10 +148,16 @@ def createRecipe():
         recipe.save()
 
         if "recipe_dps" in data:
-            for dp in data['recipe_dps']:
-                pass
-        dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id)
-        dp.save()
+            for pic in data['recipe_dps']:
+                if not pic.get('fileType'):
+                    abort(400, description="Missing required field filePath")
+                if pic.get('fileType') == 'link':
+                    dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=pic.get('filePath'))
+                    dp.save()
+            files = request.files.getlist('files[]')
+            if files:
+                for file in files:
+                    pass
     except (ValueError) as e:
         return jsonify({
             "status": "error",
