@@ -149,6 +149,7 @@ def createRecipe():
         recipe.save()
 
         if "recipe_dps" in data:
+            DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/recipes/{recipe.id}'
             recipe_dps = request.files.getlist('recipe_dps[]')
             fileIndex = 0
             for pic in data['recipe_dps']:
@@ -160,11 +161,16 @@ def createRecipe():
                     dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=pic.get('filePath'))
                     dp.save()
                 else:
-                    filename = Utils.uploadSingleFile(recipe_dps[fileIndex], )
-            files = request.files.getlist('files[]')
-            if files:
-                for file in files:
-                    pass
+                    if not recipe_dps[fileIndex]:
+                        continue
+                    filename = Utils.uploadSingleFile(recipe_dps[fileIndex], DP_FOLDER, ALLOWED_IMAGE_EXTENSIONS)
+                    dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=filename)
+                    dp.save()
+                    fileIndex += 1
+
+        if "ingredient_dps" in data:
+            pass
+
     except (ValueError) as e:
         return jsonify({
             "status": "error",
