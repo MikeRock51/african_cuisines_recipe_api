@@ -15,6 +15,7 @@ from flasgger.utils import swag_from
 from os import path
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
+ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @app_views.route('/recipes')
@@ -159,7 +160,7 @@ def createRecipe():
                     dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=pic.get('filePath'))
                     dp.save()
                 else:
-                    pass
+                    filename = Utils.uploadSingleFile(recipe_dps[fileIndex], )
             files = request.files.getlist('files[]')
             if files:
                 for file in files:

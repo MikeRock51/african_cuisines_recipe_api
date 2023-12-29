@@ -114,6 +114,23 @@ class Utils:
             "total_pages": data['total_pages'],
             "data": [recipe.toDict(detailed=detailed) for recipe in data['data']]
         }
+    
+    def uploadSingleFile(file, uploadFolder, ALLOWED_EXTENSIONS):
+        """Uploads file to the given upload folder"""
+        from werkzeug.utils import secure_filename
+
+        if file.filename == '':
+            abort(400, description="No file selected")
+        if file and not allowedFile(file.filename, ALLOWED_EXTENSIONS):
+            abort(
+                400, description=f"Invalid file format! Supported Formats: {(', ').join(ALLOWED_EXTENSIONS)}")
+        if not os.path.exists(uploadFolder):
+            os.makedirs(uploadFolder)
+
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(uploadFolder, filename))
+
+        return filename
 
     def uploadFile(request, uploadFolder, ALLOWED_EXTENSIONS):
         """Extracts file from the request object and uploads it to the given upload folder"""
