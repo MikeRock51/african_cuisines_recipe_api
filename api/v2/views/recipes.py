@@ -148,12 +148,18 @@ def createRecipe():
         recipe.save()
 
         if "recipe_dps" in data:
+            recipe_dps = request.files.getlist('recipe_dps[]')
+            fileIndex = 0
             for pic in data['recipe_dps']:
                 if not pic.get('fileType'):
-                    abort(400, description="Missing required field filePath")
+                    abort(400, description="Missing required field fileType")
                 if pic.get('fileType') == 'link':
+                    if not pic.get('filePath'):
+                        abort(400, description="Missing required field filePath")
                     dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=pic.get('filePath'))
                     dp.save()
+                else:
+                    pass
             files = request.files.getlist('files[]')
             if files:
                 for file in files:

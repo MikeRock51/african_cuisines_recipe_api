@@ -8,19 +8,25 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    if 'files[]' not in request.files:
-        return 'No file part'
-    
-    print(request.files)
+    recipe_images = request.files.getlist('recipe_images[]')
+    ingredient_images = request.files.getlist('ingredient_images[]')
+    instruction_images = request.files.getlist('instruction_images[]')
 
-    files = request.files.getlist('files[]')
-
-    for file in files:
+    # Process each category of files as needed
+    for file in recipe_images:
         print(file)
-        if file.filename == '':
-            return 'No selected file'
-        # You can save the file to your desired location or perform other actions here
-        file.save(f"uploads/{file.filename}")
+        # if file.filename != '':
+        #     file.save(f"uploads/recipe_images/{file.filename}")
+
+    for file in ingredient_images:
+        print(file)
+        # if file.filename != '':
+            # file.save(f"uploads/ingredient_images/{file.filename}")
+
+    for file in instruction_images:
+        print(file)
+        # if file.filename != '':
+        #     file.save(f"uploads/instruction_images/{file.filename}")
 
     return 'Files uploaded successfully'
 

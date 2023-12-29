@@ -8,7 +8,15 @@
 <body>
     <h1>Multiple File Upload</h1>
     <form action="http://localhost:5000/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="files[]" multiple>
+        <h2>Recipe Images</h2>
+        <input type="file" name="recipe_images[]" multiple>
+
+        <h2>Ingredient Images</h2>
+        <input type="file" name="ingredient_images[]" multiple>
+
+        <h2>Instruction Images</h2>
+        <input type="file" name="instruction_images[]" multiple>
+
         <input type="submit" value="Upload">
     </form>
 </body>
