@@ -167,16 +167,14 @@ def createRecipe():
             for field in ingr:
                 if field not in requiredFields and field not in optionalFields:
                     ingr.pop(field)
-            ingredient = IngredientDP(**ingr)
+            ingredient = Ingredient(**ingr)
             
             if "ingredient_dps" in ingr:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{recipe.id}'
-                ingredient_dps = request.files.getlist('ingredient_dps[]')
-                dpData = {
-                    "ingredientID": recipe.id,
-                    "userID": g.currentUser.id
-                }
-                Utils.processDPFiles(recipe_dps, Recipe, DP_FOLDER, dpData)
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
+                ingredient_dps = ingr['ingredients_dps']
+                dpFiles = request.files.getlist('ingredient_dps[]')
+                dpData = { "ingredientID": ingredient.id }
+                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData)
 
     except (ValueError) as e:
         return jsonify({

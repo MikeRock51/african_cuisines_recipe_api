@@ -151,10 +151,12 @@ class Utils:
 
         return filename
 
-    def processDPFiles(recipe_dps, fileList, Model, dpFolder, dpData):
-        """Processes and saves dp files"""
+    def processDPFiles(dpObjects, fileList, Model, dpFolder, dpData):
+        """Processes and saves dp files
+            NB: fileList must be in the same order as dpObjects
+        """
         fileIndex = 0
-        for pic in recipe_dps:
+        for pic in dpObjects:
             if not pic.get('fileType'):
                 abort(400, description="Missing required field fileType")
             if pic.get('fileType') == 'link':
@@ -171,7 +173,7 @@ class Utils:
                 setattr(dpData, "filePath", filename)
                 dp = Model(**dpData)
                 dp.save()
-                fileIndex += 1
+            fileIndex += 1
 
     def deleteFile(filePath: str) -> None:
         """Deletes the files at filePath if it exists"""
