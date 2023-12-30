@@ -4,7 +4,7 @@
 from typing import Dict, List
 from models.recipe import Recipe
 import re
-from flask import abort
+from flask import abort, current_app
 import json
 from json.decoder import JSONDecodeError
 import os
@@ -41,10 +41,12 @@ class Utils:
                         abort(400, description=f'Missing required {field}')
                     if field == "ingredients":
                         if (len(data['ingredients']) < 1):
-                            abort(400, description="At least one ingredient is required!")
+                            abort(
+                                400, description="At least one ingredient is required!")
                     elif field == 'instructions':
                         if (len(data['instructions']) < 3):
-                            abort(400, description="At least three steps of instruction is required!")
+                            abort(
+                                400, description="At least three steps of instruction is required!")
             return data
 
     @staticmethod
@@ -99,7 +101,6 @@ class Utils:
             raise ValueError(str(e))
         except (ValueError, JSONDecodeError):
             raise ValueError('Invalid filters')
-        
 
         return filterColumns
 
@@ -114,7 +115,7 @@ class Utils:
             "total_pages": data['total_pages'],
             "data": [recipe.toDict(detailed=detailed) for recipe in data['data']]
         }
-    
+
     def uploadSingleFile(file, uploadFolder, ALLOWED_EXTENSIONS):
         """Uploads file to the given upload folder"""
         from werkzeug.utils import secure_filename
@@ -149,7 +150,29 @@ class Utils:
         file.save(os.path.join(uploadFolder, filename))
 
         return filename
-    
+
+    def processDPFiles(recipe_dps, fileList, Model, dpFolder, dpData):
+        """Processes and saves dp files"""
+        fileIndex = 0
+        for pic in recipe_dps:
+            if not pic.get('fileType'):
+                abort(400, description="Missing required field fileType")
+            if pic.get('fileType') == 'link':
+                if not pic.get('filePath'):
+                    abort(400, description="Missing required field filePath")
+                setattr(dpData, "filePath", pic.get('filePath'))
+                dp = Model(**dpData)
+                dp.save()
+            else:
+                if not fileList[fileIndex]:
+                    continue
+                filename = Utils.uploadSingleFile(
+                    fileList[fileIndex], dpFolder, current_app.config['ALLOWED_IMAGES'])
+                setattr(dpData, "filePath", filename)
+                dp = Model(**dpData)
+                dp.save()
+                fileIndex += 1
+
     def deleteFile(filePath: str) -> None:
         """Deletes the files at filePath if it exists"""
         try:
@@ -168,10 +191,12 @@ class Utils:
                     abort(400, description="At least one ingredient is required!")
             elif field == "nutritional_values":
                 if (len(data['nutritional_values']) < 1):
-                    abort(400, description="At least one nutritional value is required!")
+                    abort(
+                        400, description="At least one nutritional value is required!")
             elif field == 'instructions':
                 if (len(data['instructions']) < 3):
-                    abort(400, description="At least three steps of instruction is required!")
+                    abort(
+                        400, description="At least three steps of instruction is required!")
 
 
 class VError(ValueError):

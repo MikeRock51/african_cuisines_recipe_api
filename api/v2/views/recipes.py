@@ -13,10 +13,10 @@ from models.user import User
 import re
 from flasgger.utils import swag_from
 from os import path
+from models.ingredients.ingredient import Ingredient
+from models.ingredients.ingredientDP import IngredientDP
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
-ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
 
 @app_views.route('/recipes')
 @swag_from(f'{DOCS_DIR}/all_recipes.yml')
@@ -147,29 +147,36 @@ def createRecipe():
     try:
         recipe = Recipe(**recipeData)
         recipe.save()
+        
+        requiredFields = ['name']
+        optionalFields = ['description', 'quantity']
 
         if "recipe_dps" in data:
             DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/recipes/{recipe.id}'
-            recipe_dps = request.files.getlist('recipe_dps[]')
-            fileIndex = 0
-            for pic in data['recipe_dps']:
-                if not pic.get('fileType'):
-                    abort(400, description="Missing required field fileType")
-                if pic.get('fileType') == 'link':
-                    if not pic.get('filePath'):
-                        abort(400, description="Missing required field filePath")
-                    dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=pic.get('filePath'))
-                    dp.save()
-                else:
-                    if not recipe_dps[fileIndex]:
-                        continue
-                    filename = Utils.uploadSingleFile(recipe_dps[fileIndex], DP_FOLDER, ALLOWED_IMAGE_EXTENSIONS)
-                    dp = RecipeDP(recipeID=recipe.id, userID=g.currentUser.id, filePath=filename)
-                    dp.save()
-                    fileIndex += 1
+            recipe_dps = data['recipe_dps']
+            dpFiles = request.files.getlist('recipe_dps[]')
+            dpData = {
+                "recipeID": recipe.id,
+                "userID": g.currentUser.id
+            }
+            Utils.processDPFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData)
 
-        if "ingredient_dps" in data:
-            pass
+        for ingr in data['ingredients']:
+            if "name" not in ingr:
+                abort(400, description="Missing required field: name")
+            for field in ingr:
+                if field not in requiredFields and field not in optionalFields:
+                    ingr.pop(field)
+            ingredient = IngredientDP(**ingr)
+            
+            if "ingredient_dps" in ingr:
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{recipe.id}'
+                ingredient_dps = request.files.getlist('ingredient_dps[]')
+                dpData = {
+                    "ingredientID": recipe.id,
+                    "userID": g.currentUser.id
+                }
+                Utils.processDPFiles(recipe_dps, Recipe, DP_FOLDER, dpData)
 
     except (ValueError) as e:
         return jsonify({
