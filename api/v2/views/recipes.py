@@ -15,6 +15,7 @@ from flasgger.utils import swag_from
 from os import path
 from models.ingredients.ingredient import Ingredient
 from models.ingredients.ingredientDP import IngredientDP
+from models.instructions.instruction import Instruction
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
 
@@ -148,12 +149,10 @@ def createRecipe():
         recipe = Recipe(**recipeData)
         recipe.save()
         
-        requiredFields = ['name']
-        optionalFields = ['description', 'quantity']
-
         if "recipe_dps" in data:
             DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/recipes/{recipe.id}'
             recipe_dps = data['recipe_dps']
+            required = ['fileType']
             dpFiles = request.files.getlist('recipe_dps[]')
             dpData = {
                 "recipeID": recipe.id,
@@ -161,9 +160,12 @@ def createRecipe():
             }
             Utils.processDPFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData)
 
+        requiredFields = ['name']
+        optionalFields = ['description', 'quantity']
         for ingr in data['ingredients']:
-            if "name" not in ingr:
-                abort(400, description="Missing required field: name")
+            for field in requiredFields:
+                if field not in ingr:
+                    abort(400, description=f"Missing required field: {field}")
             for field in ingr:
                 if field not in requiredFields and field not in optionalFields:
                     ingr.pop(field)
@@ -172,9 +174,29 @@ def createRecipe():
             if "ingredient_dps" in ingr:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
                 ingredient_dps = ingr['ingredients_dps']
+                required = ['fileType']
                 dpFiles = request.files.getlist('ingredient_dps[]')
                 dpData = { "ingredientID": ingredient.id }
-                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData)
+                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
+
+        requiredFields = ['title']
+        optionalFields = ['description']
+        for instruct in data['instructions']:
+            for field in requiredFields:
+                if field not in instruct:
+                    abort(400, description=f"Missing required field: {field}")
+            for field in instruct:
+                if field not in requiredFields and field not in optionalFields:
+                    instruct.pop(field)
+            instruction = Instruction(**instruct)
+            
+            if "instruction_medias" in instruct:
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
+                instruction_medias = instruct['instruction_medias']
+                required = ['fileType', 'format']
+                dpFiles = request.files.getlist('instruction_medias[]')
+                dpData = { "instructionID": ingredient.id }
+                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
 
     except (ValueError) as e:
         return jsonify({

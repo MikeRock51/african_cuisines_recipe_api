@@ -11,7 +11,7 @@ class Instruction(BaseModel, Base):
 
     __tablename__ = "instructions"
 
-    name = Column(String(128), nullable=False)
+    title = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
     medias = relationship('instructionMedia', backref='instruction', cascade='all, delete-orphan', single_parent=True)
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)

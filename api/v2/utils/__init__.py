@@ -151,25 +151,27 @@ class Utils:
 
         return filename
 
-    def processDPFiles(dpObjects, fileList, Model, dpFolder, dpData):
+    def processDPFiles(dpObjects, fileList, Model, dpFolder, dpData, required):
         """Processes and saves dp files
             NB: fileList must be in the same order as dpObjects
         """
         fileIndex = 0
         for pic in dpObjects:
-            if not pic.get('fileType'):
-                abort(400, description="Missing required field fileType")
+            for field in required:
+                if field not in pic:
+                    abort(400, description=f"Missing required field {field}")
+                setattr(dpData, field, pic.get(field))
             if pic.get('fileType') == 'link':
                 if not pic.get('filePath'):
                     abort(400, description="Missing required field filePath")
-                setattr(dpData, "filePath", pic.get('filePath'))
+                setattr(dpData, field, pic.get(field))
                 dp = Model(**dpData)
                 dp.save()
             else:
                 if not fileList[fileIndex]:
                     continue
                 filename = Utils.uploadSingleFile(
-                    fileList[fileIndex], dpFolder, current_app.config['ALLOWED_IMAGES'])
+                    fileList[fileIndex], dpFolder, current_app.config['ALLOWED_MEDIA'])
                 setattr(dpData, "filePath", filename)
                 dp = Model(**dpData)
                 dp.save()
