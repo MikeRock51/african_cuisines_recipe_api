@@ -77,7 +77,3 @@ $ curl localhost:9000/api/v1/recipes
 <a href="https://twitter.com/Mike_Rock1">Twitter</a>,
 <a href="https://www.linkedin.com/in/michael-adebayo-637507251/">LinkedIn</a>,
 <a href="mailto:mikerockmusic51@gmail.com">Email</a>
-
-
-<span><i>Made at <a href='https://qwasar.io'>Qwasar SV -- Software Engineering School</a></i></span>
-<span><img alt='Qwasar SV -- Software Engineering School's Logo' src='https://storage.googleapis.com/qwasar-public/qwasar-logo_50x50.png' width='20px' /></span>
