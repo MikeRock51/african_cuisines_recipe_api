@@ -126,10 +126,15 @@ class DBStorage:
         # from models.userDP import UserDP
         from models.recipeDP import RecipeDP
         from models.ingredients.ingredient import Ingredient
+        from models.ingredients.ingredientDP import IngredientDP
         from models.instructions.instruction import Instruction
+        from models.instructions.instructionMedia import InstructionMedia
         from models.nutritionalValue import NutritionalValue
         from models.upvote import Upvote
         from models.instructions.videoInstruction import VideoInstruction
+        from models.bookmarks.bookmark import Bookmark
+        from models.bookmarks.bookmarkList import BookmarkList
+        from models.review import Review
 
         return {
             "User": User,
@@ -138,10 +143,15 @@ class DBStorage:
             "ChatSession": ChatSession,
             "RecipeDP": RecipeDP,
             "Ingredient": Ingredient,
+            "IngredientDP": IngredientDP,
             "Instruction": Instruction,
+            "InstructionMedia": InstructionMedia,
             "NutritionalValue": NutritionalValue,
             "Upvote": Upvote,
-            "VideoInstruction": VideoInstruction
+            "Review": Review,
+            "VideoInstruction": VideoInstruction,
+            "Bookmark": Bookmark,
+            "BookmarkList": BookmarkList
         }
 
     def new(self, obj) -> None:

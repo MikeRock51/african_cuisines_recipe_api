@@ -20,8 +20,8 @@ class User(BaseModel, Base, UserAuth):
     lastname = Column(String(128), nullable=True)
     role = Column(Enum(UserRole), default=UserRole.contributor, nullable=False)
     recipes = relationship('Recipe', backref='author', cascade='all, delete')
-    bookmark_lists = relationship('BookmarkList', backref='user', cascade='all, delete-orphan', single_parent=True)
     dp = Column(String(384), nullable=False)
+    bookmark_lists = relationship('BookmarkList', backref='user', cascade='all, delete-orphan')
 
     def toDict(self, detailed=False):
         """Returns a dictionary representation of a user instance"""

@@ -16,6 +16,7 @@ from os import path
 from models.ingredients.ingredient import Ingredient
 from models.ingredients.ingredientDP import IngredientDP
 from models.instructions.instruction import Instruction
+from models.instructions.instructionMedia import InstructionMedia
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
 
@@ -198,7 +199,7 @@ def createRecipe():
                 required = ['fileType', 'format']
                 mediaFiles = request.files.getlist('instruction_medias[]')
                 dpData = { "instructionID": ingredient.id }
-                Utils.processDPFiles(instruction_medias, mediaFiles, IngredientDP, DP_FOLDER, dpData, required)
+                Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
     except (VError) as e:
         if recipe:
             storage.delete(recipe)
