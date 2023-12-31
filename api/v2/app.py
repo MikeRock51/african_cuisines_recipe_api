@@ -15,7 +15,7 @@ app.url_map.strict_slashes = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['DP_FOLDER'] = path.dirname(__file__) + '/assets/dps'
 app.config['ALLOWED_IMAGES'] = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['ALLOWED_MEDIA'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4'}
+app.config['ALLOWED_MEDIA'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mpeg', '3gp'}
 app.json.sort_keys = False
 CORS(app, resources={r'/api/v2/*': {'origins': '*'}}, support_credentials=True)
 app.register_blueprint(app_views)

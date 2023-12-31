@@ -159,11 +159,13 @@ class Utils:
         for pic in dpObjects:
             for field in required:
                 if field not in pic:
-                    abort(400, description=f"Missing required field {field}")
+                    raise VError(f"Missing required field {field}", 400)
+                    # abort(400, description=f"Missing required field {field}")
                 setattr(dpData, field, pic.get(field))
             if pic.get('fileType') == 'link':
                 if not pic.get('filePath'):
-                    abort(400, description="Missing required field filePath")
+                    raise VError("Missing required field filePath", 400)
+                    # abort(400, description="Missing required field filePath")
                 setattr(dpData, field, pic.get(field))
                 dp = Model(**dpData)
                 dp.save()
@@ -206,6 +208,6 @@ class Utils:
 class VError(ValueError):
     """A custom value error"""
 
-    def __init__(self, message, statusCode):
+    def __init__(self, message: str, statusCode: int):
         super().__init__(message)
         self.statusCode = statusCode

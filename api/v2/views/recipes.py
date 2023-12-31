@@ -7,7 +7,7 @@ from models import storage
 from models.roles import UserRole
 from flask import jsonify, abort, request, g, current_app, make_response, send_from_directory
 from api.v2.views import app_views
-from api.v2.utils import Utils
+from api.v2.utils import Utils, VError
 from api.v2.utils.authWrapper import login_required
 from models.user import User
 import re
@@ -165,7 +165,8 @@ def createRecipe():
         for ingr in data['ingredients']:
             for field in requiredFields:
                 if field not in ingr:
-                    abort(400, description=f"Missing required field: {field}")
+                    raise VError(f"Missing required field {field}", 400)
+                    # abort(400, description=f"Missing required field: {field}")
             for field in ingr:
                 if field not in requiredFields and field not in optionalFields:
                     ingr.pop(field)
@@ -184,7 +185,8 @@ def createRecipe():
         for instruct in data['instructions']:
             for field in requiredFields:
                 if field not in instruct:
-                    abort(400, description=f"Missing required field: {field}")
+                    raise VError(f"Missing required field {field}", 400)
+                    # abort(400, description=f"Missing required field: {field}")
             for field in instruct:
                 if field not in requiredFields and field not in optionalFields:
                     instruct.pop(field)
@@ -194,15 +196,16 @@ def createRecipe():
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
                 instruction_medias = instruct['instruction_medias']
                 required = ['fileType', 'format']
-                dpFiles = request.files.getlist('instruction_medias[]')
+                mediaFiles = request.files.getlist('instruction_medias[]')
                 dpData = { "instructionID": ingredient.id }
-                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
-
-    except (ValueError) as e:
+                Utils.processDPFiles(instruction_medias, mediaFiles, IngredientDP, DP_FOLDER, dpData, required)
+    except (VError) as e:
+        if recipe:
+            storage.delete(recipe)
         return jsonify({
             "status": "error",
-            "message": Utils.extractErrorMessage(str(e))
-        }), 400
+            "message": str(e)
+        }), e.statusCode
 
     data = recipe.toDict(detailed=True)
     return jsonify({
