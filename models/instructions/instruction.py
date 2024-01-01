@@ -13,5 +13,5 @@ class Instruction(BaseModel, Base):
 
     title = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
-    medias = relationship('instructionMedia', backref='instruction', cascade='all, delete-orphan', single_parent=True)
+    medias = relationship('InstructionMedia', backref='instruction', cascade='all, delete-orphan, delete')
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)

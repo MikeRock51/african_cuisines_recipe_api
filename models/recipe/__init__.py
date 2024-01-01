@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The recipe model"""
 
-from sqlalchemy import Column, String, JSON, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey
 from models.base_model import BaseModel, Base
 from models.recipe.recipe import RecipeUtils
 from models.utils import Utils
@@ -17,6 +17,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     cuisine = Column(String(128), default="Unspecified", nullable=False)
     ingredients = relationship('Ingredient', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     instructions = relationship('Instruction', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    videoInstructions = relationship('VideoInstruction', backref='recipe', cascade='all, delete-orphan', single_parent=True)
     serving_size = Column(Integer, nullable=True)
     total_time_minutes = Column(Integer, nullable=False)
     calories_per_serving = Column(Integer, nullable=True)

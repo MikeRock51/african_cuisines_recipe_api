@@ -127,11 +127,11 @@ class DBStorage:
         from models.recipeDP import RecipeDP
         from models.ingredients.ingredient import Ingredient
         from models.ingredients.ingredientDP import IngredientDP
-        from models.instructions.instruction import Instruction
         from models.instructions.instructionMedia import InstructionMedia
+        from models.instructions.instruction import Instruction
+        from models.instructions.videoInstruction import VideoInstruction
         from models.nutritionalValue import NutritionalValue
         from models.upvote import Upvote
-        from models.instructions.videoInstruction import VideoInstruction
         from models.bookmarks.bookmark import Bookmark
         from models.bookmarks.bookmarkList import BookmarkList
         from models.review import Review
