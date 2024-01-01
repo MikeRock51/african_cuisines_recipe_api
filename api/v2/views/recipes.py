@@ -17,6 +17,7 @@ from models.ingredients.ingredient import Ingredient
 from models.ingredients.ingredientDP import IngredientDP
 from models.instructions.instruction import Instruction
 from models.instructions.instructionMedia import InstructionMedia
+import json
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
 
@@ -138,14 +139,16 @@ def createRecipe():
 
     Utils.validateRecipeData(data, requiredFields)
 
+    print("Validated")
+
     recipeData = {}
 
-    for key, value in data:
-        if key in requiredFields or key in optionalFields and key not in objectFields:
-            setattr(recipeData, key, value)
+    for key, value in data.items():
+        if key not in objectFields and key in requiredFields or key in optionalFields:
+            recipeData[key] = value
     
     recipeData['userID'] = g.currentUser.id
-    
+
     try:
         recipe = Recipe(**recipeData)
         recipe.save()
@@ -160,17 +163,20 @@ def createRecipe():
                 "userID": g.currentUser.id
             }
             Utils.processDPFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData)
-
+        
+        ingredients = json.loads(data['ingredients'])
         requiredFields = ['name']
-        optionalFields = ['description', 'quantity']
-        for ingr in data['ingredients']:
+        optionalFields = ['description', 'quantity', 'quantity_metric']
+        for ingr in ingredients:
+            print(ingr)
             for field in requiredFields:
                 if field not in ingr:
-                    raise VError(f"Missing required field {field}", 400)
+                    raise VError(f"Missing required ingredient field {field}", 400)
                     # abort(400, description=f"Missing required field: {field}")
+            ingredientFields = {}
             for field in ingr:
-                if field not in requiredFields and field not in optionalFields:
-                    ingr.pop(field)
+                if field in requiredFields or field in optionalFields:
+                    ingredientFields[field] = ingr[field]
             ingredient = Ingredient(**ingr)
             
             if "ingredient_dps" in ingr:
@@ -183,10 +189,11 @@ def createRecipe():
 
         requiredFields = ['title']
         optionalFields = ['description']
-        for instruct in data['instructions']:
+        instructions = json.loads(data['instructions'])
+        for instruct in instructions:
             for field in requiredFields:
                 if field not in instruct:
-                    raise VError(f"Missing required field {field}", 400)
+                    raise VError(f"Missing required instruction field {field}", 400)
                     # abort(400, description=f"Missing required field: {field}")
             for field in instruct:
                 if field not in requiredFields and field not in optionalFields:
@@ -200,7 +207,7 @@ def createRecipe():
                 mediaFiles = request.files.getlist('instruction_medias[]')
                 dpData = { "instructionID": ingredient.id }
                 Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
-    except (VError) as e:
+    except (Exception) as e:
         if recipe:
             storage.delete(recipe)
         return jsonify({

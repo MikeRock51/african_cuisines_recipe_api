@@ -14,6 +14,7 @@ class Ingredient(BaseModel, Base):
     name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
     quantity = Column(Integer, nullable=True)
+    quantity_metric = Column(String(60), nullable=True)
     dps = relationship('IngredientDP', backref='ingredient', cascade='all, delete-orphan', single_parent=True)
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
     UniqueConstraint('name', 'recipeID', name='uq_igd_per_recipe')

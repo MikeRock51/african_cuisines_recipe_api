@@ -32,8 +32,8 @@ class Recipe(BaseModel, Base, RecipeUtils):
         # Initialize instace 
         super().__init__(*args, **kwargs)
         # Calculate total cook time
-        self.total_time_minutes = self.cook_time_minutes \
-            + self.prep_time_minutes
+        self.total_time_minutes = int(self.cook_time_minutes) \
+            + int(self.prep_time_minutes)
 
     def toDict(self, detailed=False):
         """Extension of basemodel.toDict for recipe data"""

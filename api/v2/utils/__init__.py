@@ -189,9 +189,10 @@ class Utils:
 
     def validateRecipeData(data, requiredFields):
         """Validates recipe POST data"""
+        # print(data)setattr
         for field in requiredFields:
             if field not in data:
-                abort(400, description=f"Missing required {field}")
+                abort(400, description=f"Missing required recipe {field}")
             if field == "ingredients":
                 if (len(data['ingredients']) < 1):
                     abort(400, description="At least one ingredient is required!")
