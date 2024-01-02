@@ -15,16 +15,16 @@ class Recipe(BaseModel, Base, RecipeUtils):
 
     name = Column(String(255), nullable=False)
     cuisine = Column(String(128), default="Unspecified", nullable=False)
-    ingredients = relationship('Ingredient', backref='recipe', cascade='all, delete-orphan', single_parent=True)
-    instructions = relationship('Instruction', backref='recipe', cascade='all, delete-orphan', single_parent=True)
-    videoInstructions = relationship('VideoInstruction', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    ingredients = relationship('Ingredient', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
+    instructions = relationship('Instruction', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
+    videoInstructions = relationship('VideoInstruction', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
     serving_size = Column(Integer, nullable=True)
     total_time_minutes = Column(Integer, nullable=False)
     calories_per_serving = Column(Integer, nullable=True)
-    reviews = relationship('Review', backref='recipe', cascade='all, delete-orphan')
-    upvotes = relationship('Upvote', backref='recipe', cascade='all, delete-orphan', single_parent=True)
-    nutritional_values = relationship('NutritionalValue', backref='recipe', cascade='all, delete-orphan', single_parent=True)
-    dps = relationship('RecipeDP', backref='recipe', cascade='all, delete-orphan', single_parent=True)
+    reviews = relationship('Review', backref='recipe', cascade='all, delete, delete-orphan')
+    upvotes = relationship('Upvote', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
+    nutritional_values = relationship('NutritionalValue', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
+    dps = relationship('RecipeDP', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
 
     def __init__(self, *args, **kwargs) -> None:
@@ -38,11 +38,15 @@ class Recipe(BaseModel, Base, RecipeUtils):
     def toDict(self, detailed=False):
         """Extension of basemodel.toDict for recipe data"""
         instance = super().toDict()
+        print(self.ingredients)
         order = ['name', 'cuisine', 'id', 'prep_time_minutes',
                  'cook_time_minutes', 'total_time_minutes',
                  'calories_per_serving', 'serving_size', 'userID',
                  'ingredients', 'instructions']
         instance['dps'] = [dp.toDict() for dp in self.dps]
+        instance['ingredients'] = [ingredient.toDict() for ingredient in self.ingredients]
+        instance['instructions'] = [instruction.toDict() for instruction in self.instructions]
+        instance['nutritional_values'] = [value.toDict() for value in self.nutritional_values]
 
         if detailed:
             return Utils.sortDictKeys(instance, order)

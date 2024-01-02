@@ -177,7 +177,10 @@ def createRecipe():
             for field in ingr:
                 if field in requiredFields or field in optionalFields:
                     ingredientFields[field] = ingr[field]
-            ingredient = Ingredient(**ingr)
+            ingredientFields['recipeID'] = recipe.id
+            # print(ingredientFields)
+            ingredient = Ingredient(**ingredientFields)
+            ingredient.save()
             
             if "ingredient_dps" in ingr:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
@@ -195,10 +198,13 @@ def createRecipe():
                 if field not in instruct:
                     raise VError(f"Missing required instruction field {field}", 400)
                     # abort(400, description=f"Missing required field: {field}")
+            instructionFields = {}
             for field in instruct:
-                if field not in requiredFields and field not in optionalFields:
-                    instruct.pop(field)
-            instruction = Instruction(**instruct)
+                if field in requiredFields or field in optionalFields:
+                    instructionFields[field] = instruct[field]
+            instructionFields['recipeID'] = recipe.id
+            instruction = Instruction(**instructionFields)
+            instruction.save()
             
             if "instruction_medias" in instruct:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
