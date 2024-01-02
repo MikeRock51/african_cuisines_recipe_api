@@ -17,6 +17,7 @@ from models.ingredients.ingredient import Ingredient
 from models.ingredients.ingredientDP import IngredientDP
 from models.instructions.instruction import Instruction
 from models.instructions.instructionMedia import InstructionMedia
+from models.nutritions.nutritionalValue import NutritionalValue
 import json
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
@@ -204,6 +205,29 @@ def createRecipe():
                     instructionFields[field] = instruct[field]
             instructionFields['recipeID'] = recipe.id
             instruction = Instruction(**instructionFields)
+            instruction.save()
+            
+            if "instruction_medias" in instruct:
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
+                instruction_medias = instruct['instruction_medias']
+                required = ['fileType', 'format']
+                mediaFiles = request.files.getlist('instruction_medias[]')
+                dpData = { "instructionID": ingredient.id }
+                Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
+
+        requiredFields = ['title']
+        optionalFields = ['description']
+        nutritional_values = json.loads(data['nutritional_values'])
+        for value in nutritional_values:
+            for field in requiredFields:
+                if field not in value:
+                    raise VError(f"Missing required nutritional_value field: {field}", 400)
+            nutritionFields = {}
+            for field in value:
+                if field in requiredFields or field in optionalFields:
+                    nutritionFields[field] = value[field]
+            nutritionFields['recipeID'] = recipe.id
+            nutritional_value = NutritionalValue(**nutritionFields)
             instruction.save()
             
             if "instruction_medias" in instruct:

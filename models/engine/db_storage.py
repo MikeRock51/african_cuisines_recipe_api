@@ -130,7 +130,8 @@ class DBStorage:
         from models.instructions.instructionMedia import InstructionMedia
         from models.instructions.instruction import Instruction
         from models.instructions.videoInstruction import VideoInstruction
-        from models.nutritionalValue import NutritionalValue
+        from models.nutritions.nutritionalValue import NutritionalValue
+        from models.nutritions.nutritionDP import NutritionDP
         from models.upvote import Upvote
         from models.bookmarks.bookmark import Bookmark
         from models.bookmarks.bookmarkList import BookmarkList
@@ -147,6 +148,7 @@ class DBStorage:
             "Instruction": Instruction,
             "InstructionMedia": InstructionMedia,
             "NutritionalValue": NutritionalValue,
+            "NutritionDP": NutritionDP,
             "Upvote": Upvote,
             "Review": Review,
             "VideoInstruction": VideoInstruction,
