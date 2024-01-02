@@ -18,6 +18,7 @@ from models.ingredients.ingredientDP import IngredientDP
 from models.instructions.instruction import Instruction
 from models.instructions.instructionMedia import InstructionMedia
 from models.nutritions.nutritionalValue import NutritionalValue
+from models.nutritions.nutritionDP import NutritionDP
 import json
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
@@ -228,15 +229,15 @@ def createRecipe():
                     nutritionFields[field] = value[field]
             nutritionFields['recipeID'] = recipe.id
             nutritional_value = NutritionalValue(**nutritionFields)
-            instruction.save()
+            nutritional_value.save()
             
-            if "instruction_medias" in instruct:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
-                instruction_medias = instruct['instruction_medias']
-                required = ['fileType', 'format']
-                mediaFiles = request.files.getlist('instruction_medias[]')
-                dpData = { "instructionID": ingredient.id }
-                Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
+            if "nutrition_dps" in value:
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritions/{nutritional_value.id}'
+                nutrition_dps = value['nutrition_dps']
+                required = ['fileType']
+                dpFiles = request.files.getlist('nutrition_dps[]')
+                dpData = { "nutritionID": nutritional_value.id }
+                Utils.processDPFiles(nutrition_dps, dpFiles, NutritionDP, DP_FOLDER, dpData, required)
     except (Exception) as e:
         if recipe:
             storage.delete(recipe)

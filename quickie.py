@@ -12,6 +12,8 @@ def upload():
     ingredient_images = request.files.getlist('ingredient_images[]')
     instruction_images = request.files.getlist('instruction_images[]')
 
+    print(recipe_images)
+
     # Process each category of files as needed
     for file in recipe_images:
         print(file)

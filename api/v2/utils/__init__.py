@@ -161,23 +161,23 @@ class Utils:
                 if field not in pic:
                     raise VError(f"Missing required field {field}", 400)
                     # abort(400, description=f"Missing required field {field}")
-                setattr(dpData, field, pic.get(field))
+                dpData[field] = pic.get(field)
             if pic.get('fileType') == 'link':
                 if not pic.get('filePath'):
                     raise VError("Missing required field filePath", 400)
                     # abort(400, description="Missing required field filePath")
-                setattr(dpData, field, pic.get(field))
+                dpData[field] = pic.get(field)
                 dp = Model(**dpData)
                 dp.save()
             else:
-                if not fileList[fileIndex]:
-                    continue
+                if len(fileList) < fileIndex:
+                    raise VError(f"File missing from {Model.__qualname__}", 400)
                 filename = Utils.uploadSingleFile(
                     fileList[fileIndex], dpFolder, current_app.config['ALLOWED_MEDIA'])
-                setattr(dpData, "filePath", filename)
+                dpData["filePath"] = filename
                 dp = Model(**dpData)
                 dp.save()
-            fileIndex += 1
+                fileIndex += 1
 
     def deleteFile(filePath: str) -> None:
         """Deletes the files at filePath if it exists"""
