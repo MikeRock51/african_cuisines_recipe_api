@@ -159,15 +159,16 @@ class Utils:
             for field in required:
                 if field not in file:
                     raise VError(f"Missing required field {field}", 400)
-                    # abort(400, description=f"Missing required field {field}")
                 fileData[field] = file.get(field)
             if file.get('fileType') == 'link':
                 if not file.get('filePath'):
                     raise VError("Missing required field filePath", 400)
-                    # abort(400, description="Missing required field filePath")
                 fileData['filePath'] = file.get('filePath')
             else:
-                fileIndex = int(fileData['fileIndex'])
+                if "fileIndex" not in file:
+                    raise VError(f"Missing required {Model.__qualname__} field: fileIndex", 400)
+                
+                fileIndex = int(file['fileIndex'])
                 if fileIndex > len(fileList):
                     raise VError(f"{Model.__qualname__} fileIndex {fileIndex} is out of bound", 400)
                 filename = Utils.uploadSingleFile(
