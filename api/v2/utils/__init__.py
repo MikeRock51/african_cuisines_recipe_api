@@ -155,7 +155,6 @@ class Utils:
         """Processes and saves dp files
             NB: fileList must be in the same order as fileObjects
         """
-        fileIndex = 0
         for file in fileObjects:
             for field in required:
                 if field not in file:
@@ -166,19 +165,17 @@ class Utils:
                 if not file.get('filePath'):
                     raise VError("Missing required field filePath", 400)
                     # abort(400, description="Missing required field filePath")
-                fileData[field] = file.get(field)
-                f = Model(**fileData)
-                f.save()
+                fileData['filePath'] = file.get('filePath')
             else:
-                if len(fileList) < fileIndex:
-                    raise VError(f"File missing from {Model.__qualname__}", 400)
+                fileIndex = int(fileData['fileIndex'])
+                if fileIndex > len(fileList):
+                    raise VError(f"{Model.__qualname__} fileIndex {fileIndex} is out of bound", 400)
                 filename = Utils.uploadSingleFile(
                     fileList[fileIndex], uploadFolder, current_app.config['ALLOWED_MEDIA'])
                 print(f'{Model.__qualname__} uploaded successfully!')
                 fileData["filePath"] = filename
-                f = Model(**fileData)
-                f.save()
-                fileIndex += 1
+            f = Model(**fileData)
+            f.save()
 
     def deleteFile(filePath: str) -> None:
         """Deletes the files at filePath if it exists"""

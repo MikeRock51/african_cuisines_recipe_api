@@ -4,3 +4,4 @@
 .env
 *.rdb
 .venv
+api/v2/assets/

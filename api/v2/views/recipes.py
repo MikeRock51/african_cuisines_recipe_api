@@ -142,8 +142,6 @@ def createRecipe():
 
     Utils.validateRecipeData(data, requiredFields)
 
-    print("Validated")
-
     recipeData = {}
 
     for key, value in data.items():
@@ -159,7 +157,7 @@ def createRecipe():
         if "recipe_dps" in data:
             DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/recipes/{recipe.id}'
             recipe_dps = json.loads(data['recipe_dps'])
-            required = ['fileType']
+            required = ['fileType', 'fileIndex']
             dpFiles = request.files.getlist('recipe_dps[]')
             dpData = {
                 "recipeID": recipe.id,
@@ -171,7 +169,6 @@ def createRecipe():
         requiredFields = ['name']
         optionalFields = ['description', 'quantity', 'quantity_metric']
         for ingr in ingredients:
-            print(ingr)
             for field in requiredFields:
                 if field not in ingr:
                     raise VError(f"Missing required ingredient field {field}", 400)
@@ -181,14 +178,13 @@ def createRecipe():
                 if field in requiredFields or field in optionalFields:
                     ingredientFields[field] = ingr[field]
             ingredientFields['recipeID'] = recipe.id
-            # print(ingredientFields)
             ingredient = Ingredient(**ingredientFields)
             ingredient.save()
             
             if "ingredient_dps" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
                 ingredient_dps = json.loads(data['ingredient_dps'])
-                required = ['fileType']
+                required = ['fileType', 'fileIndex']
                 dpFiles = request.files.getlist('ingredient_dps[]')
                 dpData = { "ingredientID": ingredient.id }
                 Utils.processFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
@@ -212,7 +208,7 @@ def createRecipe():
             if "instruction_medias" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
                 instruction_medias = json.loads(data['instruction_medias'])
-                required = ['fileType', 'format']
+                required = ['fileType', 'format', 'fileIndex']
                 mediaFiles = request.files.getlist('instruction_medias[]')
                 dpData = { "instructionID": instruction.id }
                 Utils.processFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
@@ -235,7 +231,7 @@ def createRecipe():
             if "nutrition_dps" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritions/{nutritional_value.id}'
                 nutrition_dps = json.loads(data['nutrition_dps'])
-                required = ['fileType']
+                required = ['fileType', 'fileIndex']
                 dpFiles = request.files.getlist('nutrition_dps[]')
                 dpData = { "nutritionID": nutritional_value.id }
                 Utils.processFiles(nutrition_dps, dpFiles, NutritionDP, DP_FOLDER, dpData, required)
@@ -244,6 +240,7 @@ def createRecipe():
             instructionVid = json.loads(data['video_instruction'])
             requiredFields = ['title', 'fileType']
             optionalFields = ['description']
+
             for field in requiredFields:
                 if field not in instructionVid:
                     raise VError(f"Missing required video_instruction field: {field}", 400)
@@ -253,8 +250,9 @@ def createRecipe():
                     vidFields[field] = instructionVid[field]
             vidFields['recipeID'] = recipe.id
             if vidFields['fileType'].lower() == 'link':
-                if 'filePath' not in vidFields:
+                if 'filePath' not in instructionVid:
                     raise VError("Missing required video_instruction field: filePath", 400)
+                vidFields['filePath'] = instructionVid['filePath']
             elif vidFields['fileType'].lower() == 'file':
                 UPLOAD_FOLDER = f'{current_app.config["VIDEO_FOLDER"]}/video_instructions/{instructionVid.id}'
                 videoFile = request.files.getlist('instruction_video')[0]
