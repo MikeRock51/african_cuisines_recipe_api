@@ -174,6 +174,7 @@ class Utils:
                     raise VError(f"File missing from {Model.__qualname__}", 400)
                 filename = Utils.uploadSingleFile(
                     fileList[fileIndex], dpFolder, current_app.config['ALLOWED_MEDIA'])
+                print(f'{Model.__qualname__} uploaded successfully!')
                 dpData["filePath"] = filename
                 dp = Model(**dpData)
                 dp.save()

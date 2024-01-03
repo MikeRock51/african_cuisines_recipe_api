@@ -13,5 +13,5 @@ class InstructionMedia(BaseModel, Base):
     filePath = Column(String(500), nullable=False)
     fileType = Column(String(30), nullable=False) # link or file
     format = Column(String(30), nullable=False) # image or video
-    InstructionID = Column(String(60), ForeignKey('instructions.id'), nullable=False)
+    instructionID = Column(String(60), ForeignKey('instructions.id'), nullable=False)
     UniqueConstraint('filePath', 'instructionID', name='uq_media_per_instruction')

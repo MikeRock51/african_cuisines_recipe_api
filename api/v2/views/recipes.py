@@ -184,9 +184,9 @@ def createRecipe():
             ingredient = Ingredient(**ingredientFields)
             ingredient.save()
             
-            if "ingredient_dps" in ingr:
+            if "ingredient_dps" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
-                ingredient_dps = json.loads(ingr['ingredients_dps'])
+                ingredient_dps = json.loads(data['ingredient_dps'])
                 required = ['fileType']
                 dpFiles = request.files.getlist('ingredient_dps[]')
                 dpData = { "ingredientID": ingredient.id }
@@ -208,12 +208,12 @@ def createRecipe():
             instruction = Instruction(**instructionFields)
             instruction.save()
             
-            if "instruction_medias" in instruct:
+            if "instruction_medias" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
-                instruction_medias = json.loads(instruct['instruction_medias'])
+                instruction_medias = json.loads(data['instruction_medias'])
                 required = ['fileType', 'format']
                 mediaFiles = request.files.getlist('instruction_medias[]')
-                dpData = { "instructionID": ingredient.id }
+                dpData = { "instructionID": instruction.id }
                 Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
 
         requiredFields = ['title']
@@ -231,9 +231,9 @@ def createRecipe():
             nutritional_value = NutritionalValue(**nutritionFields)
             nutritional_value.save()
             
-            if "nutrition_dps" in value:
+            if "nutrition_dps" in data:
                 DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritions/{nutritional_value.id}'
-                nutrition_dps = value['nutrition_dps']
+                nutrition_dps = json.loads(data['nutrition_dps'])
                 required = ['fileType']
                 dpFiles = request.files.getlist('nutrition_dps[]')
                 dpData = { "nutritionID": nutritional_value.id }

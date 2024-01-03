@@ -12,5 +12,5 @@ class NutritionDP(BaseModel, Base):
 
     filePath = Column(String(384), nullable=False)
     fileType = Column(String(30), nullable=False, default="link")
-    NutritionID = Column(String(60), ForeignKey('nutritional_values.id'), nullable=False)
+    nutritionID = Column(String(60), ForeignKey('nutritional_values.id'), nullable=False)
     UniqueConstraint('filePath', 'nutritionaID', name='uq_dp_per_nutrition')
