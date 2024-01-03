@@ -19,6 +19,7 @@ from models.instructions.instruction import Instruction
 from models.instructions.instructionMedia import InstructionMedia
 from models.nutritions.nutritionalValue import NutritionalValue
 from models.nutritions.nutritionDP import NutritionDP
+from models.instructions.videoInstruction import VideoInstruction
 import json
 
 DOCS_DIR = path.dirname(__file__) + '/documentations/recipes'
@@ -164,7 +165,7 @@ def createRecipe():
                 "recipeID": recipe.id,
                 "userID": g.currentUser.id
             }
-            Utils.processDPFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData, required)
+            Utils.processFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData, required)
         
         ingredients = json.loads(data['ingredients'])
         requiredFields = ['name']
@@ -190,7 +191,7 @@ def createRecipe():
                 required = ['fileType']
                 dpFiles = request.files.getlist('ingredient_dps[]')
                 dpData = { "ingredientID": ingredient.id }
-                Utils.processDPFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
+                Utils.processFiles(ingredient_dps, dpFiles, IngredientDP, DP_FOLDER, dpData, required)
 
         requiredFields = ['title']
         optionalFields = ['description']
@@ -214,7 +215,7 @@ def createRecipe():
                 required = ['fileType', 'format']
                 mediaFiles = request.files.getlist('instruction_medias[]')
                 dpData = { "instructionID": instruction.id }
-                Utils.processDPFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
+                Utils.processFiles(instruction_medias, mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
 
         requiredFields = ['title']
         optionalFields = ['description']
@@ -237,7 +238,30 @@ def createRecipe():
                 required = ['fileType']
                 dpFiles = request.files.getlist('nutrition_dps[]')
                 dpData = { "nutritionID": nutritional_value.id }
-                Utils.processDPFiles(nutrition_dps, dpFiles, NutritionDP, DP_FOLDER, dpData, required)
+                Utils.processFiles(nutrition_dps, dpFiles, NutritionDP, DP_FOLDER, dpData, required)
+
+        if "video_instruction" in data:
+            instructionVid = json.loads(data['video_instruction'])
+            requiredFields = ['title', 'fileType']
+            optionalFields = ['description']
+            for field in requiredFields:
+                if field not in instructionVid:
+                    raise VError(f"Missing required video_instruction field: {field}", 400)
+            vidFields = {}
+            for field in instructionVid:
+                if field in requiredFields or field in optionalFields:
+                    vidFields[field] = instructionVid[field]
+            vidFields['recipeID'] = recipe.id
+            if vidFields['fileType'].lower() == 'link':
+                if 'filePath' not in vidFields:
+                    raise VError("Missing required video_instruction field: filePath", 400)
+            elif vidFields['fileType'].lower() == 'file':
+                UPLOAD_FOLDER = f'{current_app.config["VIDEO_FOLDER"]}/video_instructions/{instructionVid.id}'
+                videoFile = request.files.getlist('instruction_video')[0]
+                filename = Utils.uploadSingleFile(videoFile, UPLOAD_FOLDER, current_app.config['ALLOWED_VIDEOS'])
+                vidFields['filePath'] = filename
+            video_instruction = VideoInstruction(**vidFields)
+            video_instruction.save()
     except (VError) as ve:
         if recipe:
             storage.delete(recipe)
@@ -246,14 +270,14 @@ def createRecipe():
             "message": str(ve),
             "data": None
         }), ve.statusCode
-    # except (Exception) as e:
-    #     if recipe:
-    #         storage.delete(recipe)
-    #     return jsonify({
-    #         "status": "error",
-    #         "message": str(e),
-    #         "data": None
-    #     }), 400
+    except (Exception) as e:
+        if recipe:
+            storage.delete(recipe)
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "data": None
+        }), 400
 
     data = recipe.toDict(detailed=True)
     return jsonify({

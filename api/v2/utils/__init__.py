@@ -151,33 +151,33 @@ class Utils:
 
         return filename
 
-    def processDPFiles(dpObjects, fileList, Model, dpFolder, dpData, required):
+    def processFiles(fileObjects, fileList, Model, uploadFolder, fileData, required):
         """Processes and saves dp files
-            NB: fileList must be in the same order as dpObjects
+            NB: fileList must be in the same order as fileObjects
         """
         fileIndex = 0
-        for pic in dpObjects:
+        for file in fileObjects:
             for field in required:
-                if field not in pic:
+                if field not in file:
                     raise VError(f"Missing required field {field}", 400)
                     # abort(400, description=f"Missing required field {field}")
-                dpData[field] = pic.get(field)
-            if pic.get('fileType') == 'link':
-                if not pic.get('filePath'):
+                fileData[field] = file.get(field)
+            if file.get('fileType') == 'link':
+                if not file.get('filePath'):
                     raise VError("Missing required field filePath", 400)
                     # abort(400, description="Missing required field filePath")
-                dpData[field] = pic.get(field)
-                dp = Model(**dpData)
-                dp.save()
+                fileData[field] = file.get(field)
+                f = Model(**fileData)
+                f.save()
             else:
                 if len(fileList) < fileIndex:
                     raise VError(f"File missing from {Model.__qualname__}", 400)
                 filename = Utils.uploadSingleFile(
-                    fileList[fileIndex], dpFolder, current_app.config['ALLOWED_MEDIA'])
+                    fileList[fileIndex], uploadFolder, current_app.config['ALLOWED_MEDIA'])
                 print(f'{Model.__qualname__} uploaded successfully!')
-                dpData["filePath"] = filename
-                dp = Model(**dpData)
-                dp.save()
+                fileData["filePath"] = filename
+                f = Model(**fileData)
+                f.save()
                 fileIndex += 1
 
     def deleteFile(filePath: str) -> None:

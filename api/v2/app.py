@@ -14,11 +14,18 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['DP_FOLDER'] = path.dirname(__file__) + '/assets/dps'
+app.config['VIDEO_FOLDER'] = path.dirname(__file__) + '/assets/videos'
 app.config['ALLOWED_IMAGES'] = {'png', 'jpg', 'jpeg', 'gif'}
-app.config['ALLOWED_MEDIA'] = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mpeg', '3gp'}
+app.config['ALLOWED_VIDEOS'] = {"MP4", "AVI", "MKV", "WMV", "FLV", "MOV", "MPEG", "3GP",
+                                "WEBM", "OGG", "M4V", "DIVX", "RM", "VOB", "TS", "MTS", "M2TS",
+                                "F4V", "SWF", "ASF", "MPG", "M2V", "QT", "MPG2", "MPG4", "M2P",
+                                "M2V", "RMVB", "3G2", "H.264", "H.265", "VP8", "VP9", "WEBP"}
+app.config['ALLOWED_MEDIA'] = {
+    'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mpeg', '3gp'}
 app.json.sort_keys = False
 CORS(app, resources={r'/api/v2/*': {'origins': '*'}}, support_credentials=True)
 app.register_blueprint(app_views)
+
 
 @app.before_request
 def authenticate():
@@ -30,10 +37,12 @@ def authenticate():
     except ValueError:
         g.currentUser = None
 
+
 @app.teardown_appcontext
 def tearDown(self):
     """Removes the current database session after each request"""
     storage.close()
+
 
 @app.errorhandler(400)
 def badRequest(error):
@@ -44,6 +53,7 @@ def badRequest(error):
         "data:": None
     }), 400
 
+
 @app.errorhandler(401)
 def unauthorized(error):
     """Handles 401 errors"""
@@ -52,6 +62,7 @@ def unauthorized(error):
         "message": error.description or "Unauthorized",
         "data:": None
     }), 401
+
 
 @app.errorhandler(403)
 def forbidden(error):
@@ -62,6 +73,7 @@ def forbidden(error):
         "data:": None
     }), 403
 
+
 @app.errorhandler(404)
 def notFound(error):
     """Handles 404 errors"""
@@ -70,6 +82,7 @@ def notFound(error):
         "message": error.description or "Not Found",
         "data:": None
     }), 404
+
 
 @app.errorhandler(409)
 def unauthorized(error):
@@ -80,6 +93,7 @@ def unauthorized(error):
         "data:": None
     }), 409
 
+
 @app.errorhandler(406)
 def unauthorized(error):
     """Handles 406 errors"""
@@ -88,6 +102,7 @@ def unauthorized(error):
         "message": error.description or "Resource unacceptable!",
         "data:": None
     }), 409
+
 
 app.config['SWAGGER'] = {
     'title': 'African Cuisines Recipe Restful API',
