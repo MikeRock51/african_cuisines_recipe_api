@@ -175,23 +175,15 @@ class DBStorage:
             if obj.__class__.__name__ == 'Recipe':
                 filedFields = ['ingredients', 'instructions', 'nutritional_values']
                 DP_FOLDER = path.abspath('api/v2/assets/dps')
-                for dp in obj.dps:
-                    if dp.fileType != 'link':
-                        Utils.deleteFile(f'{DP_FOLDER}/recipes/{obj.id}/{dp.filePath}')
+                Utils.deleteFolder(f'{DP_FOLDER}/recipes/{obj.id}')
                 for field in filedFields:
                     items = getattr(obj, field)
                     for item in items:
-                        if field == 'instructions':
-                            fileObjects = item.medias
-                        else:
-                            fileObjects = item.dps
-                        for file in fileObjects:
-                            if file.fileType != 'link':
-                                Utils.deleteFile(f'{DP_FOLDER}/{field}/{item.id}/{file.filePath}')
+                        print(item)
+                        Utils.deleteFolder(f'{DP_FOLDER}/{field}/{item.id}')
                 VIDEO_FOLDER = path.abspath('api/v2/assets/videos')
                 for vid in obj.videoInstructions:
-                    if vid.fileType != 'link':
-                        Utils.deleteFile(f'{VIDEO_FOLDER}/video_instructions/{vid.id}/{vid.filePath}')
+                    Utils.deleteFolder(f'{VIDEO_FOLDER}/video_instructions/{vid.id}')
 
     def get(self, obj, id: str):
         """Retrieves the obj instance with the given id"""

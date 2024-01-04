@@ -186,6 +186,15 @@ class Utils:
             print(f"File {filePath} not found! Moving on...")
             pass
 
+    def deleteFolder(filePath: str) -> None:
+        """Deletes the folder at filePath and all it's content if it exists"""
+        import shutil
+        try:
+            shutil.rmtree(filePath)
+        except FileNotFoundError:
+            print(f"Folder {filePath} not found! Moving on...")
+            pass
+
     def validateRecipeData(data, requiredFields):
         """Validates recipe POST data"""
         # print(data)setattr
