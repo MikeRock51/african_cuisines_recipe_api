@@ -234,7 +234,7 @@ def createRecipe():
             nutritional_value.save()
             
             if "nutrition_dps" in value:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritions/{nutritional_value.id}'
+                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritional_values/{nutritional_value.id}'
                 # nutrition_dps = json.loads(value['nutrition_dps'])
                 required = ['fileType']
                 dpFiles = request.files.getlist('nutrition_dps[]')

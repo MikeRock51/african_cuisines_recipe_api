@@ -183,7 +183,7 @@ class Utils:
         try:
             os.remove(filePath)
         except FileNotFoundError:
-            print("File not found! Moving on...")
+            print(f"File {filePath} not found! Moving on...")
             pass
 
     def validateRecipeData(data, requiredFields):

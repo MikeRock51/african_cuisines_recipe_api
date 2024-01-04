@@ -169,19 +169,29 @@ class DBStorage:
         """Deletes obj from the current session and database"""
         from api.v2.utils import Utils
         if obj:
+            self.__session.delete(obj)
+            self.save()
+
             if obj.__class__.__name__ == 'Recipe':
-                filedFields = ['ingredients', 'instructions', 'nutritions', 'video_instructions']
+                filedFields = ['ingredients', 'instructions', 'nutritional_values']
                 DP_FOLDER = path.abspath('api/v2/assets/dps')
                 for dp in obj.dps:
                     if dp.fileType != 'link':
                         Utils.deleteFile(f'{DP_FOLDER}/recipes/{obj.id}/{dp.filePath}')
-                for ingredient in obj.ingredients:
-                    for dp in ingredient:
-                        if dp.fileType != 'link':
-                            Utils.deleteFile(f'{DP_FOLDER}/ingredients/{ingredient.id}/{dp.filePath}')
-                    
-            # self.__session.delete(obj)
-            # self.save()
+                for field in filedFields:
+                    items = getattr(obj, field)
+                    for item in items:
+                        if field == 'instructions':
+                            fileObjects = item.medias
+                        else:
+                            fileObjects = item.dps
+                        for file in fileObjects:
+                            if file.fileType != 'link':
+                                Utils.deleteFile(f'{DP_FOLDER}/{field}/{item.id}/{file.filePath}')
+                VIDEO_FOLDER = path.abspath('api/v2/assets/videos')
+                for vid in obj.videoInstructions:
+                    if vid.fileType != 'link':
+                        Utils.deleteFile(f'{VIDEO_FOLDER}/video_instructions/{vid.id}/{vid.filePath}')
 
     def get(self, obj, id: str):
         """Retrieves the obj instance with the given id"""
