@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from math import ceil
 from sqlalchemy.exc import ArgumentError, NoResultFound, IntegrityError
 from sqlalchemy.sql.sqltypes import JSON
+from os import path
 
 load_dotenv()
 
@@ -166,9 +167,21 @@ class DBStorage:
 
     def delete(self, obj=None) -> None:
         """Deletes obj from the current session and database"""
+        from api.v2.utils import Utils
         if obj:
-            self.__session.delete(obj)
-            self.save()
+            if obj.__class__.__name__ == 'Recipe':
+                filedFields = ['ingredients', 'instructions', 'nutritions', 'video_instructions']
+                DP_FOLDER = path.abspath('api/v2/assets/dps')
+                for dp in obj.dps:
+                    if dp.fileType != 'link':
+                        Utils.deleteFile(f'{DP_FOLDER}/recipes/{obj.id}/{dp.filePath}')
+                for ingredient in obj.ingredients:
+                    for dp in ingredient:
+                        if dp.fileType != 'link':
+                            Utils.deleteFile(f'{DP_FOLDER}/ingredients/{ingredient.id}/{dp.filePath}')
+                    
+            # self.__session.delete(obj)
+            # self.save()
 
     def get(self, obj, id: str):
         """Retrieves the obj instance with the given id"""

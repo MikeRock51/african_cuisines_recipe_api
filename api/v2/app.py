@@ -26,7 +26,7 @@ app.json.sort_keys = False
 CORS(app, resources={r'/api/v2/*': {'origins': '*'}}, support_credentials=True)
 app.register_blueprint(app_views)
 
-
+print(path.dirname(__file__) + '/assets/dps')
 @app.before_request
 def authenticate():
     """Handles pre-request setups and validations"""
