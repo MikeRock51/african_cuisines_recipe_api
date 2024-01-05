@@ -179,11 +179,11 @@ class DBStorage:
                 for field in filedFields:
                     items = getattr(obj, field)
                     for item in items:
-                        print(item)
                         Utils.deleteFolder(f'{DP_FOLDER}/{field}/{item.id}')
                 VIDEO_FOLDER = path.abspath('api/v2/assets/videos')
                 for vid in obj.videoInstructions:
-                    Utils.deleteFolder(f'{VIDEO_FOLDER}/video_instructions/{vid.id}')
+                    if vid.fileType != 'link':
+                        Utils.deleteFolder(f'{VIDEO_FOLDER}/video_instructions/{vid.id}')
 
     def get(self, obj, id: str):
         """Retrieves the obj instance with the given id"""
