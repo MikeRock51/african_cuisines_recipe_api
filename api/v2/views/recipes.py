@@ -146,7 +146,7 @@ def createRecipe():
 
     recipeData = {}
 
-    for key, value in data.items():
+    for key, value in data.items(): # Filter non-recipe fields
         if key not in objectFields and key in requiredFields or key in optionalFields:
             recipeData[key] = value
     
@@ -195,7 +195,7 @@ def createRecipe():
         }
 
         for key, value in objectFields.items():
-            fieldData = json.loads(data[key])
+            fieldData = json.loads(data[key]) # Load field json data
             for item in fieldData:
                 for field in value['requiredFields']:
                     if field not in item:

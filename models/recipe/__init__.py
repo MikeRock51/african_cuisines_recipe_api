@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The recipe model"""
 
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, UniqueConstraint
 from models.base_model import BaseModel, Base
 from models.recipe.recipe import RecipeUtils
 from models.utils import Utils
@@ -26,6 +26,7 @@ class Recipe(BaseModel, Base, RecipeUtils):
     nutritional_values = relationship('NutritionalValue', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
     dps = relationship('RecipeDP', backref='recipe', cascade='all, delete, delete-orphan', single_parent=True)
     userID = Column(String(60), ForeignKey('users.id'), nullable=False)
+    UniqueConstraint('name', 'userID', name='unique_recipe_per_user'),
 
     def __init__(self, *args, **kwargs) -> None:
         """Initialize instance"""
