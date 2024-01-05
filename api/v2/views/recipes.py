@@ -166,80 +166,59 @@ def createRecipe():
                 "userID": g.currentUser.id
             }
             Utils.processFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData, required)
-        
-        ingredients = json.loads(data['ingredients'])
-        requiredFields = ['name']
-        optionalFields = ['description', 'quantity', 'quantity_metric']
-        for ingr in ingredients:
-            for field in requiredFields:
-                if field not in ingr:
-                    raise VError(f"Missing required ingredient field {field}", 400)
-                    # abort(400, description=f"Missing required field: {field}")
-            ingredientFields = {}
-            for field in ingr:
-                if field in requiredFields or field in optionalFields:
-                    ingredientFields[field] = ingr[field]
-            ingredientFields['recipeID'] = recipe.id
-            ingredient = Ingredient(**ingredientFields)
-            ingredient.save()
-            
-            if "ingredient_dps" in ingr:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/ingredients/{ingredient.id}'
-                print(type(ingr['ingredient_dps']))
-                # ingredient_dps = json.loads(ingr['ingredient_dps'])
-                required = ['fileType']
-                dpFiles = request.files.getlist('ingredient_dps[]')
-                dpData = { "ingredientID": ingredient.id }
-                Utils.processFiles(ingr['ingredient_dps'], dpFiles, IngredientDP, DP_FOLDER, dpData, required)
 
-        requiredFields = ['title']
-        optionalFields = ['description']
-        instructions = json.loads(data['instructions'])
-        for instruct in instructions:
-            for field in requiredFields:
-                if field not in instruct:
-                    raise VError(f"Missing required instruction field {field}", 400)
-                    # abort(400, description=f"Missing required field: {field}")
-            instructionFields = {}
-            for field in instruct:
-                if field in requiredFields or field in optionalFields:
-                    instructionFields[field] = instruct[field]
-            instructionFields['recipeID'] = recipe.id
-            instruction = Instruction(**instructionFields)
-            instruction.save()
-            
-            if "instruction_medias" in instruct:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/instructions/{instruction.id}'
-                # instruction_medias = json.loads(instruct['instruction_medias'])
-                # print(f'Instruction Medias: {instruction_medias}')
-                required = ['fileType', 'format']
-                mediaFiles = request.files.getlist('instruction_medias[]')
-                # print(f'Media Files: {mediaFiles}')
-                dpData = { "instructionID": instruction.id }
-                Utils.processFiles(instruct['instruction_medias'], mediaFiles, InstructionMedia, DP_FOLDER, dpData, required)
+        objectFields = {
+            "ingredients": {
+                "requiredFields": ['name'],
+                "optionalFields": ['description', 'quantity', 'quantity_metric'],
+                "required": ['fileType'],
+                "fileField": "ingredient_dps",
+                "Model": Ingredient,
+                "DPModel": IngredientDP
+            },
+            'instructions': {
+                "requiredFields": ['title'],
+                "optionalFields": ['description'],
+                "required": ['fileType', 'format'],
+                "fileField": "instruction_medias",
+                "Model": Instruction,
+                "DPModel": InstructionMedia
+            },
+            'nutritional_values': {
+                "requiredFields": ['title'],
+                "optionalFields": ['description'],
+                "required": ['fileType'],
+                "fileField": "nutrition_dps",
+                "Model": NutritionalValue,
+                "DPModel": NutritionDP
+            }
+        }
 
-        requiredFields = ['title']
-        optionalFields = ['description']
-        nutritional_values = json.loads(data['nutritional_values'])
-        for value in nutritional_values:
-            for field in requiredFields:
-                if field not in value:
-                    raise VError(f"Missing required nutritional_value field: {field}", 400)
-            nutritionFields = {}
-            for field in value:
-                if field in requiredFields or field in optionalFields:
-                    nutritionFields[field] = value[field]
-            nutritionFields['recipeID'] = recipe.id
-            nutritional_value = NutritionalValue(**nutritionFields)
-            nutritional_value.save()
-            
-            if "nutrition_dps" in value:
-                DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/nutritional_values/{nutritional_value.id}'
-                # nutrition_dps = json.loads(value['nutrition_dps'])
-                required = ['fileType']
-                dpFiles = request.files.getlist('nutrition_dps[]')
-                dpData = { "nutritionID": nutritional_value.id }
-                Utils.processFiles(value['nutrition_dps'], dpFiles, NutritionDP, DP_FOLDER, dpData, required)
+        for key, value in objectFields.items():
+            fieldData = json.loads(data[key])
+            for item in fieldData:
+                for field in value['requiredFields']:
+                    if field not in item:
+                        raise VError(f"Missing required {key} field {field}", 400)
+                objFields = {}
+                for field in item:
+                    if field in value['requiredFields'] or field in value['optionalFields']:
+                        objFields[field] = item[field]
+                objFields['recipeID'] = recipe.id
+                print(objFields)
+                obj = value['Model'](**objFields)
+                obj.save()
+
+                if value['fileField'] in item:
+                    DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/{key}/{obj.id}'
+                    mediaFiles = request.files.getlist(f'{value["fileField"]}[]')
+                    if key == 'nutritional_values':
+                        parentField = 'nutrition'
+                    else:
+                        parentField = key[:-1]
+                    mediaData = { f"{parentField}ID": obj.id }
+                    print(mediaData)
+                    Utils.processFiles(item[value['fileField']], mediaFiles, value['DPModel'], DP_FOLDER, mediaData, value['required'])
 
         if "video_instruction" in data:
             instructionVid = json.loads(data['video_instruction'])
@@ -273,14 +252,14 @@ def createRecipe():
             "message": str(ve),
             "data": None
         }), ve.statusCode
-    # except (Exception) as e:
-    #     if recipe:
-    #         storage.delete(recipe)
-    #     return jsonify({
-    #         "status": "error",
-    #         "message": str(e),
-    #         "data": None
-    #     }), 400
+    except (Exception) as e:
+        if recipe:
+            storage.delete(recipe)
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "data": None
+        }), 400
 
     data = recipe.toDict(detailed=True)
     return jsonify({
