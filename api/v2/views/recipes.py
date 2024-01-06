@@ -196,31 +196,29 @@ def createRecipe():
 
         for key, value in objectFields.items():
             fieldData = json.loads(data[key]) # Load field json data
-            for item in fieldData:
-                for field in value['requiredFields']:
+            for item in fieldData: # Loop through each item and create the object
+                for field in value['requiredFields']: # Validate required fields
                     if field not in item:
                         raise VError(f"Missing required {key} field {field}", 400)
                 objFields = {}
                 for field in item:
                     if field in value['requiredFields'] or field in value['optionalFields']:
-                        objFields[field] = item[field]
-                objFields['recipeID'] = recipe.id
-                print(objFields)
-                obj = value['Model'](**objFields)
+                        objFields[field] = item[field] # Extract relevant fields
+                objFields['recipeID'] = recipe.id # Add userID to fields object
+                obj = value['Model'](**objFields) # Create object
                 obj.save()
 
-                if value['fileField'] in item:
+                if value['fileField'] in item: # Create field files if present
                     DP_FOLDER = f'{current_app.config["DP_FOLDER"]}/{key}/{obj.id}'
-                    mediaFiles = request.files.getlist(f'{value["fileField"]}[]')
-                    if key == 'nutritional_values':
+                    mediaFiles = request.files.getlist(f'{value["fileField"]}[]') # Get file list
+                    if key == 'nutritional_values': # Change nutritional_values to nutrition to match expected parentID field
                         parentField = 'nutrition'
                     else:
-                        parentField = key[:-1]
-                    mediaData = { f"{parentField}ID": obj.id }
-                    print(mediaData)
-                    Utils.processFiles(item[value['fileField']], mediaFiles, value['DPModel'], DP_FOLDER, mediaData, value['required'])
+                        parentField = key[:-1] # Extract parent field without the trailing 's'
+                    mediaData = { f"{parentField}ID": obj.id } # Set media parentID
+                    Utils.processFiles(item[value['fileField']], mediaFiles, value['DPModel'], DP_FOLDER, mediaData, value['required']) # Create file objects and save files
 
-        if "video_instruction" in data:
+        if "video_instruction" in data: # Process the video instruction is present
             instructionVid = json.loads(data['video_instruction'])
             requiredFields = ['title', 'fileType']
             optionalFields = ['description']
