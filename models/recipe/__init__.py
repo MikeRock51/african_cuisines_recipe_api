@@ -44,10 +44,10 @@ class Recipe(BaseModel, Base, RecipeUtils):
                  'cook_time_minutes', 'total_time_minutes',
                  'calories_per_serving', 'serving_size', 'userID',
                  'ingredients', 'instructions']
-        instance['dps'] = [dp.toDict(detailed=detailed) for dp in self.dps]
-        instance['ingredients'] = [ingredient.toDict(detailed=detailed) for ingredient in self.ingredients]
-        instance['instructions'] = [instruction.toDict(detailed=detailed) for instruction in self.instructions]
-        instance['nutritional_values'] = [value.toDict(detailed=detailed) for value in self.nutritional_values]
+        instance['dps'] = [dp.toDict() for dp in self.dps]
+        instance['ingredients'] = [ingredient.toDict() for ingredient in self.ingredients]
+        instance['instructions'] = [instruction.toDict() for instruction in self.instructions]
+        instance['nutritional_values'] = [value.toDict() for value in self.nutritional_values]
 
         if detailed:
             return Utils.sortDictKeys(instance, order)

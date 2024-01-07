@@ -15,3 +15,19 @@ class Instruction(BaseModel, Base):
     description = Column(String(1024), nullable=True)
     medias = relationship('InstructionMedia', backref='instruction', cascade='all, delete-orphan, delete')
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
+
+    def toDict(self, detailed=False):
+        """Extension of basemodel.toDict for instruction data"""
+        instance = super().toDict()
+        instance['instruction_medias'] = [media.toDict() for media in self.medias]
+        if detailed:
+            return instance
+
+        heldBackAttrs = ["__class__", "createdAt", "updatedAt"]
+
+        # Filter heldback attributes
+        for attr in heldBackAttrs:
+            if attr in instance:
+                instance.pop(attr)
+
+        return instance
