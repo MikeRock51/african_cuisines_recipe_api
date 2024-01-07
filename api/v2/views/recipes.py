@@ -167,7 +167,7 @@ def createRecipe():
             }
             Utils.processFiles(recipe_dps, dpFiles, RecipeDP, DP_FOLDER, dpData, required)
 
-        objectFields = {
+        objectFields = { # Define object fields to create and their attributes
             "ingredients": {
                 "requiredFields": ['name'],
                 "optionalFields": ['description', 'quantity', 'quantity_metric'],

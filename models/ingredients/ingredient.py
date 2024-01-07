@@ -18,3 +18,19 @@ class Ingredient(BaseModel, Base):
     dps = relationship('IngredientDP', backref='ingredient', cascade='all, delete-orphan', single_parent=True)
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
     UniqueConstraint('name', 'recipeID', name='uq_igd_per_recipe')
+
+    def toDict(self, detailed=False):
+        """Extension of basemodel.toDict for ingredient data"""
+        instance = super().toDict()
+        instance['ingredient_dps'] = [dp.toDict() for dp in self.dps]
+        if detailed:
+            return instance
+
+        heldBackAttrs = ["__class__", "createdAt", "updatedAt"]
+
+        # Filter heldback attributes
+        for attr in heldBackAttrs:
+            if attr in instance:
+                instance.pop(attr)
+
+        return instance
