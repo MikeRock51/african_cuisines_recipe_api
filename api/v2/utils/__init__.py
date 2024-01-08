@@ -97,6 +97,7 @@ class Utils:
                 print(type(getattr(Recipe, key).type))
                 if isinstance(getattr(Recipe, key).type, JSON):
                     print(f'{key} is a list')
+                print(f'Filter na re oo: {filterColumns}')
         except AttributeError as e:
             raise ValueError(str(e))
         except (ValueError, JSONDecodeError):

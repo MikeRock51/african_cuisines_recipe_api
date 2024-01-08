@@ -83,13 +83,14 @@ class DBStorage:
                     query = query.filter(obj.name.ilike(f"%{search}%"))
                 if filterColumns != {}:
                     # Create a list of filter conditions based on specified columns
-                    print(filterColumns)
+                    print(f"Filter Columns: {filterColumns}")
                     
                     # filterConditions = [(key.in_(value)
                     #                      for key, value in filterColumns.items())]
                     filterConditions = []
 
                     for key, value in filterColumns.items():
+                        print(f"Filter items: {key} - {value}")
                         if isinstance(key.type, JSON):
                             for val in value:
                                 searchTerm = f'%{val}%'
