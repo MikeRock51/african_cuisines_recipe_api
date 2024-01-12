@@ -93,6 +93,7 @@ class Utils:
         try:
             filterBy = json.loads(filterBy)
             for key, value in filterBy.items():
+                print(getattr(Recipe, key))
                 filterColumns[getattr(Recipe, key)] = value
                 print(type(getattr(Recipe, key).type))
                 if isinstance(getattr(Recipe, key).type, JSON):

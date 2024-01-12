@@ -35,7 +35,6 @@ def allRecipes():
     filterColumns = {}
 
     if filterBy:
-        print(filterBy)
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
         except ValueError as e:
