@@ -37,6 +37,7 @@ def allRecipes():
     if filterBy:
         try:
             filterColumns = Utils.getFilterColumns(filterBy)
+            # print(filterColumns)
         except ValueError as e:
             return jsonify({
                 "status": "error",

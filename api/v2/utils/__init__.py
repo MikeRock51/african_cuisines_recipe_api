@@ -93,12 +93,16 @@ class Utils:
         try:
             filterBy = json.loads(filterBy)
             for key, value in filterBy.items():
-                print(getattr(Recipe, key))
+                # print(key)
+                # print(f'TY: {dir(getattr(Recipe, key))}')
+                # print(f'TYPE: {getattr(Recipe, key).type}')
+                # print(value)
                 filterColumns[getattr(Recipe, key)] = value
-                print(type(getattr(Recipe, key).type))
-                if isinstance(getattr(Recipe, key).type, JSON):
-                    print(f'{key} is a list')
-                print(f'Filter na re oo: {filterColumns}')
+                # print(filterColumns)
+                # print(type(getattr(Recipe, key).type))
+                # if isinstance(getattr(Recipe, key).type, JSON):
+                #     print(f'{key} is a list')
+                # print(f'Filter na re oo: {filterColumns}')
         except AttributeError as e:
             raise ValueError(str(e))
         except (ValueError, JSONDecodeError):

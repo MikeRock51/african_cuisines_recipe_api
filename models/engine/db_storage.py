@@ -89,9 +89,12 @@ class DBStorage:
                     #                      for key, value in filterColumns.items())]
                     filterConditions = []
 
+                    objectFields = ['ingredients', 'instructions', 'nutritional_values']
+
                     for key, value in filterColumns.items():
                         print(f"Filter items: {key} - {value}")
-                        if isinstance(key.type, JSON):
+                        # print(key.property.mapper.class_.__tablename__)
+                        if hasattr(key.property, "mapper"):
                             for val in value:
                                 searchTerm = f'%{val}%'
                                 filterConditions.append(key.ilike(searchTerm))
