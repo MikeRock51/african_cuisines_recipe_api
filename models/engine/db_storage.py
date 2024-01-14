@@ -93,8 +93,11 @@ class DBStorage:
 
                     for key, value in filterColumns.items():
                         print(f"Filter items: {key} - {value}")
-                        # print(key.property.mapper.class_.__tablename__)
+                        # print(dir(key.property.mapper.class_))
+                        # print(key.property.mapper.name)
                         if hasattr(key.property, "mapper"):
+                            key = getattr(key.property.mapper.class_, 'name')
+                            print(key)
                             for val in value:
                                 searchTerm = f'%{val}%'
                                 filterConditions.append(key.ilike(searchTerm))
