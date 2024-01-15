@@ -97,7 +97,6 @@ class DBStorage:
                         # print(key.property.mapper.name)
                         if hasattr(key.property, "mapper"):
                             key = getattr(key.property.mapper.class_, 'name')
-                            print(key)
                             for val in value:
                                 searchTerm = f'%{val}%'
                                 filterConditions.append(key.ilike(searchTerm))
