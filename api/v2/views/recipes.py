@@ -177,7 +177,7 @@ def createRecipe():
                 "DPModel": IngredientDP
             },
             'instructions': {
-                "requiredFields": ['title'],
+                "requiredFields": ['name'],
                 "optionalFields": ['description'],
                 "required": ['fileType', 'format'],
                 "fileField": "instruction_medias",
@@ -185,7 +185,7 @@ def createRecipe():
                 "DPModel": InstructionMedia
             },
             'nutritional_values': {
-                "requiredFields": ['title'],
+                "requiredFields": ['name'],
                 "optionalFields": ['description'],
                 "required": ['fileType'],
                 "fileField": "nutrition_dps",

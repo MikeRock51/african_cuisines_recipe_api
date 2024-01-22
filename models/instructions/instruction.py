@@ -2,7 +2,7 @@
 """The instructions model"""
 
 from models.base_model import Base, BaseModel
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 
@@ -11,10 +11,11 @@ class Instruction(BaseModel, Base):
 
     __tablename__ = "instructions"
 
-    title = Column(String(128), nullable=False)
+    name = Column(String(128), nullable=False)
     description = Column(String(1024), nullable=True)
     medias = relationship('InstructionMedia', backref='instruction', cascade='all, delete-orphan, delete')
     recipeID = Column(String(60), ForeignKey('recipes.id'), nullable=False)
+    UniqueConstraint('name', 'recipeID', name='unique_recipe_instruction')
 
     def toDict(self, detailed=False):
         """Extension of basemodel.toDict for instruction data"""
