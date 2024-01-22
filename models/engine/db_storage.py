@@ -3,7 +3,7 @@
 
 from os import getenv
 from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy import create_engine, and_, func
+from sqlalchemy import create_engine, and_, or_
 from typing import Dict
 from dotenv import load_dotenv
 from math import ceil
@@ -97,9 +97,12 @@ class DBStorage:
                         # print(key.property.mapper.name)
                         if hasattr(key.property, "mapper"):
                             key = getattr(key.property.mapper.class_, 'name')
+                            or_conditions = []
                             for val in value:
                                 searchTerm = f'%{val}%'
-                                filterConditions.append(key.ilike(searchTerm))
+                                or_conditions.append(key.ilike(searchTerm))
+                                filterConditions.append(or_(*or_conditions))
+                                # filterConditions.append(key.ilike(searchTerm))
                         else:
                             filterConditions.append(key.in_(value))
 
