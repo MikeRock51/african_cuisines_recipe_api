@@ -2,8 +2,8 @@
 """The database engine"""
 
 from os import getenv
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy import create_engine, and_, or_
+from sqlalchemy.orm import scoped_session, sessionmaker, aliased
+from sqlalchemy import create_engine, and_
 from typing import Dict
 from dotenv import load_dotenv
 from math import ceil
@@ -92,22 +92,25 @@ class DBStorage:
                     objectFields = ['ingredients', 'instructions', 'nutritional_values']
 
                     for key, value in filterColumns.items():
-                        print(f"Filter items: {key} - {value}")
+                        # print(f"Filter items: {key} - {value}")
                         # print(dir(key.property.mapper.class_))
                         # print(key.property.mapper.name)
                         if hasattr(key.property, "mapper"):
-                            key = getattr(key.property.mapper.class_, 'name')
-                            or_conditions = []
+                            # key = getattr(key.property.mapper.class_, 'name')
+                            key = key.property.mapper.class_
+                            print(key)
                             for val in value:
                                 searchTerm = f'%{val}%'
-                                or_conditions.append(key.ilike(searchTerm))
-                                filterConditions.append(or_(*or_conditions))
+                                key_alias = aliased(key)
+                                query = query.join(key_alias, Recipe.id == key_alias.recipeID)
+                                query = query.filter(key_alias.name.ilike(searchTerm))
+                                # or_conditions.append(key.ilike(searchTerm))
                                 # filterConditions.append(key.ilike(searchTerm))
+                                # print(f"CONDITTIONALLY => {filterConditions}")
                         else:
                             filterConditions.append(key.in_(value))
-
-                    # Filter data by specified columns
-                    query = query.filter(and_(*filterConditions))
+                            # Filter data by specified columns
+                            query = query.filter(and_(*filterConditions))
 
                     """filterConditions = [(key.in_(value) if
                                          hasattr(value, '__iter__') else (
