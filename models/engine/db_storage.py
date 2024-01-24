@@ -92,21 +92,13 @@ class DBStorage:
                     objectFields = ['ingredients', 'instructions', 'nutritional_values']
 
                     for key, value in filterColumns.items():
-                        # print(f"Filter items: {key} - {value}")
-                        # print(dir(key.property.mapper.class_))
-                        # print(key.property.mapper.name)
                         if hasattr(key.property, "mapper"):
-                            # key = getattr(key.property.mapper.class_, 'name')
                             key = key.property.mapper.class_
-                            print(key)
                             for val in value:
                                 searchTerm = f'%{val}%'
                                 key_alias = aliased(key)
                                 query = query.join(key_alias, Recipe.id == key_alias.recipeID)
                                 query = query.filter(key_alias.name.ilike(searchTerm))
-                                # or_conditions.append(key.ilike(searchTerm))
-                                # filterConditions.append(key.ilike(searchTerm))
-                                # print(f"CONDITTIONALLY => {filterConditions}")
                         else:
                             filterConditions.append(key.in_(value))
                             # Filter data by specified columns
