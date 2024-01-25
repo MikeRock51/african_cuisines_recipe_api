@@ -5,37 +5,59 @@ tags:
 security:
   - Auth: []
 parameters:
-  - name: Recipe Data
-    in: body
+parameters:
+  - name: name
+    in: formData
     required: true
-    description: Data for the recipe you want to create
-    schema:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Amala
-        cuisine:
-          type: string
-          example: Nigerian
-        ingredients:
-          type: array
-          example: ["Yam flour", "boiling water", "A lot of energy"]
-        instructions:
-          type: array
-          example: ["Boil water on fire", "Dance around the room", "Do the hokey pokey", "Enjoy your amala with any soup of your choice"]
-        prep_time_minutes:
-          type: integer
-          example: 5
-        cook_time_minutes:
-          type: integer
-          example: 10
-        serving_size:
-          type: integer
-          example: 4
-        calories_per_serving:
-          type: integer
-          example: 80
+    type: string
+    description: Name of the recipe
+    example: Amala
+  - name: cuisine
+    in: formData
+    required: true
+    type: string
+    description: Cuisine of the recipe
+    example: Nigerian
+  - name: ingredients
+    in: formData
+    required: true
+    type: array
+    items:
+      type: string
+    description: Ingredients of the recipe
+    example: ["Yam flour", "boiling water", "A lot of energy"]
+  - name: instructions
+    in: formData
+    required: true
+    type: array
+    items:
+      type: string
+    description: Cooking instructions
+    example: ["Boil water on fire", "Dance around the room", "Do the hokey pokey", "Enjoy your amala with any soup of your choice"]
+  - name: prep_time_minutes
+    in: formData
+    required: true
+    type: integer
+    description: Preparation time in minutes
+    example: 5
+  - name: cook_time_minutes
+    in: formData
+    required: true
+    type: integer
+    description: Cooking time in minutes
+    example: 10
+  - name: serving_size
+    in: formData
+    required: true
+    type: integer
+    description: Serving size
+    example: 4
+  - name: calories_per_serving
+    in: formData
+    required: true
+    type: integer
+    description: Calories per serving
+    example: 80
 responses:
   201:
     description: Recipe created successfully
