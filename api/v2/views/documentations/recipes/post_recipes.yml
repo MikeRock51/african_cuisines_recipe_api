@@ -21,19 +21,27 @@ parameters:
   - name: ingredients
     in: formData
     required: true
-    type: array
+    type: string
     items:
-      type: string
+      type: object
     description: Ingredients of the recipe
-    example: ["Yam flour", "boiling water", "A lot of energy"]
+    example: [{ "name": "Banana powder", "description": "Elubo ogede", "quantity": 3, "metric": "cups" , "ingredient_dps": [{"fileType": "file", "fileIndex": 0}]}, { "name": "Omi Gbona", "description": "Boiling water", "quantity": 1, "metric": "liter" , "ingredient_dps": [{"fileType": "file", "fileIndex": 1}]}]
   - name: instructions
     in: formData
     required: true
-    type: array
+    type: string
     items:
-      type: string
+      type: object
     description: Cooking instructions
-    example: ["Boil water on fire", "Dance around the room", "Do the hokey pokey", "Enjoy your amala with any soup of your choice"]
+    example: [{ "name": "Boil water", "description": "Heat 1 liter of water to boiling point", "instruction_medias": [{"fileType": "file", "format": "video", "fileIndex": 0}]}, { "name": "Add flour", "description": "Slowly add flour to boiling water while stiring" }, { "name": "Stir and Turn", "description": "Stir and turn with a turning stick until smooth" , "instruction_medias": [{"fileType": "file", "format": "image", "fileIndex": 1}]}]
+  - name: nutritional_values
+    in: formData
+    required: true
+    type: string
+    items:
+      type: object
+    description: Recipe nutritional values
+    example: [{ "name": "Low in calories", "description": "Contains only 33-58 kcal per 100g" , "nutrition_dps": [{"fileType": "file", "fileIndex": 0}]}]
   - name: prep_time_minutes
     in: formData
     required: true
