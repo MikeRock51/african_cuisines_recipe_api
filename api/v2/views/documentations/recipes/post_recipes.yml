@@ -5,19 +5,20 @@ tags:
 security:
   - Auth: []
 parameters:
-parameters:
   - name: name
     in: formData
     required: true
     type: string
     description: Name of the recipe
     example: Amala
+
   - name: cuisine
     in: formData
     required: true
     type: string
     description: Cuisine of the recipe
     example: Nigerian
+
   - name: ingredients
     in: formData
     required: true
@@ -25,7 +26,24 @@ parameters:
     items:
       type: object
     description: Ingredients of the recipe
-    example: [{ "name": "Banana powder", "description": "Elubo ogede", "quantity": 3, "metric": "cups" , "ingredient_dps": [{"fileType": "file", "fileIndex": 0}]}, { "name": "Omi Gbona", "description": "Boiling water", "quantity": 1, "metric": "liter" , "ingredient_dps": [{"fileType": "file", "fileIndex": 1}]}]
+    example:
+      [
+        {
+          "name": "Banana powder",
+          "description": "Elubo ogede",
+          "quantity": 3,
+          "metric": "cups",
+          "ingredient_dps": [{ "fileType": "file", "fileIndex": 0 }],
+        },
+        {
+          "name": "Omi Gbona",
+          "description": "Boiling water",
+          "quantity": 1,
+          "metric": "liter",
+          "ingredient_dps": [{ "fileType": "file", "fileIndex": 1 }],
+        },
+      ]
+
   - name: instructions
     in: formData
     required: true
@@ -33,7 +51,26 @@ parameters:
     items:
       type: object
     description: Cooking instructions
-    example: [{ "name": "Boil water", "description": "Heat 1 liter of water to boiling point", "instruction_medias": [{"fileType": "file", "format": "video", "fileIndex": 0}]}, { "name": "Add flour", "description": "Slowly add flour to boiling water while stiring" }, { "name": "Stir and Turn", "description": "Stir and turn with a turning stick until smooth" , "instruction_medias": [{"fileType": "file", "format": "image", "fileIndex": 1}]}]
+    example:
+      [
+        {
+          "name": "Boil water",
+          "description": "Heat 1 liter of water to boiling point",
+          "instruction_medias":
+            [{ "fileType": "file", "format": "video", "fileIndex": 0 }],
+        },
+        {
+          "name": "Add flour",
+          "description": "Slowly add flour to boiling water while stiring",
+        },
+        {
+          "name": "Stir and Turn",
+          "description": "Stir and turn with a turning stick until smooth",
+          "instruction_medias":
+            [{ "fileType": "file", "format": "image", "fileIndex": 1 }],
+        },
+      ]
+
   - name: nutritional_values
     in: formData
     required: true
@@ -41,31 +78,88 @@ parameters:
     items:
       type: object
     description: Recipe nutritional values
-    example: [{ "name": "Low in calories", "description": "Contains only 33-58 kcal per 100g" , "nutrition_dps": [{"fileType": "file", "fileIndex": 0}]}]
+    example:
+      [
+        {
+          "name": "Low in calories",
+          "description": "Contains only 33-58 kcal per 100g",
+          "nutrition_dps": [{ "fileType": "file", "fileIndex": 0 }],
+        },
+      ]
+
+  - name: recipe_dps
+    in: formData
+    required: true
+    type: string
+    items:
+      type: object
+    description: Recipe display pictures object
+    example:
+      [
+        { "fileType": "file", "fileIndex": 0 },
+        { "fileType": "file", "fileIndex": 1 },
+      ]
+
   - name: prep_time_minutes
     in: formData
     required: true
     type: integer
     description: Preparation time in minutes
     example: 5
+
   - name: cook_time_minutes
     in: formData
     required: true
     type: integer
     description: Cooking time in minutes
     example: 10
+
   - name: serving_size
     in: formData
     required: true
     type: integer
     description: Serving size
     example: 4
+
   - name: calories_per_serving
     in: formData
     required: true
     type: integer
     description: Calories per serving
     example: 80
+
+  - name: recipe_dps[]
+    in: formData
+    required: false
+    type: file
+    description: Recipe display pictures
+
+  - name: ingredient_dps[]
+    in: formData
+    required: false
+    type: file
+    description: Ingredient display pictures
+
+  - name: instruction_medias[]
+    in: formData
+    required: false
+    type: file
+    description: Instruction display medias
+
+  - name: nutrition_dps[]
+    in: formData
+    required: false
+    type: file
+    description: Nutrition display pictures
+
+  - name: video_instruction
+    in: formData
+    required: false
+    oneOf:
+      - type: file
+      - type: string
+    description: Recipe video instruction
+
 responses:
   201:
     description: Recipe created successfully
