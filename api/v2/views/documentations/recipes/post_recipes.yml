@@ -159,6 +159,7 @@ parameters:
       - type: file
       - type: string
     description: Recipe video instruction
+    example: {"fileType": "link", "title": "How to make Rice Amala", "filePath": "https://mikerock.tech/portfolio" }
 
 responses:
   201:
